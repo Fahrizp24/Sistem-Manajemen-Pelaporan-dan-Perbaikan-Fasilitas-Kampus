@@ -1,14 +1,5 @@
 @extends('layouts.template')
-
 @section('title', 'Tambah User Baru')
-
-@section('breadcrumb')
-    @include('layouts.breadcrumb', [
-        'breadcrumb_parent' => 'User Management',
-        'breadcrumb_current' => 'Tambah User',
-        'page_title' => 'Tambah User Baru'
-    ])
-@endsection
 
 @section('content')
 <div class="card card-outline card-primary">

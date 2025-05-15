@@ -44,7 +44,7 @@
   <!-- [ Main Content ] start -->
   <div class="pc-container">
     <div class="pc-content">
-      @yield('breadcrumb')
+      @include('layouts.breadcrumb')
       
       <!-- [ Main Content ] start -->
       @yield('content')
@@ -65,7 +65,7 @@
   <script src="{{ asset('mantis/dist/assets/js/plugins/feather.min.js') }}"></script>
 
   <script>
-    layout_change('dark');
+    layout_change('light');
     change_box_container('false');
     layout_rtl_change('false');
     preset_change('preset-1');
