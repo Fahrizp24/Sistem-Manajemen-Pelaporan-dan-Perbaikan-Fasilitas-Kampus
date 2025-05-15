@@ -16,10 +16,13 @@ use App\Http\Controllers\WelcomeController;
 Route::pattern('id', '[0-9]+');//ketika ada parametr {id}, maka harus berupa angka
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('contoh', [
+        'breadcrumb_parent' => 'User Management',
+        'breadcrumb_current' => 'Tambah User',
+        'page_title' => 'Tambah User Baru',
+        // 'level' => Level::all() // Data untuk dropdown
+    ]);});
 
-Route::get('/', [WelcomeController::class, 'index']);
 
 Route::group(['prefix'=>'admin'],function () {
     
