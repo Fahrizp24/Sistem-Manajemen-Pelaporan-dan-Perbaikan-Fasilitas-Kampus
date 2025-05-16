@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('laporan_id')->constrained('laporan')->onDelete('cascade');
             $table->foreignId('pengguna_id')->constrained('pengguna')->onDelete('cascade');
-            $table->integer('penilaian'); // Skala 1–5
+            $table->integer('penilaian');
             $table->text('komentar')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

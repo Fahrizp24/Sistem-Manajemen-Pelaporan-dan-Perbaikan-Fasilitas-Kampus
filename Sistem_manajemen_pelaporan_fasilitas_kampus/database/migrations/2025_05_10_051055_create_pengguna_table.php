@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email')->unique();
             $table->string('kata_sandi');
-            $table->string('peran'); // admin, teknisi, mahasiswa, sarpras, dll
+            $table->enum('peran', ['admin', 'mahasiswa', 'dosen', 'tendik', 'sarana', 'teknisi']);
             $table->string('foto_profil')->nullable();
             $table->timestamps();
         });

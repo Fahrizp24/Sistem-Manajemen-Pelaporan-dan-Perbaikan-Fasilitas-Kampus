@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('nama');
             $table->text('deskripsi')->nullable();
             $table->string('lokasi');
-            $table->string('kategori'); // AC, Proyektor, Jaringan, dll
+            $table->string('kategori');
             $table->foreignId('gedung_id')->constrained('gedung')->onDelete('cascade');
-            $table->string('status'); // baik, rusak, perlu perhatian
+            $table->enum('status', ['baik', 'rusak', 'perlu perhatian'])->default('baik');
             $table->timestamps();
         });
     }

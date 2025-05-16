@@ -15,13 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pelapor_id')->constrained('pengguna')->onDelete('cascade');
             $table->foreignId('fasilitas_id')->constrained('fasilitas')->onDelete('cascade');
-            $table->foreignId('teknisi_id')->nullable()->constrained('pengguna')->onDelete('set null');
-            $table->foreignId('ditugaskan_oleh')->nullable()->constrained('pengguna')->onDelete('set null');
+            $table->foreignId('ditugaskan_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
+            $table->foreignId('teknisi_id')->nullable()->constrained('pengguna')->nullOnDelete();
             $table->text('deskripsi');
             $table->string('foto')->nullable();
-            $table->string('status'); 
-            $table->text('catatan')->nullable();
-
+            $table->enum('status', ['diajukan', 'diproses', 'selesai', 'ditolak'])->default('diajukan');
             $table->timestamps();
         });
     }
