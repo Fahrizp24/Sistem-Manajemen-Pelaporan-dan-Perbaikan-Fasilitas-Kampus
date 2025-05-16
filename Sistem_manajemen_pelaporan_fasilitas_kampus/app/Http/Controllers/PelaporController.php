@@ -1,6 +1,3 @@
-use Illuminate\Http\Request;
-use App\Models\UserModel;
-
 <?php
 
 namespace App\Http\Controllers;
@@ -14,7 +11,7 @@ class PelaporController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */
+    */
     public function index()
     {
         $pelapor = UserModel::all();
@@ -23,8 +20,20 @@ class PelaporController extends Controller
 
     public function profile()
     {
-        $pelapor = UserModel::all();
-        return view('pelapor.profile', compact('pelapor'));
+        $breadcrumb = (object) [
+            'title' => 'Profile',
+            'list' => ['Detail Profile']
+        ];
+    
+        $page = (object) [
+            'title' => 'Profile'
+        ];
+    
+        $activeMenu = 'profile';
+
+        return view('pelapor.profile', ['breadcrumb' => $breadcrumb, 'page'=> $page,'activeMenu' => $activeMenu]);
+        // $pelapor = UserModel::all();
+        // return view('pelapor.profile', compact('pelapor'));
     }
 
     /**

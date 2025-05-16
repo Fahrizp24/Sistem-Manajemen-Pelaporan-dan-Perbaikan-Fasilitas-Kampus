@@ -2,58 +2,100 @@
 @section('title', 'Tambah User Baru')
 
 @section('content')
-<div class="card card-outline card-primary">
-    <div class="card-header">
-        <h3 class="card-title">Tambah User Baru</h3>
-        <div class="card-tools"></div>
+<div class="row">
+    <!-- Line Chart Example -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Monthly Sales</h4>
+            </div>
+            <div class="card-body">
+                <canvas id="lineChart" style="height: 300px;"></canvas>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-        <form method="POST" action="{{ url('user') }}" class="form-horizontal">
-            @csrf
-            <div class="form-group row">
-                <label class="col-1 control-label col-form-label">Level</label>
-                <div class="col-11">
-                    {{-- <select class="form-control" id="level_id" name="level_id" required>
-                        <option value="">- Pilih Level -</option>
-                        @foreach($level as $item)
-                            <option value="{{ $item->level_id }}">{{ $item->level_nama }}</option>
-                        @endforeach
-                    </select>
-                    @error('level_id')
-                        <small class="form-text text-danger">{{ $message }}</small>
-                    @enderror --}}
-                </div>
+
+    <!-- Pie Chart Example -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Product Distribution</h4>
             </div>
-            <div class="form-group row">
-                <label class="col-1 control-label col-form-label">Username</label>
-                <div class="col-11">
-                    <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" required>
-                    @error('username')
-                        <small class="form-text text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+            <div class="card-body">
+                <canvas id="pieChart" style="height: 300px;"></canvas>
             </div>
-            <div class="form-group row">
-                <label class="col-1 control-label col-form-label">Password</label>
-                <div class="col-11">
-                    <input type="password" class="form-control" id="password" name="password" required>
-                    @error('password')
-                        <small class="form-text text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-1 control-label col-form-label"></label>
-                <div class="col-11">
-                    <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
-                    <a class="btn btn-sm btn-default ml-1" href="{{ url('user') }}">Kembali</a>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 @endsection
 
+@push('css')
+<!-- Add any chart-specific CSS here -->
+<style>
+    .chart-container {
+        position: relative;
+        margin: auto;
+    }
+</style>
+@endpush
+
+@push('js')
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Line Chart
+    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    new Chart(lineCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Monthly Sales',
+                data: [65, 59, 80, 81, 56, 55],
+                borderColor: '#4CAF50',
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+
+    // Pie Chart
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Electronics', 'Fashion', 'Home & Living', 'Beauty'],
+            datasets: [{
+                data: [30, 25, 20, 25],
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0'
+                ],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+</script>
+@endpush
 @push('css')
     <!-- CSS tambahan spesifik untuk halaman ini -->
 @endpush
