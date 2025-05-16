@@ -13,15 +13,18 @@ class LaporanModel extends Model
     protected $table = 'laporan';
 
     // Primary key tabel
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_laporan';
 
     // Kolom-kolom yang dapat diisi secara massal
     protected $fillable = [
-        'judul',
+        'pelapor_id',
+        'fasilitas_id',
         'deskripsi',
+        'foto',
         'status',
         'tanggal_laporan',
-        'user_id',
+        'tingkat_urgensi',
+        'tanggal_selesai'
     ];
 
     // Jika tabel tidak menggunakan timestamps (created_at, updated_at)
@@ -32,4 +35,11 @@ class LaporanModel extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    // Relasi ke model Fasilitas
+    public function fasilitas()
+    {
+        return $this->belongsTo(FasilitasModel::class, 'fasilitas_id');
+    }
+    
 }
