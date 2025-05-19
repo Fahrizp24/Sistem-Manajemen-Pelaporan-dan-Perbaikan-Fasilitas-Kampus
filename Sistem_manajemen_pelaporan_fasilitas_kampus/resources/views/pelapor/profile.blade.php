@@ -15,7 +15,7 @@
                     
                     <div class="d-flex justify-content-center mt-4">
                         <a href="#" class="btn btn-primary btn-sm me-2">Edit Photo</a>
-                        <a href="#" class="btn btn-outline-secondary btn-sm">Change Password</a>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</button>
                     </div>
                 </div>
                 
@@ -101,46 +101,44 @@
                 </form>
             </div>
         </div>
-        
-        <div class="card">
-            <div class="card-header">
-                <h5>Change Password</h5>
-            </div>
-            <div class="card-body">
-                <form method="POST" action="#">
-                    @csrf
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Current Password</label>
-                        <div class="col-sm-9">
-                            <input type="password" class="form-control" name="current_password" required>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">New Password</label>
-                        <div class="col-sm-9">
-                            <input type="password" class="form-control" name="new_password" required>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Confirm Password</label>
-                        <div class="col-sm-9">
-                            <input type="password" class="form-control" name="new_password_confirmation" required>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <label class="col-sm-3 col-form-label"></label>
-                        <div class="col-sm-9">
-                            <button type="submit" class="btn btn-primary me-2">Change Password</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
+    <!-- Modal: Change Password -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST" action="#">
+        @csrf
+        <div class="modal-header">
+          <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          
+          <div class="mb-3">
+            <label for="current_password" class="form-label">Current Password</label>
+            <input type="password" class="form-control" name="current_password" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="new_password" class="form-label">New Password</label>
+            <input type="password" class="form-control" name="new_password" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="new_password_confirmation" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" name="new_password_confirmation" required>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Change Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
     <!-- [ Profile ] end -->
 </div>
 @endsection
