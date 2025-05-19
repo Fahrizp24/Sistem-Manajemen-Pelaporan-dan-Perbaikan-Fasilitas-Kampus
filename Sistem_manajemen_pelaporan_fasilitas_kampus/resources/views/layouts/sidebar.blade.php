@@ -3,7 +3,7 @@
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
-                    <a href="index.html"><img src="./assets/compiled/svg/logo.svg" alt="Logo" srcset=""></a>
+                    <a href="index"><img src="./assets/compiled/svg/logo.svg" alt="Logo" srcset=""></a>
                 </div>
                 <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
@@ -44,21 +44,21 @@
         <li class="sidebar-title">Aktor: Dosen, Mahasiswa dan Tendik</li>
 
         <li class="sidebar-item">
-            <a href="profile.html" class='sidebar-link'>
+            <a href="profile" class='sidebar-link'>
                 <i class="bi bi-person"></i>
                 <span>Profil</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="laporkan-kerusakan.html" class='sidebar-link'>
+            <a href="laporan_kerusakan" class='sidebar-link'>
                 <i class="bi bi-exclamation-triangle-fill"></i>
                 <span>Laporkan Kerusakan</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="laporan-saya.html" class='sidebar-link'>
+            <a href="laporan_saya" class='sidebar-link'>
                 <i class="bi bi-file-earmark-text"></i>
                 <span>Laporan Saya</span>
             </a>
@@ -68,21 +68,21 @@
         <li class="sidebar-title">Aktor: Sarana Prasarana</li>
 
         <li class="sidebar-item">
-            <a href="laporan-masuk.html" class='sidebar-link'>
+            <a href="laporan-masuk" class='sidebar-link'>
                 <i class="bi bi-inbox"></i>
                 <span>Laporan Masuk</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="sistem-rekomendasi.html" class='sidebar-link'>
+            <a href="sistem-rekomendasi" class='sidebar-link'>
                 <i class="bi bi-lightbulb"></i>
                 <span>Sistem Rekomendasi</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="statistik.html" class='sidebar-link'>
+            <a href="statistik" class='sidebar-link'>
                 <i class="bi bi-bar-chart-fill"></i>
                 <span>Statistik</span>
             </a>
@@ -92,49 +92,49 @@
         <li class="sidebar-title">Aktor: Admin</li>
 
         <li class="sidebar-item">
-            <a href="laporan.html" class='sidebar-link'>
+            <a href="laporan" class='sidebar-link'>
                 <i class="bi bi-file-text"></i>
                 <span>Laporan</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="kelola-pengguna.html" class='sidebar-link'>
+            <a href="kelola-pengguna" class='sidebar-link'>
                 <i class="bi bi-people"></i>
                 <span>Kelola Pengguna</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="fasilitas.html" class='sidebar-link'>
+            <a href="fasilitas" class='sidebar-link'>
                 <i class="bi bi-building"></i>
                 <span>Fasilitas</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="gedung.html" class='sidebar-link'>
+            <a href="gedung" class='sidebar-link'>
                 <i class="bi bi-house-door"></i>
                 <span>Gedung</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="sistem-rekomendasi.html" class='sidebar-link'>
+            <a href="sistem-rekomendasi" class='sidebar-link'>
                 <i class="bi bi-lightbulb"></i>
                 <span>Sistem Rekomendasi</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="laporan-periodik.html" class='sidebar-link'>
+            <a href="laporan-periodik" class='sidebar-link'>
                 <i class="bi bi-calendar-range"></i>
                 <span>Laporan Periodik</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="statistik.html" class='sidebar-link'>
+            <a href="statistik" class='sidebar-link'>
                 <i class="bi bi-bar-chart-fill"></i>
                 <span>Statistik</span>
             </a>
@@ -144,14 +144,14 @@
         <li class="sidebar-title">Aktor: Teknisi</li>
 
         <li class="sidebar-item">
-            <a href="penugasan.html" class='sidebar-link'>
+            <a href="penugasan" class='sidebar-link'>
                 <i class="bi bi-tools"></i>
                 <span>Penugasan</span>
             </a>
         </li>
 
         <li class="sidebar-item">
-            <a href="riwayat-penugasan.html" class='sidebar-link'>
+            <a href="riwayat-penugasan" class='sidebar-link'>
                 <i class="bi bi-clock-history"></i>
                 <span>Riwayat Penugasan</span>
             </a>
