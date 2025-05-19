@@ -6,6 +6,7 @@ use App\Http\Controllers\PelaporController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\TeknisiController;
+use App\Http\Controllers\SarprasController;
 use App\Http\Controllers\Admincontroller;
 use App\Http\Controllers\GedungController;
 
@@ -121,17 +122,17 @@ Route::group(['prefix' => 'teknisi'], function () {
 Route::group(['prefix' => 'sarpras'], function () {
     //menu laporan
     Route::group(['prefix' => 'laporan_masuk'], function () {
-        Route::get('/', [Admincontroller::class, 'list_laporan'])->name('sarpras.laporan');
+        Route::get('/', [SarprasController::class, 'list_laporan'])->name('sarpras.laporan');
         Route::get('/{id}', [LaporanController::class, 'show_laporan'])->name('sarpras.show_laporan');
-        Route::post('/{id}', [Admincontroller::class, 'update_laporan'])->name('sarpras.update_laporan');
+        Route::post('/{id}', [SarprasController::class, 'update_laporan'])->name('sarpras.update_laporan');
     });
     //menu spk
     Route::group(['prefix' => 'sistem_rekomendasi'], function () {
-        
+        Route::get('/', [SarprasController::class, 'spk'])->name('sarpras.spk');
     });
     //menu statistik
     Route::group(['prefix' => 'statistik'], function () {
-        Route::get('/', [Admincontroller::class, 'statistik'])->name('sarpras.statistik');
+        Route::get('/', [SarprasController::class, 'statistik'])->name('sarpras.statistik');
     });
 });
 

@@ -51,7 +51,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($laporan_kerusakan as $key => $item)
+                                    {{-- @foreach($laporan_kerusakan as $key => $item)
                                     <tr class="{{ $key % 2 == 0 ? 'even' : 'odd' }}">
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->user->name ?? 'N/A' }}</td>
@@ -71,7 +71,7 @@
                                             </a>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @endforeach --}}
                                 </tbody>
                             </table>
                         </div>
@@ -79,12 +79,12 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-5">
                             <div class="dataTables_info" id="table1_info" role="status" aria-live="polite">
-                                Showing {{ $laporan_kerusakan->firstItem() }} to {{ $laporan_kerusakan->lastItem() }} of {{ $laporan_kerusakan->total() }} entries
+                                {{-- Showing {{ $laporan_kerusakan->firstItem() }} to {{ $laporan_kerusakan->lastItem() }} of {{ $laporan_kerusakan->total() }} entries --}}
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-7">
                             <div class="dataTables_paginate paging_simple_numbers" id="table1_paginate">
-                                {{ $laporan_kerusakan->links('pagination::bootstrap-5') }}
+                                {{-- {{ $laporan_kerusakan->links('pagination::bootstrap-5') }} --}}
                             </div>
                         </div>
                     </div>
