@@ -12,9 +12,9 @@ class UmpanBalikSeeder extends Seeder
         DB::table('umpan_balik')->insert([
             [
                 'laporan_id' => 1,
-                'pengguna_id' => 1,
+                'pengguna_id' => 3,
                 'penilaian' => 4,
-                'komentar' => 'Respon cepat dan tanggap.',
+                'komentar' => 'Terima kasih atas perbaikannya!',
                 'created_at' => now(),
             ],
         ]);

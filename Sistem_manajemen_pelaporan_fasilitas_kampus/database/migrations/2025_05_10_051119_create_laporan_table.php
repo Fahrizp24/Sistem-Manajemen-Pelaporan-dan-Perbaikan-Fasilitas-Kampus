@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('laporan', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('pelapor_id')->constrained('pengguna')->onDelete('cascade');
-            $table->foreignId('fasilitas_id')->constrained('fasilitas')->onDelete('cascade');
-            $table->foreignId('ditugaskan_oleh')->nullable()->constrained('pengguna')->nullOnDelete();
-            $table->foreignId('teknisi_id')->nullable()->constrained('pengguna')->nullOnDelete();
+            $table->id('laporan_id');
+            $table->foreignId('pelapor_id')->constrained('pengguna', 'pengguna_id')->onDelete('cascade');
+            $table->foreignId('fasilitas_id')->constrained('fasilitas', 'fasilitas_id')->onDelete('cascade');
+            $table->foreignId('ditugaskan_oleh')->constrained('pengguna', 'pengguna_id')->onDelete('cascade');
+            $table->foreignId('teknisi_id')->constrained('pengguna', 'pengguna_id')->onDelete('cascade');
             $table->text('deskripsi');
             $table->string('foto')->nullable();
             $table->enum('status', ['diajukan', 'diproses', 'selesai', 'ditolak'])->default('diajukan');
+            $table->enum('urgensi', ['rendah', 'sedang', 'tinggi'])->default('sedang');
             $table->timestamps();
         });
     }

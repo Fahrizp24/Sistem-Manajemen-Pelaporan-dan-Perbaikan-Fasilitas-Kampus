@@ -9,17 +9,8 @@ class FasilitasSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('fasilitas')->insert([
-            [
-                'nama' => 'Proyektor',
-                'deskripsi' => 'Proyektor kelas rusak',
-                'lokasi' => 'Ruang A101',
-                'kategori' => 'Elektronik',
-                'gedung_id' => 1,
-                'status' => 'rusak',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+                DB::table('fasilitas')->insert([
+            ['nama' => 'Proyektor', 'deskripsi' => 'Proyektor ruang kelas', 'kategori' => 'Elektronik', 'gedung_id' => 1, 'status' => 'baik'],
         ]);
     }
 }
