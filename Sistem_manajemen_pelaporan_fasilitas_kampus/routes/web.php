@@ -136,6 +136,11 @@ Route::group(['prefix' => 'sarpras'], function () {
     });
 });
 
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+
 // Halaman form laporan kerusakan
 Route::middleware(['auth'])->group(function () {
     // Laporan Kerusakan Routes
