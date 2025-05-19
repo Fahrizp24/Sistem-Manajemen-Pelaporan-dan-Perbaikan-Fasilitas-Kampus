@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
+
 class TeknisiController extends Controller
 {
     /**
@@ -28,34 +29,13 @@ class TeknisiController extends Controller
         $activeMenu = 'penugasan';
         $laporan = LaporanModel::where('status', 'dilaksanakan')
         ->where('idTeknisi', $idTeknisi)
-        ->get();               return view('pelapor.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu', 'laporan'));
+        ->get();
 
+        return view('pelapor.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
     }
 
-    // public function profile()
-    // {
-    //     $breadcrumb = (object) [
-    //         'title' => 'Profile',
-    //         'list' => ['Detail Profile']
-    //     ];
-    
-    //     $page = (object) [
-    //         'title' => 'Profile'
-    //     ];
-    
-    //     $activeMenu = 'profile';
-
-    //     return view('pelapor.profile', ['breadcrumb' => $breadcrumb, 'page'=> $page,'activeMenu' => $activeMenu]);
-    //     // $pelapor = UserModel::all();
-    //     // return view('pelapor.profile', compact('pelapor'));
-    // }
-
-    /**
-     * Display the specified resource.
-     */
     public function riwayat_penugasan()
     {
-        // Mengambil ID user yang sedang login
         $idTeknisi = Auth::id();
 
         $laporan = LaporanModel::where('status', 'selesai')
@@ -75,22 +55,21 @@ class TeknisiController extends Controller
         $idTeknisi = Auth::id();
         $laporan = LaporanModel::where('status', 'dilaksanakan')
         ->where('idTeknisi', $idTeknisi)
-        ->find();
+        ->first();
 
         if ($laporan) {
-                $laporan->status = 'selesai';
-                $laporan->save();
+            $laporan->status = 'selesai';
+            $laporan->save();
 
             return response()->json([
                 'status' => true,
                 'message' => 'Status berhasil diubah',
             ]);
-        }else {
+        } else {
             return response()->json([
                 'status' => false,
                 'message' => 'Laporan tidak ditemukan',
             ]);
         }
-
     }
 }
