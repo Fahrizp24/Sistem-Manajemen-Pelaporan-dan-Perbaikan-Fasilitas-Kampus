@@ -63,10 +63,10 @@ class PelaporController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show_laporan_saya()
     {
-        $pelapor = UserModel::findOrFail($id);
-        return view('pelapor.show', compact('pelapor'));
+        // $pelapor = UserModel::findOrFail($id);
+        return view('pelapor.laporan_saya');
     }
 
     /**
@@ -104,5 +104,17 @@ class PelaporController extends Controller
         $pelapor->delete();
 
         return redirect()->route('pelapor.index')->with('success', 'UserModel deleted successfully.');
+    }
+
+    public function laporan_kerusakan()
+    {
+        // $laporan = DB::table('laporan')
+        //     ->join('fasilitas', 'laporan.fasilitas_id', '=', 'fasilitas.id')
+        //     ->select('laporan.*', 'fasilitas.nama_fasilitas')
+        //     ->get();
+
+        // return view('pelapor.laporan_kerusakan', compact('laporan'));
+        return view('pelapor.laporan_kerusakan');
+
     }
 }

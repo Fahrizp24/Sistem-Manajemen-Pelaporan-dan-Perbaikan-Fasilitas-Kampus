@@ -1,47 +1,75 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\LaporanModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use App\Models\UserModel;
+use Illuminate\Support\Facades\Auth;
 
 class TeknisiController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the resource.
+    */
+    public function list_laporan()
     {
         $breadcrumb = (object) [
-            'title' => 'User Management',
-            'list' => ['Tambah User', 'Baru']
+            'title' => 'Data Penugasan',
+            'list' => ['Data Penugasan']
         ];
     
         $page = (object) [
-            'title' => 'Ajukan Penyelesaian'
+            'title' => 'Data Penugasan'
         ];
-    
-        $activeMenu = 'user';
+        $idTeknisi = Auth::id();
 
-        return view('teknisi.penugasan', ['breadcrumb' => $breadcrumb, 'page'=> $page,'activeMenu' => $activeMenu]);
+        $activeMenu = 'penugasan';
+        $laporan = LaporanModel::where('status', 'dilaksanakan')
+        ->where('idTeknisi', $idTeknisi)
+        ->get();
+
+        return view('pelapor.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
+    }
+
+    public function riwayat_penugasan()
+    {
+        $idTeknisi = Auth::id();
+
+        $laporan = LaporanModel::where('status', 'selesai')
+        ->where('idTeknisi', $idTeknisi)
+        ->get();        
+        return view('pelapor.riwayat_penugasan',compact('laporan'));
     }
 
     public function edit($id)
     {
-        $pelapor = LaporanModel::findOrFail($id);
-        return view('teknisi.edit', compact('pelapor'));
+        $pelapor = UserModel::findOrFail($id);
+        return view('pelapor.edit', compact('pelapor'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
+    public function updateLaporan()
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:pelapor,email,' . $id,
-            'phone' => 'required|string|max:15',
-        ]);
+        $idTeknisi = Auth::id();
+        $laporan = LaporanModel::where('status', 'dilaksanakan')
+        ->where('idTeknisi', $idTeknisi)
+        ->first();
 
-        $pelapor = LaporanModel::findOrFail($id);
-        $pelapor->update($request->all());
+        if ($laporan) {
+            $laporan->status = 'selesai';
+            $laporan->save();
 
-        return redirect()->route('teknisi.index')->with('success', 'UserModel updated successfully.');
+            return response()->json([
+                'status' => true,
+                'message' => 'Status berhasil diubah',
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Laporan tidak ditemukan',
+            ]);
+        }
     }
 }

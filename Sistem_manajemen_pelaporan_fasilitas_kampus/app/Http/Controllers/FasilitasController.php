@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\GedungModel;
 use Illuminate\Http\Request;
 
-class GedungController extends Controller
+class FasilitasController extends Controller
 {
     public function index()
     {
