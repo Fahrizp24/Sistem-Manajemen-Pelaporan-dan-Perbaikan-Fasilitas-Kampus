@@ -8,7 +8,7 @@
                 <div class="text-center">
                     <div class="user-profile">
                         <!-- Pastikan path gambar sesuai dengan struktur folder Anda -->
-                        <img src="{{ asset('assets/images/user/avatar-2.jpg') }}" alt="User Image" class="img-fluid rounded-circle" width="150">
+                        <img src="{{ asset('mazer/dist/assets/images/user/avatar-2.jpg') }}" alt="User Image" class="img-fluid rounded-circle" width="150">
                     </div>
                     <h4 class="mt-3 mb-0">John Doe</h4>
                     <p class="text-muted">Administrator</p>

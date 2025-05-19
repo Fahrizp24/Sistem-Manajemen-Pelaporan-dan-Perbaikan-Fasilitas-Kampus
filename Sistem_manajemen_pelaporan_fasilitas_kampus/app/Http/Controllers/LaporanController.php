@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\FasilitasModel;
 use Illuminate\Support\Facades\Auth;
 
-class LaporanKerusakanController extends Controller
+class LaporanController extends Controller
 {
     /**
      * Display a listing of the resource.
