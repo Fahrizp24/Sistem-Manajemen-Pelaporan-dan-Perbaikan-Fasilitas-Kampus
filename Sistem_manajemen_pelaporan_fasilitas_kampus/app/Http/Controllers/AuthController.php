@@ -48,7 +48,7 @@ class AuthController extends Controller
     
             $role = $user->peran;
             $redirectPath = match ($role) {
-                'admin' => '/admin/laporan',
+                'admin' => '/admin/laporan/',
                 'teknisi' => '/teknisi/penugasan',
                 'sarpras' => '/sarpras/laporan_masuk',
                 'pelapor' => '/pelapor/profile'
