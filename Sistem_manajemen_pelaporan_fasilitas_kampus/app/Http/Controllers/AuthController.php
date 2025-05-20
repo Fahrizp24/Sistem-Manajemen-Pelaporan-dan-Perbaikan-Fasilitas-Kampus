@@ -13,7 +13,7 @@ class AuthController extends Controller
     public function login()
     {
         if (Auth::check()) { // jika sudah login, maka redirect ke halaman home
-            $role = Auth::user()->role;
+            $role = Auth::user()->peran;
             $redirectPath = match ($role) {
                 'admin' => '/admin/laporan',
                 'teknisi' => '/teknisi/penugasan',
@@ -28,7 +28,7 @@ class AuthController extends Controller
     public function postlogin(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
-            $user = UserModel::where('username', $request->username)->first();
+            $user = UserModel::where('nama', $request->username)->first();
     
             if (!$user) {
                 return response()->json([
@@ -37,7 +37,7 @@ class AuthController extends Controller
                 ]);
             }
     
-            if (!Hash::check($request->password, $user->password)) {
+            if (!Hash::check($request->password, $user->kata_sandi)) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Password salah'
@@ -46,7 +46,7 @@ class AuthController extends Controller
     
             Auth::login($user);
     
-            $role = $user->role;
+            $role = $user->peran;
             $redirectPath = match ($role) {
                 'admin' => '/admin/laporan',
                 'teknisi' => '/teknisi/penugasan',
