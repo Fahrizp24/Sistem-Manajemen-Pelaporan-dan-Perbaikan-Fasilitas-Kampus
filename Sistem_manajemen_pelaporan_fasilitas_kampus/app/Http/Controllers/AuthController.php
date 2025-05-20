@@ -28,7 +28,7 @@ class AuthController extends Controller
     public function postlogin(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
-            $user = UserModel::where('nama', $request->username)->first();
+            $user = UserModel::where('username', $request->username)->first();
     
             if (!$user) {
                 return response()->json([

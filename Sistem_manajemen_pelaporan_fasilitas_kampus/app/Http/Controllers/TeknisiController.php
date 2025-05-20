@@ -28,10 +28,10 @@ class TeknisiController extends Controller
 
         $activeMenu = 'penugasan';
         $laporan = LaporanModel::where('status', 'dilaksanakan')
-        ->where('idTeknisi', $idTeknisi)
+        ->where('teknisi_id', $idTeknisi)
         ->get();
 
-        return view('pelapor.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
+        return view('teknisi.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
     }
 
     public function riwayat_penugasan()

@@ -29,4 +29,11 @@ class UserModel extends Authenticatable
         'kata_sandi',
         'remember_token',
     ];
+
+    // Di dalam UserModel
+    public function getAuthPassword()
+    {
+        return $this->kata_sandi;
+    }
+
 }
