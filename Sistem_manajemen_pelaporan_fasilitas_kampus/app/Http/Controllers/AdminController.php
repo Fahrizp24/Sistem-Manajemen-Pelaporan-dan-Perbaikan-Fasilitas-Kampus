@@ -5,9 +5,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserModel;
-use App\Models\LaporanModel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Barryvdh\DomPDF\Facade\Pdf;
+
 class AdminController extends Controller
 {
     /**
@@ -15,37 +15,109 @@ class AdminController extends Controller
     */
     public function index()
     {
-        $pelapor = UserModel::all();
-        return view('admin.index', compact('pelapor'));
+        $admin = UserModel::all();
+        return view('admin.index', compact('admin'));
     }
 
-    public function laporan()
+    public function profile()
     {
         $breadcrumb = (object) [
-            'title' => 'Laporan Masuk',
-            'list' => ['Laporan', 'Masuk']
+            'title' => 'Profile',
+            'list' => ['Detail Profile']
         ];
-
+    
         $page = (object) [
-            'title' => 'Laporan Masuk'
+            'title' => 'Profile'
         ];
+    
+        $activeMenu = 'profile';
 
-        $activeMenu = 'laporan';
+        return view('admin.profile', ['breadcrumb' => $breadcrumb, 'page'=> $page,'activeMenu' => $activeMenu]);
+        // $admin = UserModel::all();
+        // return view('admin.profile', compact('admin'));
+    }
 
-        // Ambil data laporan berdasarkan status
-        $laporan_masuk = LaporanModel::where('status', 'masuk')->get();
-        $laporan_progress = LaporanModel::where('status', 'proses')->get();
-        $laporan_selesai = LaporanModel::whereIn('status', ['selesai', 'ditolak'])->get();
+    function pengguna()
+    {
+        $admin = UserModel::all();
+        return view('admin.pengguna', compact('admin'));
+    }
 
-        
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create_pengguna()
+    {
+        return view('admin.create_pengguna');
+    }
 
-        return view('admin.laporan', [
-            'breadcrumb' => $breadcrumb,
-            'page' => $page,
-            'activeMenu' => $activeMenu,
-            'laporan_masuk' => $laporan_masuk,
-            'laporan_progress' => $laporan_progress,
-            'laporan_selesai' => $laporan_selesai,
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store_pengguna(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:pengguna,email',
+            'kata_sandi' => 'required|string|min:8',
+            'peran' => 'required|string|in:admin,admin,sarpras,teknisi',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        UserModel::create($request->all());
+
+        return redirect()->route('admin.index')->with('success', 'UserModel created successfully.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show_pengguna()
+    {
+        $admin = UserModel::all();
+        return view('admin.show_pengguna', compact('admin'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit_pengguna($id)
+    {
+        $admin = UserModel::findOrFail($id);
+        return view('admin.edit_pengguna', compact('admin'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update_pengguna(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:pengguna,email',
+            'kata_sandi' => 'required|string|min:8',
+            'peran' => 'required|string|in:admin,admin,sarpras,teknisi',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $admin = UserModel::findOrFail($id);
+        $admin->update($request->all());
+        // if successfully updated
+        if ($admin) {
+            return redirect()->route('admin.pengguna')->with('success', 'UserModel updated successfully.');
+        } else {
+            return redirect()->route('admin.pengguna')->with('error', 'Failed to update UserModel.');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        $admin = UserModel::findOrFail($id);
+        $admin->delete();
+
+        return redirect()->route('admin.index')->with('success', 'UserModel deleted successfully.');
     }
 }
