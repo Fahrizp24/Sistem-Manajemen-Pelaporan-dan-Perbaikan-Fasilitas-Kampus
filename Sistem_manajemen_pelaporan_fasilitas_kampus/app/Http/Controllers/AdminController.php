@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -12,11 +13,27 @@ class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
-    */
+     */
     public function index()
     {
         $admin = UserModel::all();
         return view('admin.index', compact('admin'));
+    }
+
+    public function laporan()
+    {
+        $laporan = DB::table('laporan')->get();
+        $breadcrumb = (object) [
+            'title' => 'Laporan',
+            'list' => ['Admin Laporan']
+        ];
+
+        $page = (object) [
+            'title' => 'Laporan'
+        ];
+
+        $activeMenu = 'laporan';
+        return view('admin.laporan', ['laporan' => $laporan, 'breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
 
     public function profile()
@@ -25,14 +42,14 @@ class AdminController extends Controller
             'title' => 'Profile',
             'list' => ['Detail Profile']
         ];
-    
+
         $page = (object) [
             'title' => 'Profile'
         ];
-    
+
         $activeMenu = 'profile';
 
-        return view('admin.profile', ['breadcrumb' => $breadcrumb, 'page'=> $page,'activeMenu' => $activeMenu]);
+        return view('admin.profile', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
         // $admin = UserModel::all();
         // return view('admin.profile', compact('admin'));
     }

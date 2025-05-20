@@ -25,7 +25,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php $no = 1; @endphp
+                            {{-- @php $no = 1; @endphp
                             @forelse (array_merge($laporan_masuk->all(), $laporan_progress->all(), $laporan_selesai->all()) as $laporan)
                                 <tr>
                                     <td>{{ $no++ }}</td>
@@ -73,7 +73,7 @@
                                 </tr>
                             @empty
                                 <tr><td colspan="8" class="text-center">Tidak ada data laporan.</td></tr>
-                            @endforelse
+                            @endforelse --}}
                         </tbody>
                     </table>
                 </div>
