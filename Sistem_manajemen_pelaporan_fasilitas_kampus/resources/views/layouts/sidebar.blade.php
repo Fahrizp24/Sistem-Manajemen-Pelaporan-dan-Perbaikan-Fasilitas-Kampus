@@ -44,122 +44,137 @@
             </div>
             <div class="sidebar-menu">
                 <ul class="menu">
-                    <!-- Aktor: Dosen, Mahasiswa, dan Tendik -->
-                    <li class="sidebar-title">Aktor: Dosen, Mahasiswa dan Tendik</li>
-
+            
+                    @php
+                        $peran = Auth::user()->peran;
+                    @endphp
+            
+                    {{-- Dosen, Mahasiswa, Tendik --}}
+                    @if(in_array($peran, ['pelapor']))
+                    <li class="sidebar-title">Menu</li>
+            
                     <li class="sidebar-item">
                         <a href="{{ url('/pelapor/profile') }}" class='sidebar-link'>
                             <i class="bi bi-person"></i>
                             <span>Profil</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
                         <a href="{{ url('pelapor/laporan') }}" class='sidebar-link'>
                             <i class="bi bi-exclamation-triangle-fill"></i>
                             <span>Laporkan Kerusakan</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
                         <a href="{{ url('pelapor/laporan_saya') }}" class='sidebar-link'>
                             <i class="bi bi-file-earmark-text"></i>
                             <span>Laporan Saya</span>
                         </a>
                     </li>
-
-                    <!-- Aktor: Sarana Prasarana -->
-                    <li class="sidebar-title">Aktor: Sarana Prasarana</li>
-
+                    @endif
+            
+                    {{-- Sarana Prasarana --}}
+                    @if($peran === 'sarpras')
+                    <li class="sidebar-title">Menu</li>
+            
                     <li class="sidebar-item">
                         <a href="{{ url('sarpras/laporan_masuk') }}" class='sidebar-link'>
                             <i class="bi bi-inbox"></i>
                             <span>Laporan Masuk</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
                         <a href="{{ url('sarpras/sistem_rekomendasi') }}" class='sidebar-link'>
                             <i class="bi bi-lightbulb"></i>
                             <span>Sistem Rekomendasi</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
                         <a href="{{ url('sarpras/statistik') }}" class='sidebar-link'>
                             <i class="bi bi-bar-chart-fill"></i>
                             <span>Statistik</span>
                         </a>
                     </li>
-
-                    <!-- Aktor: Admin -->
-                    <li class="sidebar-title">Aktor: Admin</li>
-
+                    @endif
+            
+                    {{-- Admin --}}
+                    @if($peran === 'admin')
+                    <li class="sidebar-title">Menu</li>
+            
                     <li class="sidebar-item">
                         <a href="{{ url('admin/laporan') }}" class='sidebar-link'>
                             <i class="bi bi-file-text"></i>
                             <span>Laporan</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
                         <a href="{{ url('/admin/pengguna') }}" class='sidebar-link'>
                             <i class="bi bi-people"></i>
                             <span>Kelola Pengguna</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
                         <a href="{{ url('admin/fasilitas') }}" class='sidebar-link'>
                             <i class="bi bi-building"></i>
                             <span>Fasilitas</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
                         <a href="{{ url('admin/gedung') }}" class='sidebar-link'>
                             <i class="bi bi-house-door"></i>
                             <span>Gedung</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
-                        <a href="sistem-rekomendasi" class='sidebar-link'>
+                        <a href="{{ url('admin/sistem-rekomendasi') }}" class='sidebar-link'>
                             <i class="bi bi-lightbulb"></i>
                             <span>Sistem Rekomendasi</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
-                        <a href="laporan-periodik" class='sidebar-link'>
+                        <a href="{{ url('admin/laporan-periodik') }}" class='sidebar-link'>
                             <i class="bi bi-calendar-range"></i>
                             <span>Laporan Periodik</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
                         <a href="{{ url('admin/statistik') }}" class='sidebar-link'>
                             <i class="bi bi-bar-chart-fill"></i>
                             <span>Statistik</span>
                         </a>
                     </li>
-
-                    <!-- Aktor: Teknisi -->
-                    <li class="sidebar-title">Aktor: Teknisi</li>
-
+                    @endif
+            
+                    {{-- Teknisi --}}
+                    @if($peran === 'teknisi')
+                    <li class="sidebar-title">Menu</li>
+            
                     <li class="sidebar-item">
                         <a href="{{ url('teknisi/penugasan') }}" class='sidebar-link'>
                             <i class="bi bi-tools"></i>
                             <span>Penugasan</span>
                         </a>
                     </li>
-
+            
                     <li class="sidebar-item">
                         <a href="{{ url('/teknisi/riwayat_penugasan') }}" class='sidebar-link'>
                             <i class="bi bi-clock-history"></i>
                             <span>Riwayat Penugasan</span>
                         </a>
                     </li>
+                    @endif
+            
+                    {{-- Logout (semua peran) --}}
                     <li class="sidebar-item">
                         <a href="{{ url('logout') }}" class="sidebar-link"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -170,8 +185,10 @@
                             @csrf
                         </form>
                     </li>
+            
                 </ul>
             </div>
+            
 
         </div>
     </div>

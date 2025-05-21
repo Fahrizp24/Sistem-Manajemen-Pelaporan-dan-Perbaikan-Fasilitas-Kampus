@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\UserModel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
