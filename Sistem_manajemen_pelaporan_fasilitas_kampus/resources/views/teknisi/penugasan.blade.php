@@ -38,13 +38,16 @@
                                             style="width: 50px;">No</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Fasilitas: activate to sort column ascending"
-                                            style="width: 150px;">Fasilitas</th>
+                                            style="width: 100px;">Fasilitas</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Deskripsi: activate to sort column ascending"
                                             style="width: 200px;">Deskripsi</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Status: activate to sort column ascending"
-                                            style="width: 120px;">Status</th>
+                                            style="width: 50px;">Status</th>
+                                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="Aksi: activate to sort column ascending"
+                                            style="width: 200px;">Tanggal Laporan</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Aksi: activate to sort column ascending"
                                             style="width: 100px;">Aksi</th>
@@ -57,11 +60,12 @@
                                         <td>{{ $item->fasilitas->nama }}</td>
                                         <td>{{ $item->deskripsi ?? 'N/A' }}</td>
                                         <td>{{ $item->status }}</td>
-                                        {{-- <td>
-                                            <a href="{{ route('teknisi.edit', $item->penugasan_id) }}" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-eye"></i> Edit
+                                        <td>{{ $item->created_at }}</td>
+                                        <td>
+                                            <a href="{{ route('teknisi.penugasan.edit', $item->laporan_id) }}" class="btn btn-sm btn-primary">
+                                                <i class="bi-pencil-square"></i> Edit
                                             </a>
-                                        </td> --}}
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

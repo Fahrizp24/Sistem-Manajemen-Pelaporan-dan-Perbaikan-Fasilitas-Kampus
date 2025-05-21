@@ -47,19 +47,19 @@ class TeknisiController extends Controller
 
     public function edit($id)
     {
-        $teknisi = UserModel::findOrFail($id);
-        return view('teknisi.edit', compact('teknisi'));
+        $laporan = LaporanModel::findOrFail($id);
+        return view('teknisi.edit', compact('laporan'));
     }
 
     public function update()
     {
         $teknisi_id = Auth::id();
-        $laporan = LaporanModel::where('status', 'dilaksanakan')
+        $laporan = LaporanModel::where('status', 'sedang dikerjakan')
         ->where('teknisi_id', $teknisi_id)
         ->first();
 
         if ($laporan) {
-            $laporan->status = 'selesai';
+            $laporan->status = 'konfirmasi';
             $laporan->save();
 
             return response()->json([
@@ -72,5 +72,25 @@ class TeknisiController extends Controller
                 'message' => 'laporan tidak ditemukan',
             ]);
         }
+
+    }
+
+    public function show(string $id)
+    {
+        $breadcrumb = (object) [
+            'title' => 'Data Riwayat Penugasan',
+            'list' => ['Data Riwayat Penugasan']
+        ];
+    
+        $page = (object) [
+            'title' => 'Data Riwayat Penugasan'
+        ];
+        $teknisi_id = Auth::id();
+
+        $activeMenu = 'riwayat_penugasan';
+        
+        $laporan = LaporanModel::find($id);
+
+        return view('teknisi.show', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
     }
 }

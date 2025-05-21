@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header">
             <h5 class="card-title">
-                Daftar Penugasan
+                Riwayat Penugasan
             </h5>
         </div>
         <div class="card-body">
@@ -30,7 +30,7 @@
                     </div>
                     <div class="row dt-row">
                         <div class="col-sm-12">
-                            <table class="table dataTable no-footer" id="table_penugasan" aria-describedby="table1_info">
+                            <table class="table dataTable no-footer" id="table1" aria-describedby="table1_info">
                                 <thead>
                                     <tr>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
@@ -38,24 +38,52 @@
                                             style="width: 50px;">No</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Fasilitas: activate to sort column ascending"
-                                            style="width: 150px;">Fasilitas</th>
-                                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="Tanggal Laporan: activate to sort column ascending"
-                                            style="width: 120px;">Tanggal Laporan</th>
+                                            style="width: 100px;">Fasilitas</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Deskripsi: activate to sort column ascending"
-                                            style="width: 250px;">Deskripsi</th>
+                                            style="width: 200px;">Deskripsi</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Status: activate to sort column ascending"
-                                            style="width: 150px;">Status</th>
+                                            style="width: 50px;">Status</th>
+                                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="Status: activate to sort column ascending"
+                                            style="width: 200px;">Tanggal Selesai</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Aksi: activate to sort column ascending"
                                             style="width: 100px;">Aksi</th>
                                     </tr>
                                 </thead>
+                                <tbody>
+                                    @foreach($laporan as $key => $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->fasilitas->nama }}</td>
+                                        <td>{{ $item->deskripsi ?? 'N/A' }}</td>
+                                        <td>{{ $item->status }}</td>
+                                        <td>{{ $item->updated_at }}</td>
+                                        <td>
+                                            <a href="{{ route('teknisi.riwayat_penugasan.show', $item->laporan_id) }}" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-eye"></i> Detail
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
                             </table>
                         </div>
                     </div>
+                    {{-- <div class="row">
+                        <div class="col-sm-12 col-md-5">
+                            <div class="dataTables_info" id="table1_info" role="status" aria-live="polite">
+                                Showing {{ $laporan->firstItem() }} to {{ $laporan->lastItem() }} of {{ $laporan->total() }} entries
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers" id="table1_paginate">
+                                {{ $laporan->links('pagination::bootstrap-5') }}
+                            </div>
+                        </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -63,89 +91,8 @@
 </section>
 @endsection
 
-@push('js')
-    <script>
-        function modalAction(url = '') {
-            $('#myModal').load(url, function() {
-                $('#myModal').modal('show');
-            });
-        }
-
-        $(document).ready(function() {
-            var dataPenugasan = $('#table_penugasan').DataTable({
-                // serverSide: true, jika ingin menggunakan server-side processing
-                serverSide: true,
-                ajax: {
-                    "url": "{{ url('penugasan/penugasan_list') }}",
-                    "dataType": "json",
-                    "type": "POST",
-                    "data": function(d) {
-                        d.penugasan_kode = $('#penugasan_kode').val();
-                    }
-
-                },
-                columns: [
-                    // nomor urut dari laravel datatable addIndexColumn()
-                    {
-                        data: "DT_RowIndex",
-                        className: "text-center",
-                        orderable: false,
-                        searchable: false
-                    }, {
-                        data: "pengguna.nama",
-                        className: "",
-                        // orderable: true, jika ingin kolom ini bisa diurutkan
-                        orderable: true,
-                        // searchable: true, jika ingin kolom ini bisa dicari
-                        searchable: true
-                    }, {
-                        data: "fasilitas.nama",
-                        className: "",
-                        orderable: true,
-                        searchable: true
-                    }, {
-                        data: "pengguna.nama",
-                        className: "",
-                        orderable: false,
-                        searchable: false
-                    }, {
-                        data: "pengguna.nama",
-                        className: "",
-                        orderable: false,
-                        searchable: false
-                    },{
-                        data: "deskripsi",
-                        className: "",
-                        orderable: false,
-                        searchable: false
-                    },{
-                        data: "foto",
-                        className: "",
-                        orderable: false,
-                        searchable: false
-                    },{
-                        data: "status",
-                        className: "",
-                        orderable: false,
-                        searchable: false
-                    },{
-                        data: "aksi",
-                        className: "",
-                        orderable: false,
-                        searchable: false
-                    }
-                ]
-            });
-
-            $('#penugasan_kode').on('change', function() {
-                datapenugasan.ajax.reload();
-            })
-        });
-    </script>
-@endpush
-
 @push('scripts')
-<script src="{{ asset('assets/extensions/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/extensions/parsleyjs/parsley.min.js') }}"></script>
-<script src="{{ asset('assets/static/js/pages/parsley.js') }}"></script>
+<script src="{{ asset('/mazer/assets/extensions/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('/mazer/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
+<script src="{{ asset('/mazer/assets/static/js/pages/parsley.js') }}"></script>
 @endpush

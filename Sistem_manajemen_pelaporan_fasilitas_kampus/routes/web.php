@@ -87,14 +87,14 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['authorize:teknisi'])->group(function () {
         Route::prefix('teknisi')->group(function () {
             Route::prefix('penugasan')->group(function () {
-                Route::get('/', [TeknisiController::class, 'penugasan']);
-                Route::get('/{id}/edit', [TeknisiController::class, 'edit']);
-                Route::post('/{id}', [TeknisiController::class, 'update_laporan']);
+                Route::get('/', [TeknisiController::class, 'penugasan'])->name('teknisi.penugasan');
+                Route::get('/{id}/edit', [TeknisiController::class, 'edit'])->name('teknisi.penugasan.edit');
+                Route::post('/{id}/update', [TeknisiController::class, 'update'])->name('teknisi.penugasan.update');
             });
         
             Route::prefix('riwayat_penugasan')->group(function () {
                 Route::get('/', [TeknisiController::class, 'riwayat_penugasan'])->name('teknisi.riwayat_penugasan');
-                Route::get('/{id}', [TeknisiController::class, 'show_riwayat'])->name('teknisi.show_riwayat');
+                Route::get('/{id}/show', [TeknisiController::class, 'show'])->name('teknisi.riwayat_penugasan.show');
             });
         });
         
