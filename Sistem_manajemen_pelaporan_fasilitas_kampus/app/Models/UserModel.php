@@ -17,23 +17,36 @@ class UserModel extends Authenticatable
 
     // Define the attributes that are mass assignable
     protected $fillable = [
+        'username',
         'nama',
         'email',
-        'kata_sandi',
+        'password',
         'peran',
         'foto_profil'
     ];
 
     // Define the attributes that should be hidden for arrays
     protected $hidden = [
-        'kata_sandi',
+        'password',
         'remember_token',
     ];
 
     // Di dalam UserModel
     public function getAuthPassword()
     {
-        return $this->kata_sandi;
+        return $this->password;
     }
 
+    public function getRoleName() : string {
+        return $this->peran; // mendapatkan nama role
+    }
+
+    public function hasRole(): bool {
+        $roles = ['admin', 'pelapor', 'sarpras', 'teknisi', 'superadmin'];
+        return in_array($this->peran, $roles);
+    }
+    
+    public function getRole(){
+        return $this->peran; //mengecek apakah sebuah user memiliki role
+    }
 }

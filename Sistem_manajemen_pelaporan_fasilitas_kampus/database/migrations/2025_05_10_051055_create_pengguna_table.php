@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('nama');
             $table->string('email')->unique();
-            $table->string('kata_sandi');
+            $table->string('password');
             $table->enum('peran', ['admin', 'pelapor', 'sarpras', 'teknisi']);
             $table->string('foto_profil')->nullable();
             $table->timestamps();
