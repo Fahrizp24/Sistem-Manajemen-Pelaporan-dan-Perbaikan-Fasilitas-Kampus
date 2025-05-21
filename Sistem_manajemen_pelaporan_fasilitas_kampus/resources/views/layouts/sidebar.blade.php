@@ -148,14 +148,14 @@
                     <li class="sidebar-title">Aktor: Teknisi</li>
 
                     <li class="sidebar-item">
-                        <a href="penugasan" class='sidebar-link'>
+                        <a href="{{ url('/teknisi/penugasan') }}" class='sidebar-link'>
                             <i class="bi bi-tools"></i>
                             <span>Penugasan</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="riwayat-penugasan" class='sidebar-link'>
+                        <a href="{{ url('/teknisi/riwayat_penugasan') }}" class='sidebar-link'>
                             <i class="bi bi-clock-history"></i>
                             <span>Riwayat Penugasan</span>
                         </a>

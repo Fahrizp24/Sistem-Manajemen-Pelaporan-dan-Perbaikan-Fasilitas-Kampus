@@ -10,13 +10,14 @@ class UserModel extends Authenticatable
 {
     protected $table = 'pengguna';
 
-    protected $primaryKey = 'id_pengguna';
+    protected $primaryKey = 'pengguna_id';
 
     // Disable timestamps if your table doesn't have 'created_at' and 'updated_at' columns
     public $timestamps = true;
 
     // Define the attributes that are mass assignable
     protected $fillable = [
+        'username',
         'nama',
         'email',
         'kata_sandi',
@@ -26,6 +27,7 @@ class UserModel extends Authenticatable
 
     // Define the attributes that should be hidden for arrays
     protected $hidden = [
+        'username',
         'kata_sandi',
         'remember_token',
     ];

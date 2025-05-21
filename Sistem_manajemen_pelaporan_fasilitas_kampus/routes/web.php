@@ -73,14 +73,14 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('teknisi')->group(function () {
     Route::prefix('penugasan')->group(function () {
-        Route::get('/', [TeknisiController::class, 'list_laporan'])->name('teknisi.laporan');
-        Route::get('/{id}', [LaporanController::class, 'show_laporan'])->name('teknisi.show_laporan');
-        Route::post('/{id}', [TeknisiController::class, 'update_laporan'])->name('teknisi.update_laporan');
+        Route::get('/', [TeknisiController::class, 'penugasan']);
+        Route::get('/{id}/edit', [TeknisiController::class, 'edit']);
+        Route::post('/{id}', [TeknisiController::class, 'update_laporan']);
     });
 
-    Route::prefix('riwayat')->group(function () {
-        Route::get('/', [TeknisiController::class, 'list_fasilitas'])->name('teknisi.fasilitas');
-        Route::get('/{id}', [TeknisiController::class, 'show_fasilitas'])->name('teknisi.show_fasilitas');
+    Route::prefix('riwayat_penugasan')->group(function () {
+        Route::get('/', [TeknisiController::class, 'riwayat_penugasan'])->name('teknisi.riwayat_penugasan');
+        Route::get('/{id}', [TeknisiController::class, 'show_riwayat'])->name('teknisi.show_riwayat');
     });
 });
 

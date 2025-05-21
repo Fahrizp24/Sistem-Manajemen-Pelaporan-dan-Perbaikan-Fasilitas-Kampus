@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LaporanModel;
+use App\Models\laporanModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,7 @@ class TeknisiController extends Controller
     /**
      * Display a listing of the resource.
     */
-    public function list_laporan()
+    public function penugasan()
     {
         $breadcrumb = (object) [
             'title' => 'Data Penugasan',
@@ -24,11 +25,11 @@ class TeknisiController extends Controller
         $page = (object) [
             'title' => 'Data Penugasan'
         ];
-        $idTeknisi = Auth::id();
+        $teknisi_id = Auth::id();
 
         $activeMenu = 'penugasan';
-        $laporan = LaporanModel::where('status', 'dilaksanakan')
-        ->where('teknisi_id', $idTeknisi)
+        $laporan = LaporanModel::where('status', 'sedang diperbaiki')
+        ->where('teknisi_id', $teknisi_id)
         ->get();
 
         return view('teknisi.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
@@ -36,25 +37,25 @@ class TeknisiController extends Controller
 
     public function riwayat_penugasan()
     {
-        $idTeknisi = Auth::id();
+        $teknisi_id = Auth::id();
 
         $laporan = LaporanModel::where('status', 'selesai')
-        ->where('idTeknisi', $idTeknisi)
+        ->where('teknisi_id', $teknisi_id)
         ->get();        
-        return view('pelapor.riwayat_penugasan',compact('laporan'));
+        return view('teknisi.riwayat_penugasan',compact('laporan'));
     }
 
     public function edit($id)
     {
-        $pelapor = UserModel::findOrFail($id);
-        return view('pelapor.edit', compact('pelapor'));
+        $teknisi = UserModel::findOrFail($id);
+        return view('teknisi.edit', compact('teknisi'));
     }
 
-    public function updateLaporan()
+    public function update()
     {
-        $idTeknisi = Auth::id();
+        $teknisi_id = Auth::id();
         $laporan = LaporanModel::where('status', 'dilaksanakan')
-        ->where('idTeknisi', $idTeknisi)
+        ->where('teknisi_id', $teknisi_id)
         ->first();
 
         if ($laporan) {
@@ -68,7 +69,7 @@ class TeknisiController extends Controller
         } else {
             return response()->json([
                 'status' => false,
-                'message' => 'Laporan tidak ditemukan',
+                'message' => 'laporan tidak ditemukan',
             ]);
         }
     }

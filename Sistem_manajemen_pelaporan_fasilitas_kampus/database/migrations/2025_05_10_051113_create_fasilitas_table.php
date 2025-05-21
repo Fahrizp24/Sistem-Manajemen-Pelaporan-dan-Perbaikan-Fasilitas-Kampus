@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->string('kategori');
             $table->foreignId('gedung_id')->constrained('gedung', 'gedung_id')->onDelete('cascade');
-            $table->enum('status', ['baik', 'rusak', 'perlu perhatian'])->default('baik');
+            $table->enum('status', ['normal', 'rusak'])->default('normal');
             $table->timestamps();
         });
     }

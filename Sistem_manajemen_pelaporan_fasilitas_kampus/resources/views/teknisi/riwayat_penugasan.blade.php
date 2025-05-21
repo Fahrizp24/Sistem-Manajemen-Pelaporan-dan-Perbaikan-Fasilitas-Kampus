@@ -30,7 +30,7 @@
                     </div>
                     <div class="row dt-row">
                         <div class="col-sm-12">
-                            <table class="table dataTable no-footer" id="table1" aria-describedby="table1_info">
+                            <table class="table dataTable no-footer" id="table_penugasan" aria-describedby="table1_info">
                                 <thead>
                                     <tr>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
@@ -53,48 +53,7 @@
                                             style="width: 100px;">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    {{-- @foreach($laporan_kerusakan as $key => $item)
-                                    <tr class="{{ $key % 2 == 0 ? 'even' : 'odd' }}">
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->fasilitas }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y') }}</td>
-                                        <td>{{ Str::limit($item->deskripsi, 50) }}</td>
-                                        <td>
-                                            @php
-                                                $badgeClass = [
-                                                    'diajukan' => 'bg-secondary',
-                                                    'diterima' => 'bg-primary',
-                                                    'ditolak' => 'bg-danger',
-                                                    'diajukan sarpras' => 'bg-warning',
-                                                    'diterima admin' => 'bg-info',
-                                                    'dilaksanakan' => 'bg-success',
-                                                    'selesai' => 'bg-dark'
-                                                ][$item->status] ?? 'bg-secondary';
-                                            @endphp
-                                            <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('laporan.detail', $item->id) }}" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-eye"></i> Detail
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach --}}
-                                </tbody>
                             </table>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 col-md-5">
-                            <div class="dataTables_info" id="table1_info" role="status" aria-live="polite">
-                                {{-- Showing {{ $laporan->firstItem() }} to {{ $laporan->lastItem() }} of {{ $laporan->total() }} entries --}}
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-7">
-                            <div class="dataTables_paginate paging_simple_numbers" id="table1_paginate">
-                                {{-- {{ $laporan->links('pagination::bootstrap-5') }} --}}
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,6 +62,87 @@
     </div>
 </section>
 @endsection
+
+@push('js')
+    <script>
+        function modalAction(url = '') {
+            $('#myModal').load(url, function() {
+                $('#myModal').modal('show');
+            });
+        }
+
+        $(document).ready(function() {
+            var dataPenugasan = $('#table_penugasan').DataTable({
+                // serverSide: true, jika ingin menggunakan server-side processing
+                serverSide: true,
+                ajax: {
+                    "url": "{{ url('penugasan/penugasan_list') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": function(d) {
+                        d.penugasan_kode = $('#penugasan_kode').val();
+                    }
+
+                },
+                columns: [
+                    // nomor urut dari laravel datatable addIndexColumn()
+                    {
+                        data: "DT_RowIndex",
+                        className: "text-center",
+                        orderable: false,
+                        searchable: false
+                    }, {
+                        data: "pengguna.nama",
+                        className: "",
+                        // orderable: true, jika ingin kolom ini bisa diurutkan
+                        orderable: true,
+                        // searchable: true, jika ingin kolom ini bisa dicari
+                        searchable: true
+                    }, {
+                        data: "fasilitas.nama",
+                        className: "",
+                        orderable: true,
+                        searchable: true
+                    }, {
+                        data: "pengguna.nama",
+                        className: "",
+                        orderable: false,
+                        searchable: false
+                    }, {
+                        data: "pengguna.nama",
+                        className: "",
+                        orderable: false,
+                        searchable: false
+                    },{
+                        data: "deskripsi",
+                        className: "",
+                        orderable: false,
+                        searchable: false
+                    },{
+                        data: "foto",
+                        className: "",
+                        orderable: false,
+                        searchable: false
+                    },{
+                        data: "status",
+                        className: "",
+                        orderable: false,
+                        searchable: false
+                    },{
+                        data: "aksi",
+                        className: "",
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
+            });
+
+            $('#penugasan_kode').on('change', function() {
+                datapenugasan.ajax.reload();
+            })
+        });
+    </script>
+@endpush
 
 @push('scripts')
 <script src="{{ asset('assets/extensions/jquery/jquery.min.js') }}"></script>
