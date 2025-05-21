@@ -160,11 +160,11 @@
                             <span>Riwayat Penugasan</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ url('logout') }}" class="nav-link"
+                    <li class="sidebar-item">
+                        <a href="{{ url('logout') }}" class="sidebar-link"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="nav-icon fas fa-sign-out-alt text-warning"></i>
-                            <p>Logout</p>
+                            <i class="bi bi-box-arrow-right text-warning"></i>
+                            <span>Logout</span>
                         </a>
                         <form id="logout-form" action="{{ url('logout') }}" method="GET" style="display: none;">
                             @csrf
