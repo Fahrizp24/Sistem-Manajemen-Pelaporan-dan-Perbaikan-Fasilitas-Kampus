@@ -105,8 +105,7 @@ Route::prefix('pelapor')->group(function () {
 
     // Laporan
     Route::prefix('laporan')->group(function () {
-        Route::get('/', [PelaporController::class, 'list_laporan'])->name('pelapor.laporan');
-        Route::get('/create', [PelaporController::class, 'create_laporan'])->name('pelapor.createLaporan');
+        Route::get('/', [PelaporController::class, 'create_laporan_kerusakan'])->name('pelapor.laporan');
         Route::post('/', [PelaporController::class, 'store_laporan'])->name('pelapor.storeLaporan');
         Route::get('/{id}', [PelaporController::class, 'show_laporan'])->name('pelapor.showLaporan');
     });

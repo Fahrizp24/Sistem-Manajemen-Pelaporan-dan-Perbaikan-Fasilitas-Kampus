@@ -148,7 +148,7 @@
                     <li class="sidebar-title">Aktor: Teknisi</li>
 
                     <li class="sidebar-item">
-                        <a href="{{ url('/teknisi/{{ url('teknisi/penugasan') }}') }}" class='sidebar-link'>
+                        <a href="{{ url('teknisi/penugasan') }}" class='sidebar-link'>
                             <i class="bi bi-tools"></i>
                             <span>Penugasan</span>
                         </a>

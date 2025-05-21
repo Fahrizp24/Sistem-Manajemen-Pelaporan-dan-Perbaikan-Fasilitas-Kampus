@@ -35,7 +35,7 @@
                                     {{ session('success') }}
                                 </div>
                             @endif
-                            <form class="form" method="POST" action="{{ route('laporan-kerusakan.store') }}" enctype="multipart/form-data" data-parsley-validate>
+                            <form class="form" method="POST" action="{{ url('store_laporan') }}" enctype="multipart/form-data" data-parsley-validate>
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-6 col-12">
