@@ -48,21 +48,21 @@
                     <li class="sidebar-title">Aktor: Dosen, Mahasiswa dan Tendik</li>
 
                     <li class="sidebar-item">
-                        <a href="profile" class='sidebar-link'>
+                        <a href="{{ url('/pelapor/profile') }}" class='sidebar-link'>
                             <i class="bi bi-person"></i>
                             <span>Profil</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="laporan_kerusakan" class='sidebar-link'>
+                        <a href="{{ url('pelapor/laporan') }}" class='sidebar-link'>
                             <i class="bi bi-exclamation-triangle-fill"></i>
                             <span>Laporkan Kerusakan</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="laporan_saya" class='sidebar-link'>
+                        <a href="{{ url('pelapor/laporan_saya') }}" class='sidebar-link'>
                             <i class="bi bi-file-earmark-text"></i>
                             <span>Laporan Saya</span>
                         </a>
@@ -72,21 +72,21 @@
                     <li class="sidebar-title">Aktor: Sarana Prasarana</li>
 
                     <li class="sidebar-item">
-                        <a href="laporan-masuk" class='sidebar-link'>
+                        <a href="{{ url('sarpras/laporan_masuk') }}" class='sidebar-link'>
                             <i class="bi bi-inbox"></i>
                             <span>Laporan Masuk</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="sistem-rekomendasi" class='sidebar-link'>
+                        <a href="{{ url('sarpras/sistem_rekomendasi') }}" class='sidebar-link'>
                             <i class="bi bi-lightbulb"></i>
                             <span>Sistem Rekomendasi</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="statistik" class='sidebar-link'>
+                        <a href="{{ url('sarpras/statistik') }}" class='sidebar-link'>
                             <i class="bi bi-bar-chart-fill"></i>
                             <span>Statistik</span>
                         </a>
@@ -96,28 +96,28 @@
                     <li class="sidebar-title">Aktor: Admin</li>
 
                     <li class="sidebar-item">
-                        <a href="laporan" class='sidebar-link'>
+                        <a href="{{ url('admin/laporan') }}" class='sidebar-link'>
                             <i class="bi bi-file-text"></i>
                             <span>Laporan</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="kelola-pengguna" class='sidebar-link'>
+                        <a href="{{ url('/admin/pengguna') }}" class='sidebar-link'>
                             <i class="bi bi-people"></i>
                             <span>Kelola Pengguna</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="fasilitas" class='sidebar-link'>
+                        <a href="{{ url('admin/fasilitas') }}" class='sidebar-link'>
                             <i class="bi bi-building"></i>
                             <span>Fasilitas</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="gedung" class='sidebar-link'>
+                        <a href="{{ url('admin/gedung') }}" class='sidebar-link'>
                             <i class="bi bi-house-door"></i>
                             <span>Gedung</span>
                         </a>
@@ -138,7 +138,7 @@
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="statistik" class='sidebar-link'>
+                        <a href="{{ url('admin/statistik') }}" class='sidebar-link'>
                             <i class="bi bi-bar-chart-fill"></i>
                             <span>Statistik</span>
                         </a>
@@ -148,7 +148,7 @@
                     <li class="sidebar-title">Aktor: Teknisi</li>
 
                     <li class="sidebar-item">
-                        <a href="{{ url('/teknisi/penugasan') }}" class='sidebar-link'>
+                        <a href="{{ url('/teknisi/{{ url('teknisi/penugasan') }}') }}" class='sidebar-link'>
                             <i class="bi bi-tools"></i>
                             <span>Penugasan</span>
                         </a>
@@ -160,11 +160,11 @@
                             <span>Riwayat Penugasan</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ url('logout') }}" class="nav-link"
+                    <li class="sidebar-item">
+                        <a href="{{ url('logout') }}" class="sidebar-link"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="nav-icon fas fa-sign-out-alt text-warning"></i>
-                            <p>Logout</p>
+                            <i class="bi bi-box-arrow-right text-warning"></i>
+                            <span>Logout</span>
                         </a>
                         <form id="logout-form" action="{{ url('logout') }}" method="GET" style="display: none;">
                             @csrf

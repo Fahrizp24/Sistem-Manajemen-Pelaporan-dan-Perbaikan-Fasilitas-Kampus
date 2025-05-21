@@ -13,38 +13,17 @@ class AuthorizeUser
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  string  ...$roles
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        // 1. Pastikan user sudah login
-        if (!$request->user()) {
-            abort(401, 'Unauthorized');
+        $roles = array_map(function ($role) {
+            return RoleEnum::from($role)->value; // ambil value dari enum
+        }, $roles);
+        $user_role = $request->user()->getRole(); // ambil data level_kode dari user yang login
+        if (in_array($user_role, $roles)) { // cek apakah level_kode user ada di dalam array roles
+            return $next($request); // jika ada, maka lanjutkan request
         }
-
-        // 2. Dapatkan role user dalam bentuk enum
-        $userRole = $request->user()->getRole(); // Mengembalikan RoleEnum|null
-
-        // 3. Jika user tidak memiliki role atau role tidak valid
-        if (!$userRole instanceof RoleEnum) {
-            abort(403, 'Forbidden: Invalid user role');
-        }
-
-        // 4. Cek setiap role yang diizinkan
-        foreach ($roles as $role) {
-            try {
-                $allowedRole = RoleEnum::from($role);
-                if ($userRole === $allowedRole) {
-                    return $next($request);
-                }
-            } catch (\ValueError $e) {
-                // Role tidak valid dalam enum
-                continue;
-            }
-        }
-
-        // 5. Jika tidak ada role yang cocok
-        abort(403, 'Forbidden: You do not have access to this resource');
+        // jika tidak punya role, maka tampilkan error 403
+        abort(403, 'Forbidden. Kamu tidak punya akses ke halaman ini');
     }
 }

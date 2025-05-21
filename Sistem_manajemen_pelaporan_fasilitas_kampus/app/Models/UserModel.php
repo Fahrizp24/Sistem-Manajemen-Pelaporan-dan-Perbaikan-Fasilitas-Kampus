@@ -20,7 +20,7 @@ class UserModel extends Authenticatable
         'username',
         'nama',
         'email',
-        'kata_sandi',
+        'password',
         'peran',
         'foto_profil'
     ];
@@ -35,7 +35,19 @@ class UserModel extends Authenticatable
     // Di dalam UserModel
     public function getAuthPassword()
     {
-        return $this->kata_sandi;
+        return $this->password;
     }
 
+    public function getRoleName() : string {
+        return $this->peran; // mendapatkan nama role
+    }
+
+    public function hasRole(): bool {
+        $roles = ['admin', 'pelapor', 'sarpras', 'teknisi', 'superadmin'];
+        return in_array($this->peran, $roles);
+    }
+    
+    public function getRole(){
+        return $this->peran; //mengecek apakah sebuah user memiliki role
+    }
 }
