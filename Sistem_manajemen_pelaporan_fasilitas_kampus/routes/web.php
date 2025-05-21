@@ -24,7 +24,7 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::prefix('admin')->group(function () {
     // Laporan
     Route::prefix('laporan')->group(function () {
-        Route::get('/', [AdminController::class, 'laporan'])->name('admin.laporan');
+        Route::get('/', [AdminController::class, 'laporan_masuk'])->name('admin.laporan_masuk');
         Route::get('/{id}', [LaporanController::class, 'show_laporan'])->name('admin.show_laporan');
         Route::post('/{id}', [AdminController::class, 'update_laporan'])->name('admin.update_laporan');
     });

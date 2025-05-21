@@ -20,7 +20,7 @@ class AdminController extends Controller
         return view('admin.index', compact('admin'));
     }
 
-    public function laporan()
+    public function laporan_masuk()
     {
         $laporan = DB::table('laporan')->get();
         $breadcrumb = (object) [
@@ -33,7 +33,7 @@ class AdminController extends Controller
         ];
 
         $activeMenu = 'laporan';
-        return view('admin.laporan', ['laporan' => $laporan, 'breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        return view('admin.laporan_masuk', ['laporan' => $laporan, 'breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
 
     public function profile()
