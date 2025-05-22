@@ -134,7 +134,7 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('laporan')->group(function () {
                 Route::get('/', [PelaporController::class, 'laporkan_kerusakan'])->name('pelapor.laporan');
                 Route::post('/', [PelaporController::class, 'store_laporan'])->name('pelapor.storeLaporan');
-                Route::get('/{id}', [PelaporController::class, 'show_laporan'])->name('pelapor.showLaporan');
+                Route::get('/{id}', [PelaporController::class, 'show_ajax_laporan'])->name('pelapor.showLaporan');
             });
         
             // Laporan Saya

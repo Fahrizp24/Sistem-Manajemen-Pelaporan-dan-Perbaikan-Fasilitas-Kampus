@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -44,10 +45,10 @@ class LaporanModel extends Model
     public function sarpras()
     {
         return $this->belongsTo(UserModel::class, 'ditugaskan_oleh', 'pengguna_id');
-    }public function teknisi()
-    
+    }
+    public function teknisi()
+
     {
         return $this->belongsTo(UserModel::class, 'teknisi_id', 'pengguna_id');
     }
-    
 }

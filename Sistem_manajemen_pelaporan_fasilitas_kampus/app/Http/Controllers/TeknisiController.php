@@ -29,8 +29,8 @@ class TeknisiController extends Controller
         $teknisi_id = Auth::id();
 
         $activeMenu = 'penugasan';
-        $laporan = LaporanModel::where('status', 'sedang diperbaiki')
-        ->where('teknisi_id', $teknisi_id)
+        $laporan = LaporanModel::where('teknisi_id', $teknisi_id)
+        // ->where('status', 'sedang dikerjakan') //ini nanti harusnya 
         ->get();
 
         return view('teknisi.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
@@ -51,17 +51,18 @@ class TeknisiController extends Controller
 
         $laporan = LaporanModel::where('status', 'selesai')
         ->where('teknisi_id', $teknisi_id)
-        ->get();        
+        ->get();   
+
         return view('teknisi.riwayat_penugasan',compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
     }
 
-    public function edit($id)
+    public function detail_laporan_status($id)
     {
         $laporan = LaporanModel::findOrFail($id);
-        return view('teknisi.edit', compact('laporan'));
+        return view('teknisi.detail', compact('laporan'));
     }
 
-    public function update()
+    public function update_laporan_status()
     {
         $teknisi_id = Auth::id();
         $laporan = LaporanModel::where('status', 'sedang dikerjakan')
@@ -85,22 +86,4 @@ class TeknisiController extends Controller
 
     }
 
-    public function show(string $id)
-    {
-        $breadcrumb = (object) [
-            'title' => 'Data Riwayat Penugasan',
-            'list' => ['Data Riwayat Penugasan']
-        ];
-    
-        $page = (object) [
-            'title' => 'Data Riwayat Penugasan'
-        ];
-        $teknisi_id = Auth::id();
-
-        $activeMenu = 'riwayat_penugasan';
-        
-        $laporan = LaporanModel::find($id);
-
-        return view('teknisi.show', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
-    }
 }

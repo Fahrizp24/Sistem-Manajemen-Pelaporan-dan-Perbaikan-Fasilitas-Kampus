@@ -20,32 +20,65 @@ class PelaporController extends Controller
             'title' => 'Profile',
             'list' => ['Detail Profile']
         ];
-    
+
         $page = (object) [
             'title' => 'Profile',
             'subtitle' => 'Detail Profile'
         ];
-    
+
         $activeMenu = 'profile';
 
         $pelapor = UserModel::find(Auth::user()->pengguna_id);
 
-        return view('pelapor.profile', ['breadcrumb' => $breadcrumb, 'page'=> $page,'activeMenu' => $activeMenu,'pelapor' => $pelapor]);
+        return view('pelapor.profile', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu, 'pelapor' => $pelapor]);
     }
 
-    public function update_profile(Request $request, $id)
+    public function update_profile(Request $request)
     {
+        $id = Auth::user()->pengguna_id;
+
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:pelapor,email,' . $id,
-            'phone' => 'required|string|max:15',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
+            'password' => 'required|string|max:15',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $pelapor = UserModel::findOrFail($id);
-        $pelapor->update($request->all());
 
-        return redirect()->route('pelapor.index')->with('success', 'UserModel updated successfully.');
-    }   
+        // Update field biasa
+        $pelapor->nama = $request->nama;
+        $pelapor->email = $request->email;
+        $pelapor->password = bcrypt($request->password); // pastikan di-hash jika perlu
+
+        // Jika ada upload file baru
+        if ($request->hasFile('foto_profil')) {
+            $filename = $pelapor->pengguna_id . '.' . $request->file('foto_profil')->getClientOriginalExtension();
+            $newPath = 'public/foto_profil/' . $filename;
+
+            // Jika sebelumnya bukan 'default', hapus file lama
+            if ($pelapor->foto_profil && $pelapor->foto_profil !== 'default') {
+                $oldPath = storage_path('app/public/foto_profil/' . $pelapor->foto_profil);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            // Simpan file baru
+            $request->file('foto_profil')->storeAs('public/foto_profil', $filename);
+            $pelapor->foto_profil = $filename;
+        }
+
+        $pelapor->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Profil berhasil diubah',
+            'data' => [
+                'foto' => asset('storage/foto_profil/' . $pelapor->foto_profil)
+            ]
+        ]);
+    }
 
     public function laporkan_kerusakan()
     {
@@ -53,16 +86,15 @@ class PelaporController extends Controller
             'title' => 'Laporan Kerusakan',
             'list' => ['Formulir Laporan Kerusakan Fasilitas']
         ];
-    
+
         $page = (object) [
             'title' => 'Laporan Kerusakan Fasilitas',
             'subtitle' => 'Formulir Laporan Kerusakan Fasilitas'
         ];
 
         $fasilitas = FasilitasModel::all();
-        $activeMenu = 'Laporkan Kerusakan';      
-        return view('pelapor.laporkan_kerusakan', compact('fasilitas', 'breadcrumb', 'page', 'activeMenu'));  
-
+        $activeMenu = 'Laporkan Kerusakan';
+        return view('pelapor.laporkan_kerusakan', compact('fasilitas', 'breadcrumb', 'page', 'activeMenu'));
     }
 
     public function laporan_saya()
@@ -71,25 +103,28 @@ class PelaporController extends Controller
             'title' => 'Pelapor',
             'list' => ['Laporan Kerusakan Fasilitas']
         ];
-    
+
         $page = (object) [
             'title' => 'Laporan Saya',
             'subtitle' => 'Riwayat Laporan Kerusakan Fasilitas'
         ];
-        
-        $activeMenu = 'Laporkan Kerusakan';      
-        return view('pelapor.laporan_saya', ['breadcrumb' => $breadcrumb, 'page'=> $page,'activeMenu' => $activeMenu]);  
 
-    }
+        $activeMenu = 'Laporkan Kerusakan';
 
-    public function list_laporan_saya()
-    {
-        //mengambil data laporan dari database dengan eloquent idpelapor
-
-        $laporan = DB::table('laporan')
-            ->join('fasilitas', 'laporan.fasilitas_id', '=', 'fasilitas.id')
-            ->select('laporan.*', 'fasilitas.nama_fasilitas')
-            ->where('pelapor_id', auth()->user()->id)
+        $laporan_saya = LaporanModel::with('fasilitas.gedung')
+            ->where('pelapor_id', auth()->user()->pengguna_id)
             ->get();
+
+        return view('pelapor.laporan_saya', compact('laporan_saya', 'breadcrumb', 'page', 'activeMenu'));
     }
+
+    public function show_ajax_laporan(string $id)
+    {
+        $laporan = LaporanModel::with('fasilitas.gedung')
+        ->where('laporan_id', $id)
+        ->get();
+
+        return view('pelapor.show_detail_laporan', compact('laporan'));
+    }
+
 }
