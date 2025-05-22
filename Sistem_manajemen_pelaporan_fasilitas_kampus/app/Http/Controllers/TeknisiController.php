@@ -23,7 +23,8 @@ class TeknisiController extends Controller
         ];
     
         $page = (object) [
-            'title' => 'Data Penugasan'
+            'title' => 'Data Penugasan',
+            'subtitle' => 'Data Penugasan Yang Harus Dikerjakan'
         ];
         $teknisi_id = Auth::id();
 
@@ -37,12 +38,21 @@ class TeknisiController extends Controller
 
     public function riwayat_penugasan()
     {
+        $breadcrumb = (object) [
+            'title' => 'Data Riwayat Penugasan',
+            'list' => ['Data Riwayat Penugasan']
+        ];
+        $page = (object) [
+            'title' => 'Data Riwayat Penugasan',
+            'subtitle' => 'Data Riwayat Penugasan Yang Telah Dikerjakan'
+        ];
+        $activeMenu = 'riwayat_penugasan';
         $teknisi_id = Auth::id();
 
         $laporan = LaporanModel::where('status', 'selesai')
         ->where('teknisi_id', $teknisi_id)
         ->get();        
-        return view('teknisi.riwayat_penugasan',compact('laporan'));
+        return view('teknisi.riwayat_penugasan',compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
     }
 
     public function edit($id)

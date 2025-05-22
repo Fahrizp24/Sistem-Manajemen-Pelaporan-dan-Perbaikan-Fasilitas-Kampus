@@ -21,12 +21,6 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 
-
-
-
-
-
-
 // Authenticated Routes
 Route::middleware(['auth'])->group(function () {
     
@@ -42,9 +36,10 @@ Route::middleware(['auth'])->group(function () {
         
             // Fasilitas
             Route::prefix('fasilitas')->group(function () {
-                Route::get('/', [AdminController::class, 'list_fasilitas'])->name('admin.fasilitas');
+                Route::get('/', [AdminController::class, 'kelola_fasilitas'])->name('admin.fasilitas');
+                Route::post('/',[AdminController::class, 'list_fasilitas'])->name('admin.list_fasilitas');
                 Route::get('/create', [FasilitasController::class, 'create_fasilitas'])->name('admin.create_fasilitas');
-                Route::post('/', [FasilitasController::class, 'store_fasilitas'])->name('admin.store_fasilitas');
+                Route::post('/store', [FasilitasController::class, 'store_fasilitas'])->name('admin.store_fasilitas');
                 Route::get('/{id}', [FasilitasController::class, 'show_fasilitas'])->name('admin.show_fasilitas');
                 Route::get('/{id}/edit', [FasilitasController::class, 'edit_fasilitas'])->name('admin.edit_fasilitas');
                 Route::post('/{id}', [FasilitasController::class, 'update_fasilitas'])->name('admin.update_fasilitas');
@@ -53,9 +48,10 @@ Route::middleware(['auth'])->group(function () {
         
             // Gedung
             Route::prefix('gedung')->group(function () {
-                Route::get('/', [AdminController::class, 'list_gedung'])->name('admin.gedung');
+                Route::get('/', [AdminController::class, 'kelola_gedung'])->name('admin.gedung');
+                Route::post('/',[AdminController::class, 'list_gedung'])->name('admin.list_gedung');
                 Route::get('/create', [GedungController::class, 'create_gedung'])->name('admin.create_gedung');
-                Route::post('/', [GedungController::class, 'store_gedung'])->name('admin.store_gedung');
+                Route::post('/store', [GedungController::class, 'store_gedung'])->name('admin.store_gedung');
                 Route::get('/{id}', [GedungController::class, 'show_gedung'])->name('admin.show_gedung');
                 Route::get('/{id}/edit', [GedungController::class, 'edit_gedung'])->name('admin.edit_gedung');
                 Route::post('/{id}', [GedungController::class, 'update_gedung'])->name('admin.update_gedung');
@@ -64,22 +60,32 @@ Route::middleware(['auth'])->group(function () {
         
             // Pengguna
             Route::prefix('pengguna')->group(function () {
-                Route::get('/', [AdminController::class, 'list_pengguna'])->name('admin.pengguna');
+                Route::get('/', [AdminController::class, 'kelola_pengguna'])->name('admin.pengguna');
+                Route::post('/',[AdminController::class, 'list_pengguna'])->name('admin.list_pengguna');
                 Route::get('/create', [AdminController::class, 'create_pengguna'])->name('admin.create_pengguna');
-                Route::post('/', [AdminController::class, 'store_pengguna'])->name('admin.store_pengguna');
+                Route::post('/store', [AdminController::class, 'store_pengguna'])->name('admin.store_pengguna');
                 Route::get('/{id}', [AdminController::class, 'show_pengguna'])->name('admin.show_pengguna');
                 Route::get('/{id}/edit', [AdminController::class, 'edit_pengguna'])->name('admin.edit_pengguna');
                 Route::post('/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
                 Route::delete('/{id}', [AdminController::class, 'destroy_pengguna'])->name('admin.destroy_pengguna');
             });
         
-            // Statistik & Laporan
+            // Statistik
             Route::get('/statistik', [AdminController::class, 'statistik'])->name('admin.statistik');
+
+            // Laporan Periodik
             Route::prefix('laporan_periodik')->group(function () {
                 Route::get('/', [AdminController::class, 'laporan_periodik'])->name('admin.laporan_periodik');
                 Route::get('/{id}', [AdminController::class, 'show_laporan_periodik'])->name('admin.show_laporan_periodik');
                 Route::post('/{id}', [AdminController::class, 'update_laporan_periodik'])->name('admin.update_laporan_periodik');
             });
+
+            //sistem rekomendasi
+            Route::prefix('sistem_rekomendasi')->group(function () {
+                Route::get('/', [AdminController::class, 'sistem_rekomendasi'])->name('admin.sistem_rekomendasi');
+            });
+
+
         });
     });
 
@@ -109,7 +115,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/{id}', [SarprasController::class, 'update_laporan'])->name('sarpras.update_laporan');
             });
         
-            Route::get('/sistem_rekomendasi', [SarprasController::class, 'spk'])->name('sarpras.spk');
+            Route::get('/sistem_rekomendasi', [SarprasController::class, 'sistem_pendukung_keputusan'])->name('sarpras.sistem_pendukung_keputusan');
             Route::get('/statistik', [SarprasController::class, 'statistik'])->name('sarpras.statistik');
         });
     });
@@ -126,7 +132,7 @@ Route::middleware(['auth'])->group(function () {
         
             // Laporan
             Route::prefix('laporan')->group(function () {
-                Route::get('/', [PelaporController::class, 'create_laporan_kerusakan'])->name('pelapor.laporan');
+                Route::get('/', [PelaporController::class, 'laporkan_kerusakan'])->name('pelapor.laporan');
                 Route::post('/', [PelaporController::class, 'store_laporan'])->name('pelapor.storeLaporan');
                 Route::get('/{id}', [PelaporController::class, 'show_laporan'])->name('pelapor.showLaporan');
             });

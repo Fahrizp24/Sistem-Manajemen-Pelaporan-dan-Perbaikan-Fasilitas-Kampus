@@ -1,10 +1,6 @@
 @extends('layouts.template')
 
 @section('content')
-<div class="page-heading">
-    <h3>{{ $title }}</h3>
-</div>
-
 <div class="page-content">
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -14,7 +10,7 @@
     <div class="card">
         <div class="card-header">Tambah Gedung</div>
         <div class="card-body">
-            <form method="POST" action="{{ route('gedung.store') }}">
+            <form method="POST" action="{{  url('admin/gedung/create') }}">
                 @csrf
                 <div class="form-group mb-2">
                     <label>Nama Gedung</label>
@@ -51,11 +47,11 @@
                         <td>
                             <a href="#" class="btn btn-info btn-sm">Detail</a>
                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="collapse" data-bs-target="#editForm{{ $item->gedung_id }}">Edit</button>
-                            <a href="{{ route('gedung.delete', $item->gedung_id) }}" onclick="return confirm('Hapus gedung ini?')" class="btn btn-danger btn-sm">Hapus</a>
+                            <a href="{{ url('admin/gedung/create', $item->gedung_id) }}" onclick="return confirm('Hapus gedung ini?')" class="btn btn-danger btn-sm">Hapus</a>
 
                             {{-- Form Edit Collapse --}}
                             <div class="collapse mt-2" id="editForm{{ $item->gedung_id }}">
-                                <form method="POST" action="{{ route('gedung.update', $item->gedung_id) }}">
+                                <form method="POST" action="{{ url('admin/gedung/create', $item->gedung_id) }}">
                                     @csrf
                                     <input type="text" name="nama" value="{{ $item->nama }}" required class="form-control mb-1">
                                     <textarea name="deskripsi" class="form-control mb-1">{{ $item->deskripsi }}</textarea>

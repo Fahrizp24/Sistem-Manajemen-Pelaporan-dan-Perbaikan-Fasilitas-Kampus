@@ -1,31 +1,23 @@
 @extends('layouts.template')
 
 @section('content')
-<div class="page-heading">
-    <h3>{{ $page->title }}</h3>
-</div>
-
-<div class="page-content">
-    <div class="row">
-        <div class="col-12">
-            <h4>Data Laporan</h4>
-            <div class="card">
-                <div class="card-body table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Pelapor</th>
-                                <th>Fasilitas</th>
-                                <th>Deskripsi</th>
-                                <th>Foto</th>
-                                <th>Tanggal</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{-- @php $no = 1; @endphp
+    <div class="card">
+        <div class="card-body table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Pelapor</th>
+                        <th>Fasilitas</th>
+                        <th>Deskripsi</th>
+                        <th>Foto</th>
+                        <th>Tanggal</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{-- @php $no = 1; @endphp
                             @forelse (array_merge($laporan_masuk->all(), $laporan_progress->all(), $laporan_selesai->all()) as $laporan)
                                 <tr>
                                     <td>{{ $no++ }}</td>
@@ -74,11 +66,8 @@
                             @empty
                                 <tr><td colspan="8" class="text-center">Tidak ada data laporan.</td></tr>
                             @endforelse --}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
 @endsection

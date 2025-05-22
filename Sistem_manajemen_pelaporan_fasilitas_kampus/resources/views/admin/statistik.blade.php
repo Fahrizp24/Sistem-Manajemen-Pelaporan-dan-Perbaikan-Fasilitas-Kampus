@@ -1,9 +1,6 @@
 @extends('layouts.template')
 
 @section('content')
-<div class="page-heading">
-    <h3>{{ $title }}</h3>
-</div>
 
 <div class="page-content">
     <div class="row">
@@ -13,12 +10,12 @@
                 <div class="card-header"><h5>Kerusakan Berdasarkan Tingkat</h5></div>
                 <div class="card-body">
                     <ul class="list-group">
-                        @foreach ($kerusakan as $item)
+                        {{-- @foreach ($kerusakan as $item)
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>{{ ucfirst($item->tingkat_kerusakan) }}</span>
                                 <span class="badge bg-primary">{{ $item->total }}</span>
-                            </li>
-                        @endforeach
+                            </li> 
+                        @endforeach--}}
                     </ul>
                 </div>
             </div>
@@ -30,12 +27,12 @@
                 <div class="card-header"><h5>Status Perbaikan</h5></div>
                 <div class="card-body">
                     <ul class="list-group">
-                        @foreach ($status_perbaikan as $item)
+                        {{-- @foreach ($status_perbaikan as $item)
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>{{ ucfirst($item->status_perbaikan) }}</span>
                                 <span class="badge bg-success">{{ $item->total }}</span>
                             </li>
-                        @endforeach
+                        @endforeach --}}
                     </ul>
                 </div>
             </div>

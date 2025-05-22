@@ -9,6 +9,9 @@ use App\Models\UserModel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use App\Models\FasilitasModel;
+use App\Models\GedungModel;
+use App\Models\LaporanModel;
 
 class AdminController extends Controller
 {
@@ -30,7 +33,8 @@ class AdminController extends Controller
         ];
 
         $page = (object) [
-            'title' => 'Laporan'
+            'title' => 'Laporan',
+            'subtitle' => 'List Laporan Fasilitas'
         ];
 
         $activeMenu = 'laporan';
@@ -55,15 +59,23 @@ class AdminController extends Controller
         // return view('admin.profile', compact('admin'));
     }
 
-    function pengguna()
+    function kelola_pengguna()
     {
-        $admin = UserModel::all();
-        return view('admin.pengguna', compact('admin'));
+        $breadcrumb = (object) [
+            'title' => 'Pengguna',
+            'list' => ['Kelola Pengguna']
+        ];
+
+        $page = (object) [
+            'title' => 'Akun Pengguna',
+            'subtitle' => 'Kelola List Akun Pengguna'
+        ];
+
+        $pengguna = UserModel::all();
+        return view('admin.kelola_pengguna', compact('pengguna', 'breadcrumb', 'page'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create_pengguna()
     {
         return view('admin.create_pengguna');
@@ -138,4 +150,87 @@ class AdminController extends Controller
 
         return redirect()->route('admin.index')->with('success', 'UserModel deleted successfully.');
     }
+
+    function kelola_fasilitas()
+    {
+        $breadcrumb = (object) [
+            'title' => 'Fasilitas',
+            'list' => ['Kelola Fasilitas']
+        ];
+
+        $page = (object) [
+            'title' => 'Fasilitas',
+            'subtitle' => 'Kelola List Fasilitas'
+        ];
+
+        $fasilitas = FasilitasModel::all();
+        return view('admin.kelola_fasilitas', compact('fasilitas', 'breadcrumb', 'page'));
+    }
+
+    function kelola_gedung()
+    {
+        $breadcrumb = (object) [
+            'title' => 'Gedung',
+            'list' => ['Kelola Gedung']
+        ];
+
+        $page = (object) [
+            'title' => 'Gedung',
+            'subtitle' => 'Kelola List Gedung'
+        ];
+
+        $gedung = GedungModel::all();
+        return view('admin.kelola_gedung', compact('gedung', 'breadcrumb', 'page'));
+    }
+
+    function sistem_rekomendasi()
+    {
+        $breadcrumb = (object) [
+            'title' => 'Sistem Rekomendasi',
+            'list' => ['Sistem Rekomendasi']
+        ];
+
+        $page = (object) [
+            'title' => 'Sistem Rekomendasi',
+            'subtitle' => 'Sistem Rekomendasi'
+        ];
+
+        $activeMenu = 'sistem_rekomendasi';
+        return view('admin.sistem_rekomendasi', compact('breadcrumb', 'page', 'activeMenu'));
+    }
+
+    function laporan_periodik()
+    {
+        $breadcrumb = (object) [
+            'title' => 'Laporan Periodik',
+            'list' => ['Laporan Periodik']
+        ];
+
+        $page = (object) [
+            'title' => 'Laporan Periodik',
+            'subtitle' => 'Detail Laporan Periodik'
+        ];
+
+        $laporan = LaporanModel::where('status', 'selesai');
+
+        $activeMenu = 'laporan_periodik';
+        return view('admin.laporan_periodik', compact('breadcrumb', 'page', 'activeMenu'));
+    }
+
+    public function statistik()
+    {
+        $breadcrumb = (object) [
+            'title' => 'Statistik',
+            'list' => ['Statistik Laporan']
+        ];
+
+        $page = (object) [
+            'title' => 'Statistik',
+            'subtitle' => 'Statistik Laporan'
+        ];
+
+        $activeMenu = 'statistik';
+        return view('admin.statistik', compact('breadcrumb', 'page', 'activeMenu'));
+    }
+
 }

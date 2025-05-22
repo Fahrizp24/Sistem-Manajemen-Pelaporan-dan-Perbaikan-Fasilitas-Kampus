@@ -134,14 +134,14 @@
                     </li>
             
                     <li class="sidebar-item">
-                        <a href="{{ url('admin/sistem-rekomendasi') }}" class='sidebar-link'>
+                        <a href="{{ url('admin/sistem_rekomendasi') }}" class='sidebar-link'>
                             <i class="bi bi-lightbulb"></i>
                             <span>Sistem Rekomendasi</span>
                         </a>
                     </li>
             
                     <li class="sidebar-item">
-                        <a href="{{ url('admin/laporan-periodik') }}" class='sidebar-link'>
+                        <a href="{{ url('admin/laporan_periodik') }}" class='sidebar-link'>
                             <i class="bi bi-calendar-range"></i>
                             <span>Laporan Periodik</span>
                         </a>
