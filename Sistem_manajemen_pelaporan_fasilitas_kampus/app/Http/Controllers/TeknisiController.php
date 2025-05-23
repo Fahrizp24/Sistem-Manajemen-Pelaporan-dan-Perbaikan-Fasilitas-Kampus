@@ -30,10 +30,51 @@ class TeknisiController extends Controller
 
         $activeMenu = 'penugasan';
         $laporan = LaporanModel::where('teknisi_id', $teknisi_id)
-        // ->where('status', 'sedang dikerjakan') //ini nanti harusnya 
+        ->where('status', 'sedang diperbaiki') //ini nanti harusnya 
         ->get();
 
         return view('teknisi.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
+    }
+
+    public function detail_laporan_status($id)
+    {
+        $laporan = LaporanModel::findOrFail($id);
+
+        $breadcrumb = (object) [
+            'title' => 'Data Riwayat Penugasan',
+            'list' => ['Data Riwayat Penugasan']
+        ];
+
+        $page = (object)[
+            'title' => 'Detail Laporan',
+            'subtitle' => 'Informasi lengkap mengenai laporan fasilitas'
+        ];
+
+        return view('teknisi.detail_laporan_status', compact('laporan', 'breadcrumb', 'page'));
+    }
+    
+    public function update_laporan_status()
+    {
+        $teknisi_id = Auth::id();
+        $laporan = LaporanModel::where('status', 'sedang diperbaiki')
+        ->where('teknisi_id', $teknisi_id)
+        ->first();
+        
+        if ($laporan) {
+            $laporan->status = 'konfirmasi';
+            $laporan->save();
+            
+            return response()->json([
+                'status' => true,
+                'message' => 'Status berhasil diubah',
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'laporan tidak ditemukan',
+            ]);
+        }
+        
     }
 
     public function riwayat_penugasan()
@@ -48,42 +89,23 @@ class TeknisiController extends Controller
         ];
         $activeMenu = 'riwayat_penugasan';
         $teknisi_id = Auth::id();
-
+    
         $laporan = LaporanModel::where('status', 'selesai')
         ->where('teknisi_id', $teknisi_id)
         ->get();   
-
+    
         return view('teknisi.riwayat_penugasan',compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
     }
 
-    public function detail_laporan_status($id)
+    public function detail_riwayat_penugasan($id)
     {
         $laporan = LaporanModel::findOrFail($id);
-        return view('teknisi.detail', compact('laporan'));
+
+        $page = (object)[
+            'title' => 'Detail Laporan',
+            'subtitle' => 'Informasi lengkap mengenai laporan fasilitas'
+        ];
+        
+        return view('teknisi.detail_riwayat_penugasan', compact('laporan', 'page'));
     }
-
-    public function update_laporan_status()
-    {
-        $teknisi_id = Auth::id();
-        $laporan = LaporanModel::where('status', 'sedang dikerjakan')
-        ->where('teknisi_id', $teknisi_id)
-        ->first();
-
-        if ($laporan) {
-            $laporan->status = 'konfirmasi';
-            $laporan->save();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Status berhasil diubah',
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'laporan tidak ditemukan',
-            ]);
-        }
-
-    }
-
 }

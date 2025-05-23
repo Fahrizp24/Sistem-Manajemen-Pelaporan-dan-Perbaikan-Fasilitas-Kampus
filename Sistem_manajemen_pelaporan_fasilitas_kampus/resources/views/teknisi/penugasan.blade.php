@@ -65,9 +65,8 @@
                                                 <td>{{ $item->status }}</td>
                                                 <td>{{ $item->created_at }}</td>
                                                 <td>
-                                                    <a href="{{ route('teknisi.penugasan.edit', $item->laporan_id) }}"
-                                                        class="btn btn-sm btn-primary">
-                                                        <i class="bi-pencil-square"></i> Edit
+                                                    <a href="{{url ('/teknisi/penugasan/'. $item->laporan_id . '/detail_laporan_status') }}" class="btn btn-sm btn-primary">
+                                                        <i class="bi bi-pencil"></i> Edit
                                                     </a>
                                                 </td>
                                             </tr>

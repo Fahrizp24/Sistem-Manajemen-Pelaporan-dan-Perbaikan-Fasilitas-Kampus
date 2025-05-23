@@ -94,16 +94,15 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('teknisi')->group(function () {
             Route::prefix('penugasan')->group(function () {
                 Route::get('/', [TeknisiController::class, 'penugasan'])->name('teknisi.penugasan');
-                Route::get('/{id}/edit', [TeknisiController::class, 'edit'])->name('teknisi.penugasan.edit');
-                Route::post('/{id}/update', [TeknisiController::class, 'update'])->name('teknisi.penugasan.update');
+                Route::get('/{id}/detail_laporan_status', [TeknisiController::class, 'detail_laporan_status'])->name('teknisi.penugasan.detail_laporan_status');
+                Route::post('/{id}/update_laporan_status', [TeknisiController::class, 'update_laporan_status'])->name('teknisi.penugasan.update_laporan_status');
             });
         
             Route::prefix('riwayat_penugasan')->group(function () {
                 Route::get('/', [TeknisiController::class, 'riwayat_penugasan'])->name('teknisi.riwayat_penugasan');
-                Route::get('/{id}/show', [TeknisiController::class, 'show'])->name('teknisi.riwayat_penugasan.show');
+                Route::get('/{id}/detail_riwayat_penugasan', [TeknisiController::class, 'detail_riwayat_penugasan'])->name('teknisi.detail_riwayat_penugasan');
             });
         });
-        
     });
 
     // Sarpras Routes

@@ -62,7 +62,7 @@
                                         <td>{{ $item->status }}</td>
                                         <td>{{ $item->updated_at }}</td>
                                         <td>
-                                            <a href="{{ route('teknisi.riwayat_penugasan.show', $item->laporan_id) }}" class="btn btn-sm btn-primary">
+                                            <a href="{{url ('/teknisi/riwayat_penugasan/'. $item->laporan_id . '/detail_riwayat_penugasan') }}" class="btn btn-sm btn-primary">
                                                 <i class="bi bi-eye"></i> Detail
                                             </a>
                                         </td>
