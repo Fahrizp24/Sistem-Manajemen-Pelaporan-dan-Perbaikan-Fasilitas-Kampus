@@ -14,6 +14,8 @@ class LaporanController extends Controller
      */
     public function index()
     {
+
+        $laporan = LaporanModel::with(['pelapor', 'fasilitas'])->get();
         return view('pelapor.laporan_kerusakan');;
 
     }
