@@ -1,23 +1,15 @@
 @extends('layouts.template')
 
-@section('content')
 
-<section class="section">
-
-</section>
-@endsection
 
 @push('scripts')
 <script src="{{ asset('assets/extensions/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('assets/extensions/parsleyjs/parsley.min.js') }}"></script>
 <script src="{{ asset('assets/static/js/pages/parsley.js') }}"></script>
-@endpush@extends('layouts.template') 
+@endpush
 
 @section('content')
-<div class="header">
-    <h1>Dashboard Monitoring Kerusakan</h1>
-    <p>Statistik kerusakan dan respon perbaikan</p>
-</div>
+
 
 <div class="chart-row">
     <!-- Grafik Line Chart (Jumlah Kerusakan per Bulan) -->
@@ -227,19 +219,3 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
-=======
-@extends('layouts.template')
-
-@section('content')
-
-<section class="section">
-
-</section>
-@endsection
-
-@push('scripts')
-<script src="{{ asset('assets/extensions/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/extensions/parsleyjs/parsley.min.js') }}"></script>
-<script src="{{ asset('assets/static/js/pages/parsley.js') }}"></script>
-@endpush
->>>>>>> 2531cc1aff8a42748852f0e772e66bd842b0d2c5
