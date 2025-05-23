@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header">
             <h5 class="card-title">
-                Daftar Penugasan
+                Riwayat Penugasan
             </h5>
         </div>
         <div class="card-body">
@@ -38,65 +38,52 @@
                                             style="width: 50px;">No</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Fasilitas: activate to sort column ascending"
-                                            style="width: 150px;">Fasilitas</th>
-                                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="Tanggal Laporan: activate to sort column ascending"
-                                            style="width: 120px;">Tanggal Laporan</th>
+                                            style="width: 100px;">Fasilitas</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Deskripsi: activate to sort column ascending"
-                                            style="width: 250px;">Deskripsi</th>
+                                            style="width: 200px;">Deskripsi</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Status: activate to sort column ascending"
-                                            style="width: 150px;">Status</th>
+                                            style="width: 50px;">Status</th>
+                                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
+                                            aria-label="Status: activate to sort column ascending"
+                                            style="width: 200px;">Tanggal Selesai</th>
                                         <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
                                             aria-label="Aksi: activate to sort column ascending"
                                             style="width: 100px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach($laporan_kerusakan as $key => $item)
-                                    <tr class="{{ $key % 2 == 0 ? 'even' : 'odd' }}">
+                                    @foreach($laporan as $key => $item)
+                                    <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->fasilitas }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y') }}</td>
-                                        <td>{{ Str::limit($item->deskripsi, 50) }}</td>
+                                        <td>{{ $item->fasilitas->nama }}</td>
+                                        <td>{{ $item->deskripsi ?? 'N/A' }}</td>
+                                        <td>{{ $item->status }}</td>
+                                        <td>{{ $item->updated_at }}</td>
                                         <td>
-                                            @php
-                                                $badgeClass = [
-                                                    'diajukan' => 'bg-secondary',
-                                                    'diterima' => 'bg-primary',
-                                                    'ditolak' => 'bg-danger',
-                                                    'diajukan sarpras' => 'bg-warning',
-                                                    'diterima admin' => 'bg-info',
-                                                    'dilaksanakan' => 'bg-success',
-                                                    'selesai' => 'bg-dark'
-                                                ][$item->status] ?? 'bg-secondary';
-                                            @endphp
-                                            <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('laporan.detail', $item->id) }}" class="btn btn-sm btn-primary">
+                                            <a href="{{ route('teknisi.riwayat_penugasan.show', $item->laporan_id) }}" class="btn btn-sm btn-primary">
                                                 <i class="bi bi-eye"></i> Detail
                                             </a>
                                         </td>
                                     </tr>
-                                    @endforeach --}}
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-sm-12 col-md-5">
                             <div class="dataTables_info" id="table1_info" role="status" aria-live="polite">
-                                {{-- Showing {{ $laporan->firstItem() }} to {{ $laporan->lastItem() }} of {{ $laporan->total() }} entries --}}
+                                Showing {{ $laporan->firstItem() }} to {{ $laporan->lastItem() }} of {{ $laporan->total() }} entries
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-7">
                             <div class="dataTables_paginate paging_simple_numbers" id="table1_paginate">
-                                {{-- {{ $laporan->links('pagination::bootstrap-5') }} --}}
+                                {{ $laporan->links('pagination::bootstrap-5') }}
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -105,7 +92,7 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('assets/extensions/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/extensions/parsleyjs/parsley.min.js') }}"></script>
-<script src="{{ asset('assets/static/js/pages/parsley.js') }}"></script>
+<script src="{{ asset('/mazer/assets/extensions/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('/mazer/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
+<script src="{{ asset('/mazer/assets/static/js/pages/parsley.js') }}"></script>
 @endpush

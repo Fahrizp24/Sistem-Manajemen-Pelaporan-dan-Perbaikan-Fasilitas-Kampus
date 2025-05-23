@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,33 +13,42 @@ class LaporanModel extends Model
     protected $table = 'laporan';
 
     // Primary key tabel
-    protected $primaryKey = 'id_laporan';
+    protected $primaryKey = 'laporan_id';
 
     // Kolom-kolom yang dapat diisi secara massal
     protected $fillable = [
         'pelapor_id',
         'fasilitas_id',
+        'ditugaskan_oleh',
+        'teknisi_id',
         'deskripsi',
         'foto',
         'status',
-        'tanggal_laporan',
-        'tingkat_urgensi',
-        'tanggal_selesai'
+        'urgensi',
     ];
 
     // Jika tabel tidak menggunakan timestamps (created_at, updated_at)
     public $timestamps = true;
 
     // Relasi ke model User (contoh jika ada relasi)
-    public function user()
+    public function pelapor()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(UserModel::class, 'pelapor_id', 'pengguna_id');
     }
 
     // Relasi ke model Fasilitas
     public function fasilitas()
     {
-        return $this->belongsTo(FasilitasModel::class, 'fasilitas_id');
+        return $this->belongsTo(FasilitasModel::class, 'fasilitas_id', 'fasilitas_id');
     }
-    
+
+    public function sarpras()
+    {
+        return $this->belongsTo(UserModel::class, 'ditugaskan_oleh', 'pengguna_id');
+    }
+    public function teknisi()
+
+    {
+        return $this->belongsTo(UserModel::class, 'teknisi_id', 'pengguna_id');
+    }
 }

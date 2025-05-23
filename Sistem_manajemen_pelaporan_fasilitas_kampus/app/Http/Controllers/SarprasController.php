@@ -16,21 +16,21 @@ class SarprasController extends Controller
     public function list_laporan()
     {
         $breadcrumb = (object) [
-            'title' => 'Data Penugasan',
-            'list' => ['Data Penugasan']
+            'title' => 'Data Laporan',
+            'list' => ['Data Laporan Masuk'] 
         ];
     
         $page = (object) [
-            'title' => 'Data Penugasan'
+            'title' => 'Data Laporan',
+            'subtitle' => 'Data Laporan Masuk Dari Pelapor dan Admin'
         ];
         // $idTeknisi = Auth::id();
 
-        // $activeMenu = 'penugasan';
+        $activeMenu = 'penugasan';
         // $laporan = LaporanModel::where('status', 'dilaksanakan')
         // ->where('idTeknisi', $idTeknisi)
         // ->get();              
-        // return view('pelapor.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu', 'laporan'));
-        return view('sarpras.laporan_masuk');
+        return view('sarpras.laporan_masuk', compact( 'breadcrumb', 'page', 'activeMenu'));
 
     }
 
@@ -55,33 +55,30 @@ class SarprasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function spk()
+    public function sistem_pendukung_keputusan()
     {
-        
-        return view('sarpras.spk');
+        $breadcrumb = (object) [
+            'title' => 'Sistem Pendukung Keputusan',
+            'list' => ['Sistem Pendukung Keputusan']
+        ];
+        $page = (object) [
+            'title' => 'Sistem Pendukung Keputusan',
+            'subtitle' => 'Sistem Pendukung Keputusan'
+        ];
+        return view('sarpras.sistem_pendukung_keputusan', compact('breadcrumb', 'page'));
     }
 
-    public function updateLaporan()
+    public function statistik()
     {
-        $idTeknisi = Auth::id();
-        $laporan = LaporanModel::where('status', 'dilaksanakan')
-        ->where('idTeknisi', $idTeknisi)
-        ->find();
-
-        if ($laporan) {
-                $laporan->status = 'selesai';
-                $laporan->save();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Status berhasil diubah',
-            ]);
-        }else {
-            return response()->json([
-                'status' => false,
-                'message' => 'Laporan tidak ditemukan',
-            ]);
-        }
+        $breadcrumb = (object) [
+            'title' => 'Statistik',
+            'list' => ['Statistik']
+        ];
+        $page = (object) [
+            'title' => 'Statistik',
+            'subtitle' => 'Statistik'
+        ];
+        return view('sarpras.statistik', compact('breadcrumb', 'page'));
 
     }
 }

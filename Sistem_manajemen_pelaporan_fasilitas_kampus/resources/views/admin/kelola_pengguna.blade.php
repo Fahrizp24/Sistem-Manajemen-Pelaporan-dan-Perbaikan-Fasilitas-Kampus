@@ -7,17 +7,17 @@
 <div class="page-content">
     <div class="row">
         <div class="col-12 mb-3">
-            <form method="GET" action="{{ route('admin.kelola_pengguna.index') }}">
+            {{-- <form method="GET" action="{{ route('admin.kelola_pengguna.index') }}">
                 <div class="input-group">
                     <input type="text" name="keyword" class="form-control" placeholder="Cari NIP/NIM/NIDN..." value="{{ request('keyword') }}">
                     <button class="btn btn-primary" type="submit">Filter</button>
                     <a href="{{ route('admin.kelola_pengguna.index') }}" class="btn btn-secondary">Reset</a>
                 </div>
-            </form>
+            </form> --}}
         </div>
 
         <div class="col-12 mb-3">
-            <a href="{{ route('admin.kelola_pengguna.create') }}" class="btn btn-success">+ Tambah Pengguna</a>
+            <a href="{{ url('admin/pengguna/create') }}" class="btn btn-success">+ Tambah Pengguna</a>
         </div>
 
         <div class="col-12">
@@ -38,16 +38,16 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $user->nama }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->identitas }}</td>
+                            <td>{{ $user->username }}</td>
                             <td>{{ ucfirst($user->peran) }}</td>
                             <td>
-                                <a href="{{ route('admin.kelola_pengguna.edit', $user->pengguna_id) }}" class="btn btn-sm btn-primary">Edit</a>
-                                <form action="{{ route('admin.kelola_pengguna.destroy', $user->pengguna_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
+                                <a href="{{ url('admin/pengguna/edit', $user->pengguna_id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                <form action="{{ url('admin/pengguna/destroy', $user->pengguna_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-danger">Hapus</button>
                                 </form>
-                                <form action="{{ route('admin.kelola_pengguna.reset', $user->pengguna_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Reset kata sandi?')">
+                                <form action="{{ url('admin/pengguna/reset', $user->pengguna_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Reset kata sandi?')">
                                     @csrf
                                     <button class="btn btn-sm btn-warning">Reset Sandi</button>
                                 </form>

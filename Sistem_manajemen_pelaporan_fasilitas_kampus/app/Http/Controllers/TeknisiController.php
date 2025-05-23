@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LaporanModel;
+use App\Models\laporanModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,7 @@ class TeknisiController extends Controller
     /**
      * Display a listing of the resource.
     */
-    public function list_laporan()
+    public function penugasan()
     {
         $breadcrumb = (object) [
             'title' => 'Data Penugasan',
@@ -22,43 +23,54 @@ class TeknisiController extends Controller
         ];
     
         $page = (object) [
-            'title' => 'Data Penugasan'
+            'title' => 'Data Penugasan',
+            'subtitle' => 'Data Penugasan Yang Harus Dikerjakan'
         ];
-        $idTeknisi = Auth::id();
+        $teknisi_id = Auth::id();
 
         $activeMenu = 'penugasan';
-        $laporan = LaporanModel::where('status', 'dilaksanakan')
-        ->where('idTeknisi', $idTeknisi)
+        $laporan = LaporanModel::where('teknisi_id', $teknisi_id)
+        // ->where('status', 'sedang dikerjakan') //ini nanti harusnya 
         ->get();
 
-        return view('pelapor.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
+        return view('teknisi.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
     }
 
     public function riwayat_penugasan()
     {
-        $idTeknisi = Auth::id();
+        $breadcrumb = (object) [
+            'title' => 'Data Riwayat Penugasan',
+            'list' => ['Data Riwayat Penugasan']
+        ];
+        $page = (object) [
+            'title' => 'Data Riwayat Penugasan',
+            'subtitle' => 'Data Riwayat Penugasan Yang Telah Dikerjakan'
+        ];
+        $activeMenu = 'riwayat_penugasan';
+        $teknisi_id = Auth::id();
 
         $laporan = LaporanModel::where('status', 'selesai')
-        ->where('idTeknisi', $idTeknisi)
-        ->get();        
-        return view('pelapor.riwayat_penugasan',compact('laporan'));
+        ->where('teknisi_id', $teknisi_id)
+        ->get();   
+
+        return view('teknisi.riwayat_penugasan',compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
     }
 
-    public function edit($id)
+    public function detail_laporan_status($id)
     {
-        $pelapor = UserModel::findOrFail($id);
-        return view('pelapor.edit', compact('pelapor'));
+        $laporan = LaporanModel::findOrFail($id);
+        return view('teknisi.detail', compact('laporan'));
     }
 
-    public function updateLaporan()
+    public function update_laporan_status()
     {
-        $idTeknisi = Auth::id();
-        $laporan = LaporanModel::where('status', 'dilaksanakan')
-        ->where('idTeknisi', $idTeknisi)
+        $teknisi_id = Auth::id();
+        $laporan = LaporanModel::where('status', 'sedang dikerjakan')
+        ->where('teknisi_id', $teknisi_id)
         ->first();
 
         if ($laporan) {
-            $laporan->status = 'selesai';
+            $laporan->status = 'konfirmasi';
             $laporan->save();
 
             return response()->json([
@@ -68,8 +80,10 @@ class TeknisiController extends Controller
         } else {
             return response()->json([
                 'status' => false,
-                'message' => 'Laporan tidak ditemukan',
+                'message' => 'laporan tidak ditemukan',
             ]);
         }
+
     }
+
 }

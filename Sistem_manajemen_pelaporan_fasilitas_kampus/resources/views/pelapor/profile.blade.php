@@ -8,10 +8,10 @@
                 <div class="text-center">
                     <div class="user-profile">
                         <!-- Pastikan path gambar sesuai dengan struktur folder Anda -->
-                        <img src="{{ asset('mazer/dist/assets/images/user/avatar-2.jpg') }}" alt="User Image" class="img-fluid rounded-circle" width="150">
+                        <img src="{{ asset('storage/photo/'.$pelapor->foto_profil.'.jpg') }}" alt="User Image" class="img-fluid rounded-circle" width="150">
                     </div>
-                    <h4 class="mt-3 mb-0">John Doe</h4>
-                    <p class="text-muted">Administrator</p>
+                    <h4 class="mt-3 mb-0">{{$pelapor->nama}}</h4>
+                    <p class="text-muted">{{$pelapor->username}}</p>
                     
                     <div class="d-flex justify-content-center mt-4">
                         <a href="#" class="btn btn-primary btn-sm me-2">Edit Photo</a>
@@ -23,20 +23,12 @@
                 
                 <div class="user-details">
                     <h5>About</h5>
-                    <p class="text-muted mb-3">Senior Web Developer with 5+ years of experience in Laravel development.</p>
-                    
                     <ul class="list-unstyled">
                         <li class="mb-2">
-                            <i class="ti ti-mail me-2"></i> john.doe@example.com
+                            <i class="ti ti-mail me-2"></i> {{$pelapor->email}}
                         </li>
                         <li class="mb-2">
-                            <i class="ti ti-phone me-2"></i> +1 234 567 890
-                        </li>
-                        <li class="mb-2">
-                            <i class="ti ti-map-pin me-2"></i> New York, USA
-                        </li>
-                        <li class="mb-2">
-                            <i class="ti ti-calendar me-2"></i> Joined Jan 2023
+                            <i class="ti ti-phone me-2"></i> {{$pelapor->peran}}
                         </li>
                     </ul>
                 </div>
@@ -44,7 +36,7 @@
         </div>
     </div>
     
-    <div class="col-xl-8">
+    {{-- <div class="col-xl-8">
         <div class="card">
             <div class="card-header">
                 <h5>Edit Profile</h5>
@@ -140,7 +132,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- [ Profile ] end -->
 </div>
 @endsection

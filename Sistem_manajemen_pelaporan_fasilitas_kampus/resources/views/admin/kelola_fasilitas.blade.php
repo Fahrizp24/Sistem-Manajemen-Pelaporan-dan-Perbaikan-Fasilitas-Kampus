@@ -2,9 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1>Data Fasilitas Kampus</h1>
-    <a href="{{ route('fasilitas.create') }}" class="btn btn-primary mb-3">Tambah Fasilitas</a>
-
+    <a href="{{ url('admin/fasilitas/create') }}" class="btn btn-primary mb-3">Tambah Fasilitas</a>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
@@ -27,8 +25,8 @@
                     <td>{{ $item->gedung->nama ?? '-' }}</td>
                     <td>{{ ucfirst($item->status) }}</td>
                     <td>
-                        <a href="{{ route('fasilitas.edit', $item->fasilitas_id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('fasilitas.destroy', $item->fasilitas_id) }}" method="POST" style="display:inline">
+                        <a href="{{  url('admin/fasilitas/Edit', $item->fasilitas_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ url('admin/fasilitas/destroy', $item->fasilitas_id) }}" method="POST" style="display:inline">
                             @csrf @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm"
                                 onclick="return confirm('Yakin ingin menghapus fasilitas ini?')">Hapus</button>

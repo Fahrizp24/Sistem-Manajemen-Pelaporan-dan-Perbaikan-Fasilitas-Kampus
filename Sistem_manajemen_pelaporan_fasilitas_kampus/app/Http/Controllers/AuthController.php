@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-
 
 class AuthController extends Controller
 {
     public function login()
     {
+
         if (Auth::check()) { // jika sudah login, maka redirect ke halaman home
             $role = Auth::user()->peran;
             $redirectPath = match ($role) {
@@ -28,42 +26,28 @@ class AuthController extends Controller
     public function postlogin(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
-            $user = UserModel::where('nama', $request->username)->first();
-    
-            if (!$user) {
+            $credentials = $request->only('username', 'password');
+            if (Auth::attempt($credentials)) {
+                $role = Auth::user()->peran;
+                $redirectPath = match ($role) {
+                    'admin' => '/admin/laporan',
+                    'teknisi' => '/teknisi/penugasan',
+                    'sarpras' => '/sarpras/laporan_masuk',
+                    'pelapor' => '/pelapor/profile'
+                };
                 return response()->json([
-                    'status' => false,
-                    'message' => 'Username tidak ditemukan'
+                    'status' => true,
+                    'message' => 'Login Berhasil',
+                    'redirect' => url($redirectPath)
                 ]);
             }
-    
-            if (!Hash::check($request->password, $user->kata_sandi)) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Password salah'
-                ]);
-            }
-    
-            Auth::login($user);
-    
-            $role = $user->peran;
-            $redirectPath = match ($role) {
-                'admin' => '/admin/laporan/',
-                'teknisi' => '/teknisi/penugasan',
-                'sarpras' => '/sarpras/laporan_masuk',
-                'pelapor' => '/pelapor/profile'
-            };
-    
             return response()->json([
-                'status' => true,
-                'message' => 'Login Berhasil',
-                'redirect' => url($redirectPath)
+                'status' => false,
+                'message' => 'Login Gagal'
             ]);
         }
-    
         return redirect('login');
     }
-    
     public function logout(Request $request)
     {
         Auth::logout();

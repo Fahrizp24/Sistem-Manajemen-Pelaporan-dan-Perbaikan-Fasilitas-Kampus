@@ -18,10 +18,10 @@
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <div class="auth-logo">
-                        <a href="index.html"><img src="{{ asset('mazer/dist/asset/logoo.png') }}" alt="Logo"></a>
+                        <img src="{{ asset('mazer/dist/asset/logoo.png') }}" alt="Logo"></a>
                     </div>
-                    <h1 class="auth-title">Log in.</h1>
-                    <p class="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>
+                    <h1 class="auth-title">LOGIN</h1>
+                    <p class="auth-subtitle mb-5">Masuklah dengan data yang telah terdaftar.</p>
                     
                     <form action="{{ url('login') }}" method="POST" id="form-login">
                         @csrf <!-- Pindahkan ke dalam form -->
@@ -44,12 +44,11 @@
                                 Keep me logged in
                             </label>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Login</button>
                     </form>
                     
                     <div class="text-center mt-5 text-lg fs-4">
-                        <p class="text-gray-600">Don't have an account? <a href="#" class="font-bold">Sign up</a>.</p>
-                        <p><a class="font-bold" href="auth-forgot-password.html">Forgot password?</a>.</p>
+                        <p><a class="font-bold" href="auth-forgot-password.html">Forgot password?</a></p>
                     </div>
                 </div>
             </div>

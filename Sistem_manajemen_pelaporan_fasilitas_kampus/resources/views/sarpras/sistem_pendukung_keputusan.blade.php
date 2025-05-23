@@ -4,11 +4,6 @@
 
 <section class="section">
     <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">
-                Daftar Laporan
-            </h5>
-        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <div id="table1_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
