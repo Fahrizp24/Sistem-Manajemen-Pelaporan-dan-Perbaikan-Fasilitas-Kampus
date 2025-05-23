@@ -7,6 +7,7 @@
                         <img src="{{ asset('mazer/dist/asset/logoo.png')}}" alt="Logo"
                             style="width: 90px; height: auto;">
                     </a>
+                </div>
                     <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                             aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20"
@@ -173,8 +174,10 @@
                         </a>
                     </li>
                     @endif
-            
+            </div>
                     {{-- Logout (semua peran) --}}
+                  <div class="logout-section">
+                <ul class="menu">
                     <li class="sidebar-item">
                         <a href="{{ url('logout') }}" class="sidebar-link"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -185,10 +188,37 @@
                             @csrf
                         </form>
                     </li>
-            
                 </ul>
             </div>
-            
-
         </div>
     </div>
+
+
+<style>
+    /* Sidebar Structure */
+    .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 120px); /* Adjust based on your header height */
+    }
+ 
+    .sidebar-title {
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Logout Section */
+    .logout-section {
+        margin-top: auto;
+        padding: 1rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: sticky;
+        bottom: 0;
+        background: inherit;
+    }
+    
+    /* Ensure proper spacing */
+    .menu {
+        padding-bottom: 1rem;
+    }
+</style>
