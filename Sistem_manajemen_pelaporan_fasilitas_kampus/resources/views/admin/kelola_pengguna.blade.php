@@ -38,7 +38,7 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $user->nama }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->identitas }}</td>
+                            <td>{{ $user->username }}</td>
                             <td>{{ ucfirst($user->peran) }}</td>
                             <td>
                                 <a href="{{ url('admin/pengguna/edit', $user->pengguna_id) }}" class="btn btn-sm btn-primary">Edit</a>
