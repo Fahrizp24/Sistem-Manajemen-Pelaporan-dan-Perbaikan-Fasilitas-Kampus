@@ -44,137 +44,138 @@
                 </div>
             </div>
             <div class="sidebar-menu">
-                <ul class="menu">
-            
-                    @php
-                        $peran = Auth::user()->peran;
-                    @endphp
-            
-                    {{-- Dosen, Mahasiswa, Tendik --}}
-                    @if(in_array($peran, ['pelapor']))
-                    <li class="sidebar-title">Menu</li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('/pelapor/profile') }}" class='sidebar-link'>
-                            <i class="bi bi-person"></i>
-                            <span>Profil</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('pelapor/laporan') }}" class='sidebar-link'>
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                            <span>Laporkan Kerusakan</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('pelapor/laporan_saya') }}" class='sidebar-link'>
-                            <i class="bi bi-file-earmark-text"></i>
-                            <span>Laporan Saya</span>
-                        </a>
-                    </li>
-                    @endif
-            
-                    {{-- Sarana Prasarana --}}
-                    @if($peran === 'sarpras')
-                    <li class="sidebar-title">Menu</li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('sarpras/laporan_masuk') }}" class='sidebar-link'>
-                            <i class="bi bi-inbox"></i>
-                            <span>Laporan Masuk</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('sarpras/sistem_rekomendasi') }}" class='sidebar-link'>
-                            <i class="bi bi-lightbulb"></i>
-                            <span>Sistem Rekomendasi</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('sarpras/statistik') }}" class='sidebar-link'>
-                            <i class="bi bi-bar-chart-fill"></i>
-                            <span>Statistik</span>
-                        </a>
-                    </li>
-                    @endif
-            
-                    {{-- Admin --}}
-                    @if($peran === 'admin')
-                    <li class="sidebar-title">Menu</li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('admin/laporan') }}" class='sidebar-link'>
-                            <i class="bi bi-file-text"></i>
-                            <span>Laporan</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('/admin/pengguna') }}" class='sidebar-link'>
-                            <i class="bi bi-people"></i>
-                            <span>Kelola Pengguna</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('admin/fasilitas') }}" class='sidebar-link'>
-                            <i class="bi bi-building"></i>
-                            <span>Fasilitas</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('admin/gedung') }}" class='sidebar-link'>
-                            <i class="bi bi-house-door"></i>
-                            <span>Gedung</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('admin/sistem_rekomendasi') }}" class='sidebar-link'>
-                            <i class="bi bi-lightbulb"></i>
-                            <span>Sistem Rekomendasi</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('admin/laporan_periodik') }}" class='sidebar-link'>
-                            <i class="bi bi-calendar-range"></i>
-                            <span>Laporan Periodik</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('admin/statistik') }}" class='sidebar-link'>
-                            <i class="bi bi-bar-chart-fill"></i>
-                            <span>Statistik</span>
-                        </a>
-                    </li>
-                    @endif
-            
-                    {{-- Teknisi --}}
-                    @if($peran === 'teknisi')
-                    <li class="sidebar-title">Menu</li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('teknisi/penugasan') }}" class='sidebar-link'>
-                            <i class="bi bi-tools"></i>
-                            <span>Penugasan</span>
-                        </a>
-                    </li>
-            
-                    <li class="sidebar-item">
-                        <a href="{{ url('/teknisi/riwayat_penugasan') }}" class='sidebar-link'>
-                            <i class="bi bi-clock-history"></i>
-                            <span>Riwayat Penugasan</span>
-                        </a>
-                    </li>
-                    @endif
-            </div>
+            <ul class="menu">
+                @php
+                    $peran = Auth::user()->peran;
+                    $currentUrl = url()->current();
+                @endphp
+        
+                {{-- Dosen, Mahasiswa, Tendik --}}
+                @if(in_array($peran, ['pelapor']))
+                <li class="sidebar-title">Menu</li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/pelapor/profile') ? 'active' : '' }}">
+                    <a href="{{ url('/pelapor/profile') }}" class='sidebar-link'>
+                        <i class="bi bi-person"></i>
+                        <span>Profil</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/pelapor/laporan') && !str_contains($currentUrl, '/pelapor/laporan_saya') ? 'active' : '' }}">
+                    <a href="{{ url('pelapor/laporan') }}" class='sidebar-link'>
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span>Laporkan Kerusakan</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/pelapor/laporan_saya') ? 'active' : '' }}">
+                    <a href="{{ url('pelapor/laporan_saya') }}" class='sidebar-link'>
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Laporan Saya</span>
+                    </a>
+                </li>
+                @endif
+        
+                {{-- Sarana Prasarana --}}
+                @if($peran === 'sarpras')
+                <li class="sidebar-title">Menu</li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/laporan_masuk') ? 'active' : '' }}">
+                    <a href="{{ url('sarpras/laporan_masuk') }}" class='sidebar-link'>
+                        <i class="bi bi-inbox"></i>
+                        <span>Laporan Masuk</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/sistem_rekomendasi') ? 'active' : '' }}">
+                    <a href="{{ url('sarpras/sistem_rekomendasi') }}" class='sidebar-link'>
+                        <i class="bi bi-lightbulb"></i>
+                        <span>Sistem Rekomendasi</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/statistik') ? 'active' : '' }}">
+                    <a href="{{ url('sarpras/statistik') }}" class='sidebar-link'>
+                        <i class="bi bi-bar-chart-fill"></i>
+                        <span>Statistik</span>
+                    </a>
+                </li>
+                @endif
+        
+                {{-- Admin --}}
+                @if($peran === 'admin')
+                <li class="sidebar-title">Menu</li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan') && !str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
+                    <a href="{{ url('admin/laporan') }}" class='sidebar-link'>
+                        <i class="bi bi-file-text"></i>
+                        <span>Laporan</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/pengguna') ? 'active' : '' }}">
+                    <a href="{{ url('/admin/pengguna') }}" class='sidebar-link'>
+                        <i class="bi bi-people"></i>
+                        <span>Kelola Pengguna</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/fasilitas') ? 'active' : '' }}">
+                    <a href="{{ url('admin/fasilitas') }}" class='sidebar-link'>
+                        <i class="bi bi-building"></i>
+                        <span>Fasilitas</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/gedung') ? 'active' : '' }}">
+                    <a href="{{ url('admin/gedung') }}" class='sidebar-link'>
+                        <i class="bi bi-house-door"></i>
+                        <span>Gedung</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/sistem_rekomendasi') ? 'active' : '' }}">
+                    <a href="{{ url('admin/sistem_rekomendasi') }}" class='sidebar-link'>
+                        <i class="bi bi-lightbulb"></i>
+                        <span>Sistem Rekomendasi</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
+                    <a href="{{ url('admin/laporan_periodik') }}" class='sidebar-link'>
+                        <i class="bi bi-calendar-range"></i>
+                        <span>Laporan Periodik</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/statistik') ? 'active' : '' }}">
+                    <a href="{{ url('admin/statistik') }}" class='sidebar-link'>
+                        <i class="bi bi-bar-chart-fill"></i>
+                        <span>Statistik</span>
+                    </a>
+                </li>
+                @endif
+        
+                {{-- Teknisi --}}
+                @if($peran === 'teknisi')
+                <li class="sidebar-title">Menu</li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/teknisi/penugasan') ? 'active' : '' }}">
+                    <a href="{{ url('teknisi/penugasan') }}" class='sidebar-link'>
+                        <i class="bi bi-tools"></i>
+                        <span>Penugasan</span>
+                    </a>
+                </li>
+        
+                <li class="sidebar-item {{ str_contains($currentUrl, '/teknisi/riwayat_penugasan') ? 'active' : '' }}">
+                    <a href="{{ url('/teknisi/riwayat_penugasan') }}" class='sidebar-link'>
+                        <i class="bi bi-clock-history"></i>
+                        <span>Riwayat Penugasan</span>
+                    </a>
+                </li>
+                @endif
+            </ul>
+        </div>
                     {{-- Logout (semua peran) --}}
                   <div class="logout-section">
                 <ul class="menu">
@@ -220,5 +221,42 @@
     /* Ensure proper spacing */
     .menu {
         padding-bottom: 1rem;
+    }
+ /* Sidebar Structure */
+    .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 120px); /* Adjust based on your header height */
+    }
+ 
+    .sidebar-title {
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Logout Section */
+    .logout-section {
+        margin-top: auto;
+        padding: 1rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        position: sticky;
+        bottom: 0;
+        background: inherit;
+    }
+    
+    /* Ensure proper spacing */
+    .menu {
+        padding-bottom: 1rem;
+    }
+    
+    /* Style untuk menu aktif */
+    .sidebar-item.active > .sidebar-link {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-left: 3px solid #fff;
+    }
+    
+    .sidebar-item.active > .sidebar-link i {
+        color: #fff;
     }
 </style>
