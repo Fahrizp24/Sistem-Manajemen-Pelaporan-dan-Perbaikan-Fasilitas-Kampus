@@ -7,22 +7,8 @@
     @endif
 
     {{-- Form Tambah Gedung --}}
-    <div class="card">
-        <div class="card-header">Tambah Gedung</div>
-        <div class="card-body">
-            <form method="POST" action="{{  url('admin/gedung/create') }}">
-                @csrf
-                <div class="form-group mb-2">
-                    <label>Nama Gedung</label>
-                    <input type="text" name="nama" class="form-control" required>
-                </div>
-                <div class="form-group mb-2">
-                    <label>Deskripsi</label>
-                    <textarea name="deskripsi" class="form-control"></textarea>
-                </div>
-                <button class="btn btn-primary">Simpan</button>
-            </form>
-        </div>
+    <div class="col-12 mb-3">
+            <a href="{{ url('admin/gedung/create') }}" class="btn btn-success">+ Tambah Gedung</a>
     </div>
 
     {{-- Tabel Gedung --}}
