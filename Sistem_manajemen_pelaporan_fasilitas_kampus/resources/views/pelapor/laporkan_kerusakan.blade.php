@@ -40,6 +40,18 @@
                                             <small class="text-muted">Format: jpeg, png, jpg, gif (max: 2MB)</small>
                                         </div>
                                     </div>
+                                    <div class="col-12">
+                                        <div class="form-group mandatory mt-3">
+                                            <label for="tingkat_urgensi" class="form-label">Gedung</label>
+                                            <select id="tingkat_urgensi" name="tingkat_urgensi" class="form-select"
+                                                data-parsley-required="true">
+                                                <option value="">Pilih lokasi gedung</option>
+                                                <option value="AJ">AJ</option>
+                                                <option value="AI">AI</option>
+                                                <option value="AA">AA</option>
+                                            </select>
+                                        </div>
+                                    </div>
 
                                     <div class="col-12">
                                         <div class="form-group mandatory">
@@ -48,18 +60,7 @@
                                                 placeholder="Jelaskan kerusakan yang terjadi" data-parsley-required="true"></textarea>
                                         </div>
                                     </div>
-                                    <div class="col-12">
-                                        <div class="form-group mandatory mt-3">
-                                            <label for="tingkat_urgensi" class="form-label">Tingkat Urgensi</label>
-                                            <select id="tingkat_urgensi" name="tingkat_urgensi" class="form-select"
-                                                data-parsley-required="true">
-                                                <option value="">Pilih tingkat kerusakan</option>
-                                                <option value="rendah">Rendah</option>
-                                                <option value="sedang">Sedang</option>
-                                                <option value="tinggi">Tinggi</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                    
                                     <div class="col-12 d-flex justify-content-end mt-3">
                                         <button type="submit" class="btn btn-primary me-1 mb-1">
                                             Kirim Laporan
