@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
                     <a href="index">
-                        <img src="{{ asset('mazer/dist/asset/logoo.png')}}" alt="Logo"
+                        <img src="{{ asset('mazer/dist/asset/logoSistem.png')}}" alt="Logo"
                             style="width: 90px; height: auto;">
                     </a>
                 </div>
