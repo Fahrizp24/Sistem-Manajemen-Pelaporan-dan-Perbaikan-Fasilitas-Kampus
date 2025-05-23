@@ -34,7 +34,7 @@
 
         <!-- Features Section -->
         <div class="col-12 mt-5">
-            <h2 class="section-title mb-4 animate__animated animate__fadeInUp">Mengapa Menggunakan SIPERBA?</h2>
+            <h2 class="section-title mb-4 animate__animated animate__fadeInUp">Mengapa Menggunakan FIXIT?</h2>
             <div class="row">
                 <div class="col-md-4">
                     <div class="card feature-card animate__animated animate__fadeInUp animate__delay-1s">
