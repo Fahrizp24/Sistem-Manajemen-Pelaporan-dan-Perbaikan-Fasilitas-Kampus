@@ -9,6 +9,7 @@ use App\Http\Controllers\TeknisiController;
 use App\Http\Controllers\SarprasController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GedungController;
+use App\Http\Controllers\DashboardController;
 
 Route::pattern('id', '[0-9]+');
 
@@ -16,7 +17,7 @@ Route::pattern('id', '[0-9]+');
 Route::get('/', function () {
     return redirect()->route('login');
 });
-
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
