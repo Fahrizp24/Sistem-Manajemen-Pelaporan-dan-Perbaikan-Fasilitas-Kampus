@@ -86,37 +86,40 @@ class AdminController extends Controller
      * Store a newly created resource in storage.
      */
     public function ajaxStorePengguna(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'nama' => 'required|string|max:255',
-        'email' => 'required|email|unique:pengguna,email',
-        'identitas' => 'required|string|max:50',
-        'kata_sandi' => 'required|string|min:8',
-        'peran' => 'required|in:admin,sarpras,teknisi',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Validasi gagal!',
-            'msgField' => $validator->errors()
+    {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:pengguna,email',
+            // 'identitas' => 'nullable    |string|max:50',
+            'password' => 'required|string|min:6',
+            'peran' => 'required|in:admin,pelapor,sarpras,teknisi',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal!',
+                'msgField' => $validator->errors()
+            ]);
+        }
+
+        // Simpan data
+        $pengguna = new UserModel();
+        $pengguna->username = $request->username;
+        $pengguna->nama = $request->nama;
+        $pengguna->email = $request->email;
+        // $pengguna->identitas = $request->identitas;
+        $pengguna->password = bcrypt($request->password);
+        $pengguna->peran = $request->peran;
+        $pengguna->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Pengguna berhasil ditambahkan!'
+        ]);
+        
     }
-
-    // Simpan data
-    $pengguna = new UserModel();
-    $pengguna->nama = $request->nama;
-    $pengguna->email = $request->email;
-    $pengguna->identitas = $request->identitas;
-    $pengguna->password = bcrypt($request->kata_sandi);
-    $pengguna->peran = $request->peran;
-    $pengguna->save();
-
-    return response()->json([
-        'status' => true,
-        'message' => 'Pengguna berhasil ditambahkan!'
-    ]);
-}
 
 
     /**
@@ -141,42 +144,43 @@ class AdminController extends Controller
      * Update the specified resource in storage.
      */
     public function update_pengguna(Request $request, $id)
-{
-    $request->validate([
-        'nama' => 'required|string|max:255',
-        'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
-        'kata_sandi' => 'nullable|string|min:8',
-        'peran' => 'required|string|in:admin,sarpras,teknisi',
-        'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
+    {
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
+            'password' => 'nullable|string|min:6',
+            'peran' => 'required|string|in:admin,sarpras,teknisi',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
 
-    $pengguna = UserModel::findOrFail($id);
+        $pengguna = UserModel::findOrFail($id);
 
-    // Update field satu per satu
-    $pengguna->nama = $request->nama;
-    $pengguna->email = $request->email;
-    $pengguna->identitas = $request->identitas;
-    $pengguna->peran = $request->peran;
+        // Update field satu per satu
+        $pengguna->nama = $request->nama;
+        $pengguna->email = $request->email;
+        $pengguna->identitas = $request->identitas;
+        $pengguna->peran = $request->peran;
 
-    // Jika password diisi, update dan hash
-    if ($request->filled('kata_sandi')) {
-        $pengguna->kata_sandi = Hash::make($request->kata_sandi);
+        // Jika password diisi, update dan hash
+        if ($request->filled('password')) {
+            $pengguna->kata_sandi = Hash::make($request->kata_sandi);
+        }
+
+        // Jika ada file foto yang diupload
+        if ($request->hasFile('foto_profil')) {
+            $file = $request->file('foto_profil');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/foto_profil'), $filename);
+            $pengguna->foto_profil = $filename;
+        }
+
+        if ($pengguna->save()) {
+            return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil diperbarui.');
+        } else {
+            return redirect()->route('admin.pengguna')->with('error', 'Gagal memperbarui pengguna.');
+        }
     }
-
-    // Jika ada file foto yang diupload
-    if ($request->hasFile('foto_profil')) {
-        $file = $request->file('foto_profil');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/foto_profil'), $filename);
-        $pengguna->foto_profil = $filename;
-    }
-
-    if ($pengguna->save()) {
-        return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil diperbarui.');
-    } else {
-        return redirect()->route('admin.pengguna')->with('error', 'Gagal memperbarui pengguna.');
-    }
-}
 
 
     /**
