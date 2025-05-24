@@ -49,10 +49,7 @@
                                             @method('DELETE')
                                             <button class="btn btn-sm btn-danger">Hapus</button>
                                         </form>
-                                        <form action="{{ url('admin/pengguna/reset', $user->pengguna_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Reset kata sandi?')">
-                                            @csrf
-                                            <button class="btn btn-sm btn-warning">Reset Sandi</button>
-                                        </form>
+                                        
                                     </td>
                                 </tr>
                             @empty

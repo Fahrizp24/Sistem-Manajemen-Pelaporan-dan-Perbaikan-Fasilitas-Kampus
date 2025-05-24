@@ -10,7 +10,6 @@
                         <th>Pelapor</th>
                         <th>Fasilitas</th>
                         <th>Deskripsi</th>
-                        <th>Foto</th>
                         <th>Status</th>
                         <th>Aksi</th>
                         <th>Urgensi</th>
@@ -24,13 +23,7 @@
         <td>{{ $item->pelapor->nama ?? '-' }}</td>
         <td>{{ $item->fasilitas->nama ?? '-' }}</td>
         <td>{{ $item->deskripsi }}</td>
-        <td>
-            @if ($item->foto)
-                <img src="{{ asset('storage/' . $item->foto) }}" alt="Foto" width="80">
-            @else
-                <span class="text-muted">Tidak ada</span>
-            @endif
-        </td>
+        
         
         <td>
             @switch($item->status)
