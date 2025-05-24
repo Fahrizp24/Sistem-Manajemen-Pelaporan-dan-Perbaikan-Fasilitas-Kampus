@@ -78,26 +78,45 @@ class AdminController extends Controller
 
     public function create_pengguna()
     {
-        return view('admin.create_pengguna');
+        return view('admin.pengguna.create_ajax');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store_pengguna(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:pengguna,email',
-            'kata_sandi' => 'required|string|min:8',
-            'peran' => 'required|string|in:admin,admin,sarpras,teknisi',
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    public function ajaxStorePengguna(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'nama' => 'required|string|max:255',
+        'email' => 'required|email|unique:pengguna,email',
+        'identitas' => 'required|string|max:50',
+        'kata_sandi' => 'required|string|min:8',
+        'peran' => 'required|in:admin,sarpras,teknisi',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Validasi gagal!',
+            'msgField' => $validator->errors()
         ]);
-
-        UserModel::create($request->all());
-
-        return redirect()->route('admin.index')->with('success', 'UserModel created successfully.');
     }
+
+    // Simpan data
+    $pengguna = new UserModel();
+    $pengguna->nama = $request->nama;
+    $pengguna->email = $request->email;
+    $pengguna->identitas = $request->identitas;
+    $pengguna->password = bcrypt($request->kata_sandi);
+    $pengguna->peran = $request->peran;
+    $pengguna->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Pengguna berhasil ditambahkan!'
+    ]);
+}
+
 
     /**
      * Display the specified resource.

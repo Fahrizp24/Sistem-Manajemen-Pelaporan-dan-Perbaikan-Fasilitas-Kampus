@@ -63,7 +63,8 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('pengguna')->group(function () {
                 Route::get('/', [AdminController::class, 'kelola_pengguna'])->name('admin.pengguna');
                 Route::post('/',[AdminController::class, 'list_pengguna'])->name('admin.list_pengguna');
-                Route::get('/create', [AdminController::class, 'create_pengguna'])->name('admin.create_pengguna');
+                Route::get('/create_ajax', [AdminController::class, 'create_pengguna'])->name('admin.pengguna.create_pengguna');
+                Route::post('/user/ajax', [AdminController::class, 'ajaxStorePengguna'])->name('admin.pengguna.ajaxstore');
                 Route::post('/store', [AdminController::class, 'store_pengguna'])->name('admin.store_pengguna');
                 Route::get('/{id}', [AdminController::class, 'show_pengguna'])->name('admin.show_pengguna');
                 Route::get('/{id}/edit', [AdminController::class, 'edit_pengguna'])->name('admin.edit_pengguna');
