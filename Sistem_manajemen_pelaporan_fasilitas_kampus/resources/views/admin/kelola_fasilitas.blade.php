@@ -2,14 +2,13 @@
 
 @section('content')
 <div class="container">
-    <a href="{{ url('admin/fasilitas/create') }}" class="btn btn-success">+ Tambah Fasilitas</a>
-
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
     <div class="card">
         <div class="card-header">
+            <a href="{{ url('admin/fasilitas/create') }}" class="btn btn-success mb-3">+ Tambah Fasilitas</a>
             <h5 class="mb-0">Daftar Fasilitas</h5>
         </div>
         <div class="card-body">
@@ -31,7 +30,7 @@
                             <td>{{ $item->gedung->nama ?? '-' }}</td>
                             <td>{{ ucfirst($item->status) }}</td>
                             <td>
-                                <a href="{{ url('admin/fasilitas/Edit', $item->fasilitas_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ url('admin/fasilitas/Edit', $item->fasilitas_id) }}" class="btn btn-primary btn-sm">Edit</a>
                                 <form action="{{ url('admin/fasilitas/destroy', $item->fasilitas_id) }}" method="POST" style="display:inline">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm"

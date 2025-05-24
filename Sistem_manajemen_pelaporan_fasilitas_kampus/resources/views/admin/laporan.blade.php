@@ -35,18 +35,7 @@
             @endswitch
         </td>
         <td>
-            @if ($item->status === 'diajukan')
-                <form action="{{ url('/admin/laporan/terima', $item->laporan_id) }}" method="POST" class="d-inline">
-                    @csrf
-                    <button class="btn btn-success btn-sm">Terima</button>
-                </form>
-                <form action="{{ url('/admin/laporan/tolak', $item->laporan_id) }}" method="POST" class="d-inline">
-                    @csrf
-                    <button class="btn btn-danger btn-sm">Tolak</button>
-                </form>
-            @else
-                <span class="text-muted">-</span>
-            @endif
+            <a href="{{ url('/admin/laporan/' . $item->laporan_id) }}" class="btn btn-info btn-sm">Detail</a>
         </td>
         <td>
             {{ $item->urgensi ?? '-' }}

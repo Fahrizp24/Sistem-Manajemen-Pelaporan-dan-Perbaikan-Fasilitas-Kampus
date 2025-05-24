@@ -177,7 +177,7 @@
             </ul>
         </div>
                     {{-- Logout (semua peran) --}}
-                  <div class="logout-section">
+            <div class="logout-section">
                 <ul class="menu">
                     <li class="sidebar-item">
                         <a href="{{ url('logout') }}" class="sidebar-link"
@@ -196,32 +196,7 @@
 
 
 <style>
-    /* Sidebar Structure */
-    .sidebar-menu {
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 120px); /* Adjust based on your header height */
-    }
- 
-    .sidebar-title {
-        margin-top: 1rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    /* Logout Section */
-    .logout-section {
-        margin-top: auto;
-        padding: 1rem 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        position: sticky;
-        bottom: 0;
-        background: inherit;
-    }
-    
-    /* Ensure proper spacing */
-    .menu {
-        padding-bottom: 1rem;
-    }
+
  /* Sidebar Structure */
     .sidebar-menu {
         display: flex;
@@ -237,7 +212,7 @@
     /* Logout Section */
     .logout-section {
         margin-top: auto;
-        padding: 1rem 0;
+        padding: 0.1rem 0;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         position: sticky;
         bottom: 0;

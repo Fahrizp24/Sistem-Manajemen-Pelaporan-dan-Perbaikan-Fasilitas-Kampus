@@ -62,6 +62,16 @@ class LaporanController extends Controller
     /**
      * Display the specified resource.
      */
+    public function show_laporan($id)   
+    {
+        $laporan = LaporanModel::with(['pelapor', 'fasilitas'])->findOrFail($id);
+        $breadcrumb = (object) [
+            'title' => 'Detail Laporan',
+        ];
+
+        $activeMenu = 'laporan';
+    return view('admin.show_laporan', ['laporan' => $laporan, 'breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu ]);
+    }
     public function show(string $id)
     {
         //
