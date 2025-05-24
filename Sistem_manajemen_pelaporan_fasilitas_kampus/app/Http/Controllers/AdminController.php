@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\FasilitasModel;
 use App\Models\GedungModel;
 use App\Models\LaporanModel;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -132,32 +133,51 @@ class AdminController extends Controller
      */
     public function edit_pengguna($id)
     {
-        $admin = UserModel::findOrFail($id);
-        return view('admin.edit_pengguna', compact('admin'));
+        $user = UserModel::findOrFail($id);
+        return view('admin.pengguna.edit_ajax', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update_pengguna(Request $request, $id)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:pengguna,email',
-            'kata_sandi' => 'required|string|min:8',
-            'peran' => 'required|string|in:admin,admin,sarpras,teknisi',
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+{
+    $request->validate([
+        'nama' => 'required|string|max:255',
+        'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
+        'kata_sandi' => 'nullable|string|min:8',
+        'peran' => 'required|string|in:admin,sarpras,teknisi',
+        'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
 
-        $admin = UserModel::findOrFail($id);
-        $admin->update($request->all());
-        // if successfully updated
-        if ($admin) {
-            return redirect()->route('admin.pengguna')->with('success', 'UserModel updated successfully.');
-        } else {
-            return redirect()->route('admin.pengguna')->with('error', 'Failed to update UserModel.');
-        }
+    $pengguna = UserModel::findOrFail($id);
+
+    // Update field satu per satu
+    $pengguna->nama = $request->nama;
+    $pengguna->email = $request->email;
+    $pengguna->identitas = $request->identitas;
+    $pengguna->peran = $request->peran;
+
+    // Jika password diisi, update dan hash
+    if ($request->filled('kata_sandi')) {
+        $pengguna->kata_sandi = Hash::make($request->kata_sandi);
     }
+
+    // Jika ada file foto yang diupload
+    if ($request->hasFile('foto_profil')) {
+        $file = $request->file('foto_profil');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/foto_profil'), $filename);
+        $pengguna->foto_profil = $filename;
+    }
+
+    if ($pengguna->save()) {
+        return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil diperbarui.');
+    } else {
+        return redirect()->route('admin.pengguna')->with('error', 'Gagal memperbarui pengguna.');
+    }
+}
+
 
     /**
      * Remove the specified resource from storage.

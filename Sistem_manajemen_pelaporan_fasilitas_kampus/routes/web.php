@@ -67,8 +67,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/user/ajax', [AdminController::class, 'ajaxStorePengguna'])->name('admin.pengguna.ajaxstore');
                 Route::post('/store', [AdminController::class, 'store_pengguna'])->name('admin.store_pengguna');
                 Route::get('/{id}', [AdminController::class, 'show_pengguna'])->name('admin.show_pengguna');
-                Route::get('/{id}/edit', [AdminController::class, 'edit_pengguna'])->name('admin.edit_pengguna');
-                Route::post('/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
+                Route::get('/edit_ajax/{id}', [AdminController::class, 'edit_pengguna'])->name('admin.pengguna.edit_pengguna');
+                Route::post('/admin/pengguna/update/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
                 Route::delete('/{id}', [AdminController::class, 'destroy_pengguna'])->name('admin.destroy_pengguna');
             });
         

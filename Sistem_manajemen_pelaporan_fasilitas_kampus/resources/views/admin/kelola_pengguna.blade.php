@@ -51,8 +51,11 @@
                                         <td>{{ $user->identitas }}</td>
                                         <td>{{ ucfirst($user->peran) }}</td>
                                         <td>
-                                            <a href="{{ url('admin/pengguna/edit', $user->pengguna_id) }}"
-                                                class="btn btn-sm btn-primary">Edit</a>
+                                            <button class="btn btn-sm btn-primary btn-edit"
+                                                data-url="{{ url('admin/pengguna/edit_ajax', $user->pengguna_id) }}">
+                                                Edit
+                                            </button>
+
                                             <form action="{{ url('admin/pengguna/destroy', $user->pengguna_id) }}" method="POST"
                                                 style="display:inline;"
                                                 onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
@@ -79,15 +82,27 @@
             </div>
         </div>
     </div>
-    @endsection
-    @push('scripts')
-        <script>
-            $(document).on('click', '#btn-tambah', function () {
-                let url = $(this).data('url');
-                $.get(url, function (response) {
-                    $('#modal-content').html(response);
-                    $('#myModal').modal('show');
-                });
+@endsection
+@push('scripts')
+    <script>
+        //tambah data
+        $(document).on('click', '#btn-tambah', function () {
+            let url = $(this).data('url');
+            $.get(url, function (response) {
+                $('#modal-content').html(response);
+                $('#myModal').modal('show');
             });
-        </script>
-    @endpush
+        });
+        //edit data
+        $(document).on('click', '.btn-edit', function () {
+        let url = $(this).data('url');
+        $.get(url, function (response) {
+            $('#modal-content').html(response);
+            $('#myModal').modal('show');
+        }).fail(function (xhr) {
+            console.error('Gagal memuat form edit:', xhr.responseText);
+            alert('Terjadi kesalahan saat memuat form edit.');
+        });
+    });
+    </script>
+@endpush
