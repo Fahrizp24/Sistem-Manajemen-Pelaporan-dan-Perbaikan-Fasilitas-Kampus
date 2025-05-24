@@ -59,7 +59,7 @@
                                         @foreach ($laporan as $key => $item)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $item->fasilitas->gedung->nama }}</td>
+                                                <td>{{ $item->fasilitas->gedung->nama}}</td>
                                                 <td>{{ $item->fasilitas->nama }}</td>
                                                 <td>{{ $item->deskripsi ?? 'N/A' }}</td>
                                                 <td>{{ $item->status }}</td>
