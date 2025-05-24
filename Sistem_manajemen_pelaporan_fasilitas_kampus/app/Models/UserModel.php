@@ -28,7 +28,7 @@ class UserModel extends Authenticatable
     // Define the attributes that should be hidden for arrays
     protected $hidden = [
         'username',
-        'kata_sandi',
+        'password',
         'remember_token',
     ];
 

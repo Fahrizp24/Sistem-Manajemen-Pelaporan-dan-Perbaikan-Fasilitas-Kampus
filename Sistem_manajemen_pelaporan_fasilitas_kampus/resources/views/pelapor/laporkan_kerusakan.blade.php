@@ -15,20 +15,29 @@
                                     {{ session('success') }}
                                 </div>
                             @endif
-                            @csrf
                             <form class="form" method="POST" action="{{ url('/pelapor/laporan') }}" id="form-laporan"
                                 enctype="multipart/form-data" data-parsley-validate>
                                 @csrf
                                 <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group mandatory mt-3">
+                                            <label for="gedung_id" class="form-label">Gedung</label>
+                                            <select id="gedung_id" name="gedung_id" class="form-select"
+                                                data-parsley-required="true">
+                                                <option value="">Pilih lokasi gedung</option>
+                                                @foreach ($gedung as $g)
+                                                    <option value="{{ $g->gedung_id }}">{{ $g->nama }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
                                     <div class="col-md-6 col-12">
                                         <div class="form-group mandatory">
                                             <label for="fasilitas_id" class="form-label">Fasilitas</label>
                                             <select id="fasilitas_id" class="form-select" name="fasilitas_id"
-                                                data-parsley-required="true">
-                                                <option value="">Pilih Fasilitas</option>
-                                                @foreach ($fasilitas as $fasilitas)
-                                                    <option value="{{ $fasilitas->id }}">{{ $fasilitas->nama }}</option>
-                                                @endforeach
+                                                data-parsley-required="true" disabled>
+                                                <option value="">Pilih Gedung terlebih dahulu</option>
                                             </select>
                                         </div>
                                     </div>
@@ -40,18 +49,6 @@
                                             <small class="text-muted">Format: jpeg, png, jpg, gif (max: 2MB)</small>
                                         </div>
                                     </div>
-                                    <div class="col-12">
-                                        <div class="form-group mandatory mt-3">
-                                            <label for="tingkat_urgensi" class="form-label">Gedung</label>
-                                            <select id="tingkat_urgensi" name="tingkat_urgensi" class="form-select"
-                                                data-parsley-required="true">
-                                                <option value="">Pilih lokasi gedung</option>
-                                                <option value="AJ">AJ</option>
-                                                <option value="AI">AI</option>
-                                                <option value="AA">AA</option>
-                                            </select>
-                                        </div>
-                                    </div>
 
                                     <div class="col-12">
                                         <div class="form-group mandatory">
@@ -60,7 +57,7 @@
                                                 placeholder="Jelaskan kerusakan yang terjadi" data-parsley-required="true"></textarea>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-12 d-flex justify-content-end mt-3">
                                         <button type="submit" class="btn btn-primary me-1 mb-1">
                                             Kirim Laporan
@@ -80,67 +77,130 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('assets/extensions/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/extensions/parsleyjs/parsley.min.js') }}"></script>
-    <script src="{{ asset('assets/static/js/pages/parsley.js') }}"></script>
     <script>
-        $(document).ready(function () {
-            $("#form-laporan").validate({
-                rules: {
-                    fasilitas_id: {
-                        required: true
-                    },
-                    deskripsi: {
-                        required: true
-                    },
-                    tingkat_urgensi: {
-                        required: true
-                    },
-                    foto: {
-                        required: true,
-                        extension: "jpg|jpeg|png|gif",
-                        filesize: 2 * 1024 * 1024 // 2MB
-                    },
-                },
-                submitHandler: function (form) {
+        $(document).ready(function() {
+            // Handler untuk select gedung
+            $('#gedung_id').change(function() {
+                var gedungId = $(this).val();
+                var fasilitasSelect = $('#fasilitas_id');
+
+                if (gedungId) {
                     $.ajax({
-                        url: form.action,
-                        type: form.method,
-                        data: $(form).serialize(),
-                        success: function (response) {
+                        url: '/pelapor/laporan/get_fasilitas_by_gedung',
+                        type: 'GET',
+                        data: {
+                            gedung_id: gedungId
+                        },
+                        success: function(data) {
+                            fasilitasSelect.empty().append(
+                                '<option value="">Pilih Fasilitas</option>');
+                            $.each(data, function(key, value) {
+                                fasilitasSelect.append('<option value="' + value
+                                    .fasilitas_id + '">' + value.nama + '</option>');
+                            });
+                            fasilitasSelect.prop('disabled', false);
+                        },
+                        error: function() {
+                            fasilitasSelect.empty().append(
+                                '<option value="">Gagal memuat fasilitas</option>');
+                        }
+                    });
+                } else {
+                    fasilitasSelect.empty().append(
+                    '<option value="">Pilih Gedung terlebih dahulu</option>');
+                    fasilitasSelect.prop('disabled', true);
+                }
+            });
+
+            // Inisialisasi jQuery Validate
+            $('#form-laporan').validate({
+                ignore: 'input[type="file"]', // Abaikan file untuk validasi jQuery Validate
+                errorClass: 'is-invalid',
+                validClass: 'is-valid',
+                errorElement: 'div',
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    if (element.prop('type') === 'checkbox') {
+                        error.insertAfter(element.next('label'));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                highlight: function(element) {
+                    $(element).addClass('is-invalid').removeClass('is-valid');
+                },
+                unhighlight: function(element) {
+                    $(element).addClass('is-valid').removeClass('is-invalid');
+                }
+            });
+
+            // Submit handler
+            $("#form-laporan").on('submit', function(e) {
+                e.preventDefault();
+
+                if ($(this).valid()) {
+                    var form = this;
+                    var formData = new FormData(form); // Handle file upload
+
+                    $.ajax({
+                        url: $(form).attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        beforeSend: function() {
+                            $('button[type="submit"]').prop('disabled', true).html(
+                                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengirim...'
+                            );
+                        },
+                        success: function(response) {
                             if (response.status) {
-                                $('#myModal').modal('hide');
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil',
-                                    text: response.message
+                                    text: response.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href =
+                                        "{{ url('/pelapor/laporan_saya') }}";
                                 });
-                                window.location.href = "{{ url('/pelapor/laporan_saya') }}";
                             } else {
-                                $('.error-text').text('');
-                                $.each(response.msgField, function (prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
-                                });
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Terjadi Kesalahan',
+                                    title: 'Gagal',
                                     text: response.message
                                 });
                             }
+                        },
+                        error: function(xhr) {
+                            var response = xhr.responseJSON;
+                            var message = "Terjadi kesalahan pada server";
+
+                            if (response && response.message) {
+                                message = response.message;
+                            } else if (xhr.status === 422) {
+                                message = "Validasi gagal: ";
+                                var errors = response.errors;
+                                $.each(errors, function(field, messages) {
+                                    message += messages.join(', ') + " ";
+                                });
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: message
+                            });
+                        },
+                        complete: function() {
+                            $('button[type="submit"]').prop('disabled', false).html(
+                                'Kirim Laporan');
                         }
                     });
-                    return false;
-                },
-                errorElement: 'span',
-                errorPlacement: function (error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.form-group').append(error);
-                },
-                highlight: function (element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function (element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
                 }
             });
         });

@@ -63,11 +63,12 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('pengguna')->group(function () {
                 Route::get('/', [AdminController::class, 'kelola_pengguna'])->name('admin.pengguna');
                 Route::post('/',[AdminController::class, 'list_pengguna'])->name('admin.list_pengguna');
-                Route::get('/create', [AdminController::class, 'create_pengguna'])->name('admin.create_pengguna');
+                Route::get('/create_ajax', [AdminController::class, 'create_pengguna'])->name('admin.pengguna.create_pengguna');
+                Route::post('/kelola_pengguna', [AdminController::class, 'ajaxStorePengguna'])->name('admin.pengguna.ajaxstore');
                 Route::post('/store', [AdminController::class, 'store_pengguna'])->name('admin.store_pengguna');
                 Route::get('/{id}', [AdminController::class, 'show_pengguna'])->name('admin.show_pengguna');
-                Route::get('/{id}/edit', [AdminController::class, 'edit_pengguna'])->name('admin.edit_pengguna');
-                Route::post('/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
+                Route::get('/edit_ajax/{id}', [AdminController::class, 'edit_pengguna'])->name('admin.pengguna.edit_pengguna');
+                Route::post('/admin/pengguna/update/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
                 Route::delete('/{id}', [AdminController::class, 'destroy_pengguna'])->name('admin.destroy_pengguna');
             });
         
@@ -133,7 +134,8 @@ Route::middleware(['auth'])->group(function () {
             // Laporan
             Route::prefix('laporan')->group(function () {
                 Route::get('/', [PelaporController::class, 'laporkan_kerusakan'])->name('pelapor.laporan');
-                Route::post('/', [PelaporController::class, 'store_laporan'])->name('pelapor.storeLaporan');
+                Route::get('/get_fasilitas_by_gedung', [PelaporController::class, 'get_fasilitas_by_gedung']);
+                Route::post('/', [PelaporController::class, 'store_laporan'])->name('pelapor.store_laporan');
                 Route::get('/{id}', [PelaporController::class, 'show_ajax_laporan'])->name('pelapor.showLaporan');
             });
         

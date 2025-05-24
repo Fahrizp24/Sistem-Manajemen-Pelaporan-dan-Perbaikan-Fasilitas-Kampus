@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FasilitasModel;
+use App\Models\GedungModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -92,9 +93,53 @@ class PelaporController extends Controller
             'subtitle' => 'Formulir Laporan Kerusakan Fasilitas'
         ];
 
-        $fasilitas = FasilitasModel::all();
+        $gedung = GedungModel::all();
         $activeMenu = 'Laporkan Kerusakan';
-        return view('pelapor.laporkan_kerusakan', compact('fasilitas', 'breadcrumb', 'page', 'activeMenu'));
+        return view('pelapor.laporkan_kerusakan', compact('gedung', 'breadcrumb', 'page', 'activeMenu'));
+    }
+
+    public function get_fasilitas_by_gedung(Request $request)
+    {
+        $request->validate([
+            'gedung_id' => 'required|exists:gedung,gedung_id',
+        ]);
+
+        $fasilitas = FasilitasModel::where('gedung_id', $request->gedung_id)->get();
+        return response()->json($fasilitas);
+    }
+
+    public function store_laporan(Request $request)
+    {
+        $request->validate([
+            'gedung_id' => 'required|exists:gedung,gedung_id',
+            'fasilitas_id' => 'required|exists:fasilitas,fasilitas_id',
+            'deskripsi' => 'required|string|max:500',
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/foto_laporan', $filename);
+
+            $laporan = new LaporanModel();
+            $laporan->fasilitas_id = $request->fasilitas_id;
+            $laporan->pelapor_id = auth()->user()->pengguna_id;
+            $laporan->deskripsi = $request->deskripsi;
+            $laporan->foto = $filename;
+            $laporan->status = 'diajukan';
+            $laporan->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Laporan berhasil dibuat'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal membuat laporan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function laporan_saya()
@@ -121,10 +166,9 @@ class PelaporController extends Controller
     public function show_ajax_laporan(string $id)
     {
         $laporan = LaporanModel::with('fasilitas.gedung')
-        ->where('laporan_id', $id)
-        ->get();
+            ->where('laporan_id', $id)
+            ->get();
 
         return view('pelapor.show_detail_laporan', compact('laporan'));
     }
-
 }
