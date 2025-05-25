@@ -87,6 +87,7 @@ class AdminController extends Controller
      */
     public function ajaxStorePengguna(Request $request)
     {
+        if ($request->ajax() || $request->wantsJson()) {
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
@@ -102,23 +103,24 @@ class AdminController extends Controller
                 'message' => 'Validasi gagal!',
                 'msgField' => $validator->errors()
             ]);
+        } else {
+            // Simpan data
+            $pengguna = new UserModel();
+            $pengguna->username = $request->username;
+            $pengguna->nama = $request->nama;
+            $pengguna->email = $request->email;
+            // $pengguna->identitas = $request->identitas;
+            $pengguna->password = bcrypt($request->password);
+            $pengguna->peran = $request->peran;
+            $pengguna->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Pengguna berhasil ditambahkan!'
+            ]);
         }
-
-        // Simpan data
-        $pengguna = new UserModel();
-        $pengguna->username = $request->username;
-        $pengguna->nama = $request->nama;
-        $pengguna->email = $request->email;
-        // $pengguna->identitas = $request->identitas;
-        $pengguna->password = bcrypt($request->password);
-        $pengguna->peran = $request->peran;
-        $pengguna->save();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Pengguna berhasil ditambahkan!'
-        ]);
-        
+    }
+        return redirect()->route('admin.pengguna');
     }
 
 
@@ -188,10 +190,15 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        $admin = UserModel::findOrFail($id);
-        $admin->delete();
+        $pengguna = UserModel::find($id); // Ganti UserModel dengan model yang sesuai
 
-        return redirect()->route('admin.index')->with('success', 'UserModel deleted successfully.');
+        if (!$pengguna) {
+            return redirect()->route('admin.pengguna')->with('error', 'Pengguna tidak ditemukan.');
+        }
+
+        $pengguna->delete();
+
+        return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil dihapus.');
     }
 
     function kelola_fasilitas()

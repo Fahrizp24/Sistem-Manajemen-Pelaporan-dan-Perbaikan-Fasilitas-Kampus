@@ -16,7 +16,8 @@ class LaporanController extends Controller
     {
 
         $laporan = LaporanModel::with(['pelapor', 'fasilitas'])->get();
-        return view('pelapor.laporan_kerusakan');;
+        return view('pelapor.laporan_kerusakan');
+        ;
 
     }
 
@@ -59,19 +60,29 @@ class LaporanController extends Controller
     }
 
 
-    /**
-     * Display the specified resource.
-     */
-    public function show_laporan($id)   
+    public function show_laporan($id)
     {
+        try{
         $laporan = LaporanModel::with(['pelapor', 'fasilitas'])->findOrFail($id);
-        $breadcrumb = (object) [
-            'title' => 'Detail Laporan',
-        ];
 
-        $activeMenu = 'laporan';
-    return view('admin.show_laporan', ['laporan' => $laporan, 'breadcrumb' => $breadcrumb, 'activeMenu' => $activeMenu ]);
+        return response()->json([
+            'pelapor' => [
+                'nama' => $laporan->pelapor->nama ?? '-',
+            ],
+            'fasilitas' => [
+                'nama' => $laporan->fasilitas->nama ?? '-',
+            ],
+            'deskripsi' => $laporan->deskripsi,
+            'status' => $laporan->status,
+            'urgensi' => $laporan->urgensi ?? '-', // Pastikan ini sesuai dengan nama field di database
+        ]);
+        } catch (\Exception $e) {
+        return response()->json(['message' => 'Gagal mengambil data laporan'], 500);
     }
+    }
+
+
+
     public function show(string $id)
     {
         //
@@ -88,9 +99,13 @@ class LaporanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update_laporan(Request $request, string $id)
     {
-        //
+        $laporan = LaporanModel::findOrFail($id);
+        $laporan->status = $request->status;
+        $laporan->save();
+
+        return redirect()->route('admin.laporan')->with('success', 'Status laporan berhasil diperbarui.');
     }
 
 }

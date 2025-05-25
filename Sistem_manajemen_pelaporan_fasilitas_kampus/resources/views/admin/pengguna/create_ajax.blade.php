@@ -1,7 +1,6 @@
 <form action="{{ route('admin.pengguna.ajaxstore') }}" method="POST" id="form-tambah">
     @csrf
     <div class="card-header">
-        <h4 class="card-title">Tambah Pengguna</h4>
     </div>
     <div class="card-body">
         <div class="form-body">
@@ -56,39 +55,43 @@
                 username: { required: true, minlength: 3 },
                 nama: { required: true, minlength: 3 },
                 email: { required: true, email: true },
-                identitas: { required: true },
+                // identitas: { required: true },
                 peran: { required: true },
-                kata_sandi: { required: true, minlength: 6 }
+                password: { required: true, minlength: 6 }
             },
             submitHandler: function (form, event) {
-            event.preventDefault(); // mencegah submit default, kalau event tersedia
-            $.ajax({
-                url: form.action,
-                method: form.method,
-                data: $(form).serialize(),
-                success: function (response) {
-                    if (response.status) {
-                        $('#myModal').modal('hide');
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message,
-                            timer: 1500,
-                            showConfirmButton: false
-                        }).then(() => {
-                            window.location.href = "{{ route('admin.pengguna') }}";
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal',
-                            text: response.message
-                        });
+                event.preventDefault(); // mencegah submit default, kalau event tersedia
+                $.ajax({
+                    url: form.action,
+                    method: form.method,
+                    data: $(form).serialize(),
+                    success: function (response) {
+                        if (response.status) {
+                            $('#modalTambahPengguna').modal('hide');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message,
+                                timer: 1000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                // Tambahkan delay kecil sebelum reload
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 300); // 300ms delay agar data sudah tersimpan ke DB
+                            });
+
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: response.message
+                            });
+                        }
                     }
-                }
-            });
-            return false;  // pastikan ada ini supaya submit form dibatalkan
-        }
-        }
+                });
+                return false;  // pastikan ada ini supaya submit form dibatalkan
+            }
+        });
     });
 </script>
