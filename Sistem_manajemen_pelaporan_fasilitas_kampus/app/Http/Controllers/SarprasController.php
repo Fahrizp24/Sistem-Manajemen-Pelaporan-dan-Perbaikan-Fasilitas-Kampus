@@ -24,14 +24,27 @@ class SarprasController extends Controller
             'title' => 'Data Laporan',
             'subtitle' => 'Data Laporan Masuk Dari Pelapor dan Admin'
         ];
-        // $idTeknisi = Auth::id();
 
         $activeMenu = 'penugasan';
-        // $laporan = LaporanModel::where('status', 'dilaksanakan')
-        // ->where('idTeknisi', $idTeknisi)
-        // ->get();              
-        return view('sarpras.laporan_masuk', compact( 'breadcrumb', 'page', 'activeMenu'));
+        $laporan_masuk_pelapor = LaporanModel::where('status', 'diajukan')->get();  
+        $laporan_masuk_admin = LaporanModel::where('status', 'memilih teknisi')->get();            
+        return view('sarpras.laporan_masuk', compact( 'breadcrumb', 'page', 'activeMenu', 'laporan_masuk_pelapor', 'laporan_masuk_admin'));
 
+    }
+
+    public function show_laporan(string $id)
+    {
+        $laporan = LaporanModel::with([
+            'pelapor',          // Pengguna yang melapor
+            'fasilitas.gedung', // Fasilitas + gedung terkait
+            'sarpras',    // Admin/SARPRAS yang menugaskan
+            'teknisi'           // Teknisi yang ditugaskan
+        ])->find($id); // Ganti $id dengan ID laporan yang ingin ditampilkan
+        
+        return view('sarpras.show_detail_laporan', [
+            'laporan' => $laporan,
+            'page' => (object) ['title' => 'Detail Laporan']
+        ]);
     }
 
     // public function profile()

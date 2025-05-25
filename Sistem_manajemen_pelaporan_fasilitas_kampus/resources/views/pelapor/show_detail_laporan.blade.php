@@ -25,7 +25,7 @@
         <div class="card-body">
             <table class="table table-bordered table-striped table-hover table-sm">
                 <tr>
-                    <th>ID</th>
+                    <th>Pelapor</th>
                     <td>{{ $laporan->pelapor->nama }}</td>
                 </tr>
                 <tr>

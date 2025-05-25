@@ -176,7 +176,6 @@ class PelaporController extends Controller
             'laporan' => $laporan,
             'page' => (object) ['title' => 'Detail Laporan']
         ]);
-
     }
 
 }
