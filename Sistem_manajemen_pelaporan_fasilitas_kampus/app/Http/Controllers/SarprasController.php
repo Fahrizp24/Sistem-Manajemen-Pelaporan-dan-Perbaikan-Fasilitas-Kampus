@@ -28,46 +28,49 @@ class SarprasController extends Controller
         $activeMenu = 'penugasan';
         $laporan_masuk_pelapor = LaporanModel::where('status', 'diajukan')->get();  
         $laporan_masuk_admin = LaporanModel::where('status', 'memilih teknisi')->get();            
-        return view('sarpras.laporan_masuk', compact( 'breadcrumb', 'page', 'activeMenu', 'laporan_masuk_pelapor', 'laporan_masuk_admin'));
+        $laporan_masuk_teknisi = LaporanModel::where('status', 'telah diperbaiki')->get();            
+        return view('sarpras.laporan_masuk', compact( 'breadcrumb', 'page', 'activeMenu', 'laporan_masuk_pelapor', 'laporan_masuk_admin', 'laporan_masuk_teknisi'));
 
     }
 
     public function show_laporan(string $id)
     {
-        $laporan = LaporanModel::with([
-            'pelapor',          // Pengguna yang melapor
-            'fasilitas.gedung', // Fasilitas + gedung terkait
-            'sarpras',    // Admin/SARPRAS yang menugaskan
-            'teknisi'           // Teknisi yang ditugaskan
-        ])->find($id); // Ganti $id dengan ID laporan yang ingin ditampilkan
-        
-        return view('sarpras.show_detail_laporan', [
-            'laporan' => $laporan,
-            'page' => (object) ['title' => 'Detail Laporan']
-        ]);
+        $laporan = LaporanModel::findOrFail($id);
+
+        $breadcrumb = (object) [
+            'title' => 'Data Penugasan',
+            'list' => ['Data Penugasan']
+        ];
+
+        $page = (object)[
+            'title' => 'Detail Penugasan',
+            'subtitle' => 'Informasi lengkap mengenai penugasan'
+        ];
+        $source = request()->query('source', 'default');
+        return view('sarpras.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source'));
     }
 
-    // public function profile()
-    // {
-    //     $breadcrumb = (object) [
-    //         'title' => 'Profile',
-    //         'list' => ['Detail Profile']
-    //     ];
     
-    //     $page = (object) [
-    //         'title' => 'Profile'
-    //     ];
+    public function konfirmasi(string $id, Request $request)
+    {
+        try {
+            $laporan = LaporanModel::findOrFail($id);
+            $laporan->status = 'konfirmasi';
+            $laporan->save();
     
-    //     $activeMenu = 'profile';
+            return response()->json([
+                'success' => true,
+                'message' => 'Laporan berhasil dikonfirmasi.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengkonfirmasi laporan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 
-    //     return view('pelapor.profile', ['breadcrumb' => $breadcrumb, 'page'=> $page,'activeMenu' => $activeMenu]);
-    //     // $pelapor = UserModel::all();
-    //     // return view('pelapor.profile', compact('pelapor'));
-    // }
-
-    /**
-     * Display the specified resource.
-     */
+    
     public function sistem_pendukung_keputusan()
     {
         $breadcrumb = (object) [
