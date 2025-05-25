@@ -84,7 +84,7 @@ class TeknisiController extends Controller
             'title' => 'Data Penugasan',
             'list' => ['Data Penugasan']
         ];
-    
+
         $page = (object) [
             'title' => 'Data Penugasan',
             'subtitle' => 'Data Penugasan Yang Harus Dikerjakan'
@@ -92,9 +92,7 @@ class TeknisiController extends Controller
         $teknisi_id = Auth::id();
 
         $activeMenu = 'penugasan';
-        $laporan = LaporanModel::where('teknisi_id', $teknisi_id)
-        ->where('status', 'diperbaiki') //ini nanti harusnya 
-        ->get();
+        $laporan = LaporanModel::where('teknisi_id', $teknisi_id)->where('status', 'diperbaiki')->get();
 
         return view('teknisi.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
     }
@@ -112,21 +110,28 @@ class TeknisiController extends Controller
             'title' => 'Detail Penugasan',
             'subtitle' => 'Informasi lengkap mengenai penugasan'
         ];
-
         return view('teknisi.detail_penugasan', compact('laporan', 'breadcrumb', 'page'));
     }
-    
+
     public function update_penugasan(Request $request, $id)
     {
-         $laporan = LaporanModel::findOrFail($id);
-
-        // Contoh: ubah status laporan menjadi 'diajukan'
-        $laporan->status = 'telah diperbaiki';
-        $laporan->save();
-
-        return redirect()->back()->with('success', 'Laporan berhasil diajukan ke Sarpras.');
-        
+        try {
+            $laporan = LaporanModel::findOrFail($id);
+            
+            $laporan->status = 'telah diperbaiki';
+    
+            if ($laporan->save()) {
+                return redirect()->back()->with('success', 'Laporan berhasil diajukan ke Sarpras.');
+            } else {
+                return redirect()->back()->with('error', 'Gagal menyimpan perubahan status laporan.');
+            }
+    
+        } catch (\Exception $e) {
+    
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses permintaan.');
+        }
     }
+    
 
     public function riwayat_penugasan()
     {
@@ -140,12 +145,11 @@ class TeknisiController extends Controller
         ];
         $activeMenu = 'riwayat_penugasan';
         $teknisi_id = Auth::id();
-    
-        $laporan = LaporanModel::where('status', 'selesai')
-        ->where('teknisi_id', $teknisi_id)
-        ->get();   
-    
-        return view('teknisi.riwayat_penugasan',compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
+
+        $laporan = LaporanModel::whereIn('status', ['selesai','telah diperbaiki'])
+            ->where('teknisi_id', $teknisi_id)
+            ->get();
+        return view('teknisi.riwayat_penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
     }
 
     public function detail_riwayat_penugasan($id)
@@ -156,7 +160,7 @@ class TeknisiController extends Controller
             'title' => 'Detail Laporan',
             'subtitle' => 'Informasi lengkap mengenai laporan fasilitas'
         ];
-        
+
         return view('teknisi.detail_riwayat_penugasan', compact('laporan', 'page'));
     }
 }

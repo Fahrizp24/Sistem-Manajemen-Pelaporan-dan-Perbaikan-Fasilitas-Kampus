@@ -58,11 +58,10 @@
                 <tr>
                     <th>Foto</th>
                     <td>
-                        @if($laporan->foto)
+                        @if ($laporan->foto)
                             <div style="max-width: 200px; max-height: 200px; overflow: hidden;">
-                                <img src="{{ Storage::url('foto_laporan/'.$laporan->foto) }}" 
-                                     class="img-fluid"
-                                     style="width: 100%; height: auto; object-fit: cover;">
+                                <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-fluid"
+                                    style="width: 100%; height: auto; object-fit: cover;">
                             </div>
                         @else
                             <span class="text-muted">Tidak ada foto</span>
@@ -75,9 +74,10 @@
                 </tr>
             </table>
             <div class="mt-3 text-end">
-                <form action="{{ url('/teknisi/penugasan/' . $laporan->id) }}" method="POST">
+                <form action="{{ url('/teknisi/penugasan/' . $laporan->laporan_id) }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-success" onclick="return confirm('Ajukan laporan ini ke Sarpras?')">
+                    <button type="submit" class="btn btn-success"
+                        onclick="return confirm('Ajukan laporan ini ke Sarpras?')">
                         Ajukan ke Sarpras
                     </button>
                 </form>

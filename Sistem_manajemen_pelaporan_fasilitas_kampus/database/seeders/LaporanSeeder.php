@@ -69,6 +69,42 @@ class LaporanSeeder extends Seeder
                 'urgensi' => 'tinggi',
                 'created_at' => now(),
                 'updated_at' => now()
+            ],
+            [
+                'pelapor_id' => 4,
+                'fasilitas_id' => 5,
+                'ditugaskan_oleh' => 6,
+                'teknisi_id' => 2,
+                'deskripsi' => 'Printer error',
+                'foto' => 'printer_error.jpg',
+                'status' => 'diperbaiki',
+                'urgensi' => 'tinggi',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'pelapor_id' => 4,
+                'fasilitas_id' => 1,
+                'ditugaskan_oleh' => 6,
+                'teknisi_id' => 2,
+                'deskripsi' => 'Printer error',
+                'foto' => 'printer_error.jpg',
+                'status' => 'diperbaiki',
+                'urgensi' => 'tinggi',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'pelapor_id' => 4,
+                'fasilitas_id' => 2,
+                'ditugaskan_oleh' => 6,
+                'teknisi_id' => 2,
+                'deskripsi' => 'Printer error',
+                'foto' => 'printer_error.jpg',
+                'status' => 'selesai',
+                'urgensi' => 'tinggi',
+                'created_at' => now(),
+                'updated_at' => now()
             ]
         ]);
     }
