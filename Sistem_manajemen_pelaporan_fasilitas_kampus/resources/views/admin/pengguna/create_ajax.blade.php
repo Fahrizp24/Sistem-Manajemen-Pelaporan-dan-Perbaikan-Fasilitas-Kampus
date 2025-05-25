@@ -1,4 +1,4 @@
-<form action="{{ route('admin.pengguna.ajaxstore') }}" method="POST" id="form-tambah">
+<form action="{{ route('admin.pengguna.ajax') }}" method="POST" id="form-tambah">
     @csrf
     <div class="card-header">
     </div>
@@ -49,6 +49,7 @@
     </div>
 </form>
 <script>
+        
     $(document).ready(function () {
         $("#form-tambah").validate({
             rules: {
@@ -59,38 +60,45 @@
                 peran: { required: true },
                 password: { required: true, minlength: 6 }
             },
-            submitHandler: function (form, event) {
-                event.preventDefault(); // mencegah submit default, kalau event tersedia
+            submitHandler: function (form) {
                 $.ajax({
                     url: form.action,
-                    method: form.method,
+                    type: form.method,
                     data: $(form).serialize(),
                     success: function (response) {
                         if (response.status) {
-                            $('#modalTambahPengguna').modal('hide');
+                            $('#myModal').modal('hide');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
-                                text: response.message,
-                                timer: 1000,
-                                showConfirmButton: false
-                            }).then(() => {
-                                // Tambahkan delay kecil sebelum reload
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 300); // 300ms delay agar data sudah tersimpan ke DB
+                                text: response.message
                             });
-
+                            dataUser.ajax.reload();
                         } else {
+                            $('.error-text').text('');
+                            $.each(response.msgField, function (prefix, val) {
+                                $('#error-' + prefix).text(val[0]);
+                            });
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Gagal',
+                                title: 'Terjadi Kesalahan',
                                 text: response.message
                             });
                         }
                     }
                 });
-                return false;  // pastikan ada ini supaya submit form dibatalkan
+                return false;
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
             }
         });
     });

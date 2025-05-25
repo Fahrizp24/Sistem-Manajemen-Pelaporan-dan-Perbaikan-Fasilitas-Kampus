@@ -77,50 +77,44 @@ class AdminController extends Controller
     }
 
 
-    public function create_pengguna()
+    public function create_ajax()
     {
-        return view('admin.pengguna.create_ajax');
+        $user = UserModel::select('username', 'nama', 'email', 'password', 'peran')->get();
+
+        return view('admin.pengguna.create_ajax')->with('user', $user);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function ajaxStorePengguna(Request $request)
+    public function store_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:255',
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:pengguna,email',
-            // 'identitas' => 'nullable    |string|max:50',
-            'password' => 'required|string|min:6',
-            'peran' => 'required|in:admin,pelapor,sarpras,teknisi',
-        ]);
+        $rules = [
+            'username' => 'required|string',
+            'nama' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'peran' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Validasi gagal!',
+                'message' => 'Validasi Gagal',
                 'msgField' => $validator->errors()
             ]);
-        } else {
-            // Simpan data
-            $pengguna = new UserModel();
-            $pengguna->username = $request->username;
-            $pengguna->nama = $request->nama;
-            $pengguna->email = $request->email;
-            // $pengguna->identitas = $request->identitas;
-            $pengguna->password = bcrypt($request->password);
-            $pengguna->peran = $request->peran;
-            $pengguna->save();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Pengguna berhasil ditambahkan!'
-            ]);
         }
-    }
-        return redirect()->route('admin.pengguna');
+
+        UserModel::create($request->all());
+        return response()->json([
+            'status' => true,
+            'message' => 'Data Berhasil Disimpan'
+        ]);
+        }
+        redirect('/');
     }
 
 

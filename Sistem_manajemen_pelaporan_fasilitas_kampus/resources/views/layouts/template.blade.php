@@ -16,12 +16,23 @@
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('mazer/dist/assets/compiled/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/dist/assets/compiled/css/app-dark.css') }}">
-    <link rel="stylesheet" href="{{ asset('mazer/dist/assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('mazer/dist/assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}">
 
     @stack('styles')
 </head>
 
+<!-- JavaScript -->
+<script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
+<!-- jQuery Validation -->
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
+<script src="{{ asset('mazer/dist/assets/static/js/components/dark.js') }}"></script>
+<script src="{{ asset('mazer/dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+<script src="{{ asset('mazer/dist/assets/compiled/js/app.js') }}"></script>
+
 <body>
+    <!-- jQuery Validation Additional Methods -->
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/additional-methods.min.js"></script>
     <!-- Init Theme JS -->
     <script src="{{ asset('mazer/dist/assets/static/js/initTheme.js') }}"></script>
 
@@ -40,45 +51,37 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
-    <script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('mazer/dist/assets/static/js/components/dark.js') }}"></script>
-    <script src="{{ asset('mazer/dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('mazer/dist/assets/compiled/js/app.js') }}"></script>
-    
-
-    <!-- jQuery Validation -->
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
 
     <!-- Parsley.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.3/parsley.min.js"></script>
-    
+
     <script src="{{ asset('mazer/dist/assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('mazer/dist/assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js')}}"></script>
+    <script
+        src="{{ asset('mazer/dist/assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js')}}"></script>
     <script src="{{ asset('mazer/dist/assets/static/js/pages/datatables.js')}}"></script>
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    $(document).ready(function () {
-        $('#laporanTable').DataTable({
-            "language": {
-                "search": "Cari:",
-                "lengthMenu": "Tampilkan _MENU_ data per halaman",
-                "zeroRecords": "Data tidak ditemukan",
-                "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                "infoEmpty": "Tidak ada data tersedia",
-                "infoFiltered": "(difilter dari _MAX_ total data)",
-                "paginate": {
-                    "first": "Pertama",
-                    "last": "Terakhir",
-                    "next": "Berikutnya",
-                    "previous": "Sebelumnya"
-                },
-            }
+        $(document).ready(function () {
+            $('#laporanTable').DataTable({
+                "language": {
+                    "search": "Cari:",
+                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                    "zeroRecords": "Data tidak ditemukan",
+                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    "infoEmpty": "Tidak ada data tersedia",
+                    "infoFiltered": "(difilter dari _MAX_ total data)",
+                    "paginate": {
+                        "first": "Pertama",
+                        "last": "Terakhir",
+                        "next": "Berikutnya",
+                        "previous": "Sebelumnya"
+                    },
+                }
+            });
         });
-    });
-</script>
+    </script>
     @stack('scripts')
 </body>
 

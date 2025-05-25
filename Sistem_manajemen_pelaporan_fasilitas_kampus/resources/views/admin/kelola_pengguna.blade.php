@@ -32,7 +32,10 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Daftar Pengguna</h5>
-                        <button type="button" class="btn btn-success mb-3" id="btnTambahPengguna">+ Tambah Pengguna</button>
+                        {{-- <button type="button" class="btn btn-success mb-3" id="btnTambahPengguna">+ Tambah
+                            Pengguna</button> --}}
+                        <button type="button" class="btn btn-success mb-3"
+                            onclick="modalAction('{{url('admin/pengguna/create_ajax')}}')">+ Tambah Pengguna</button>
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered table-striped mb-0" id="penggunaTable">
@@ -81,8 +84,17 @@
         </div>
     </div>
 @endsection
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static"
+    data-keyboard="false" data-width="75%" aria-hidden="true"></div>
+    <div class="modal-dialog modal-lg"> <!-- atau modal-md -->
+        <div class="modal-content">
+            <!-- konten dari AJAX akan disisipkan di sini -->
+        </div>
+    </div>
+</div>
 <!-- Modal Tambah Pengguna -->
-<div class="modal fade" id="modalTambahPengguna" tabindex="-1" aria-labelledby="modalTambahLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="modalTambahPengguna" tabindex="-1" aria-labelledby="modalTambahLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -91,10 +103,10 @@
             </div>
             <div class="modal-body">
                 {{-- Konten form akan dimuat di sini melalui AJAX --}}
-            </div>
+            {{-- </div>
         </div>
     </div>
-</div>
+</div> --}}
 <!-- Modal Edit Pengguna -->
 <div class="modal fade" id="modalEditPengguna" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -111,21 +123,27 @@
 </div>
 @push('scripts')
     <script>
-        $(document).ready(function () {
-            $('#penggunaTable').DataTable();
-            $('#btnTambahPengguna').on('click', function () {
-                $.ajax({
-                    url: "{{ url('admin/pengguna/create_ajax') }}",
-                    type: "GET",
-                    success: function (response) {
-                        $('#modalTambahPengguna .modal-body').html(response);
-                        $('#modalTambahPengguna').modal('show');
-                    },
-                    error: function () {
-                        alert('Gagal memuat form pengguna.');
-                    }
-                });
+        function modalAction(url = '') {
+            $('#myModal').load(url, function () {
+                $('#myModal').modal('show');
             });
+        }
+        var dataUser;
+        $(document).ready(function () {
+            dataUser = $('#penggunaTable').DataTable();
+            // $('#btnTambahPengguna').on('click', function () {
+            //     $.ajax({
+            //         url: "{{ url('admin/pengguna/create_ajax') }}",
+            //         type: "GET",
+            //         success: function (response) {
+            //             $('#modalTambahPengguna .modal-body').html(response);
+            //             $('#modalTambahPengguna').modal('show');
+            //         },
+            //         error: function () {
+            //             alert('Gagal memuat form pengguna.');
+            //         }
+            //     });
+            // });
             $(document).on('click', '.btnEditPengguna', function () {
                 var id = $(this).data('id');
                 $.ajax({
@@ -141,5 +159,6 @@
                 });
             });
         });
+        
     </script>
 @endpush
