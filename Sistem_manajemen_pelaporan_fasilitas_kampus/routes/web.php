@@ -94,15 +94,21 @@ Route::middleware(['auth'])->group(function () {
     // Teknisi Routes
     Route::middleware(['authorize:teknisi'])->group(function () {
         Route::prefix('teknisi')->group(function () {
+            // Route::prefix('profile')->group(function () {
+            //     Route::get('/', [TeknisiController::class, 'profile'])->name('teknisi.profile');
+            //     Route::put('/', [TeknisiController::class, 'updateProfile'])->name('teknisi.updateProfile');
+            //     Route::put('/change-password', [TeknisiController::class, 'updatePassword'])->name('teknisi.updatePassword');
+            // });
+
             Route::prefix('penugasan')->group(function () {
                 Route::get('/', [TeknisiController::class, 'penugasan'])->name('teknisi.penugasan');
-                Route::get('/{id}/detail_laporan_status', [TeknisiController::class, 'detail_laporan_status'])->name('teknisi.penugasan.detail_laporan_status');
-                Route::post('/{id}/update_laporan_status', [TeknisiController::class, 'update_laporan_status'])->name('teknisi.penugasan.update_laporan_status');
+                Route::get('/{id}', [TeknisiController::class, 'detail_penugasan'])->name('teknisi.detail_penugasan');
+                Route::post('/{id}', [TeknisiController::class, 'update_penugasan'])->name('teknisi.update_penugasan');
             });
         
             Route::prefix('riwayat_penugasan')->group(function () {
                 Route::get('/', [TeknisiController::class, 'riwayat_penugasan'])->name('teknisi.riwayat_penugasan');
-                Route::get('/{id}/detail_riwayat_penugasan', [TeknisiController::class, 'detail_riwayat_penugasan'])->name('teknisi.detail_riwayat_penugasan');
+                Route::get('/{id}', [TeknisiController::class, 'detail_riwayat_penugasan'])->name('teknisi.detail_riwayat_penugasan');
             });
         });
     });

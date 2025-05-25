@@ -29,7 +29,7 @@ class LaporanSeeder extends Seeder
                 'teknisi_id' => 2,
                 'deskripsi' => 'AC bocor',
                 'foto' => 'ac_bocor.jpg',
-                'status' => 'telah diterima',
+                'status' => 'diterima',
                 'urgensi' => 'sedang',
                 'created_at' => now(),
                 'updated_at' => now()
@@ -41,7 +41,7 @@ class LaporanSeeder extends Seeder
                 'teknisi_id' => 2,
                 'deskripsi' => 'Kursi patah',
                 'foto' => 'kursi_patah.jpg',
-                'status' => 'sedang diperbaiki',
+                'status' => 'diperbaiki',
                 'urgensi' => 'rendah',
                 'created_at' => now(),
                 'updated_at' => now()

@@ -12,7 +12,7 @@
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                     Data yang anda cari tidak ditemukan
                 </div>
-                <a href="{{ url('/teknisi/riwayat_penugasan') }}" class="btn btn-warning">Kembali</a>
+                <a href="{{ url('/teknisi/penugasan') }}" class="btn btn-warning">Kembali</a>
             </div>
         </div>
     </div>
@@ -74,6 +74,14 @@
                     <td>{{ $laporan->deskripsi }}</td>
                 </tr>
             </table>
+            <div class="mt-3 text-end">
+                <form action="{{ url('/teknisi/penugasan/' . $laporan->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-success" onclick="return confirm('Ajukan laporan ini ke Sarpras?')">
+                        Ajukan ke Sarpras
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 @endempty
