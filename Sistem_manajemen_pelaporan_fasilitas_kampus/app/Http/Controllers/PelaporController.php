@@ -163,12 +163,20 @@ class PelaporController extends Controller
         return view('pelapor.laporan_saya', compact('laporan_saya', 'breadcrumb', 'page', 'activeMenu'));
     }
 
-    public function show_ajax_laporan(string $id)
+    public function show_laporan_saya(string $id)
     {
-        $laporan = LaporanModel::with('fasilitas.gedung')
-            ->where('laporan_id', $id)
-            ->get();
+        $laporan = LaporanModel::with([
+            'pelapor',          // Pengguna yang melapor
+            'fasilitas.gedung', // Fasilitas + gedung terkait
+            'sarpras',    // Admin/SARPRAS yang menugaskan
+            'teknisi'           // Teknisi yang ditugaskan
+        ])->find($id); // Ganti $id dengan ID laporan yang ingin ditampilkan
+        
+        return view('pelapor.show_detail_laporan', [
+            'laporan' => $laporan,
+            'page' => (object) ['title' => 'Detail Laporan']
+        ]);
 
-        return view('pelapor.show_detail_laporan', compact('laporan'));
     }
+
 }

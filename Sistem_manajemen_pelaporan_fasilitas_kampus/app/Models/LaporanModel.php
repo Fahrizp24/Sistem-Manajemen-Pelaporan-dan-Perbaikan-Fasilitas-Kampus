@@ -46,6 +46,7 @@ class LaporanModel extends Model
     {
         return $this->belongsTo(UserModel::class, 'ditugaskan_oleh', 'pengguna_id');
     }
+    
     public function teknisi()
 
     {
