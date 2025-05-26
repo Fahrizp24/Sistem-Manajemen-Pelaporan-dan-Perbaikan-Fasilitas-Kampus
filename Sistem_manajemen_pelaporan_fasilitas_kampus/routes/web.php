@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
         
             // Pengguna
             Route::prefix('pengguna')->group(function () {
+                Route::get('/data', [AdminController::class, 'data_pengguna'])->name('admin.data_pengguna');
                 Route::get('/', [AdminController::class, 'kelola_pengguna'])->name('admin.pengguna');
                 Route::post('/',[AdminController::class, 'list_pengguna'])->name('admin.list_pengguna');
                 Route::get('/create_ajax', [AdminController::class, 'create_ajax'])->name('admin.pengguna.create_pengguna');
@@ -68,7 +69,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/store', [AdminController::class, 'store_pengguna'])->name('admin.store_pengguna');
                 Route::get('/{id}', [AdminController::class, 'show_pengguna'])->name('admin.show_pengguna');
                 Route::get('/edit_ajax/{id}', [AdminController::class, 'edit_pengguna'])->name('admin.pengguna.edit_pengguna');
-                Route::post('/pengguna/update/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
+                Route::post('/update/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
                 Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
             });
         

@@ -42,13 +42,17 @@ class LaporanModel extends Model
         return $this->belongsTo(FasilitasModel::class, 'fasilitas_id', 'fasilitas_id');
     }
 
+    public function gedung()
+    {
+        return $this->belongsTo(GedungModel::class);
+    }
+
     public function sarpras()
     {
         return $this->belongsTo(UserModel::class, 'ditugaskan_oleh', 'pengguna_id');
     }
-    
-    public function teknisi()
 
+    public function teknisi()
     {
         return $this->belongsTo(UserModel::class, 'teknisi_id', 'pengguna_id');
     }

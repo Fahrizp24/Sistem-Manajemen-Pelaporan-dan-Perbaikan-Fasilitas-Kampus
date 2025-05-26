@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - FIXIT</title>
-
+    
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('mazer/dist/assets/compiled/svg/favicon.svg') }}" type="image/x-icon">
     <link rel="shortcut icon"
@@ -22,20 +22,8 @@
     @stack('styles')
 </head>
 
-<!-- JavaScript -->
-<script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
-<!-- jQuery Validation -->
-{{-- <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script> --}}
-<script src="{{ asset('mazer/dist/assets/static/js/components/dark.js') }}"></script>
-<script src="{{ asset('mazer/dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
-<script src="{{ asset('mazer/dist/assets/compiled/js/app.js') }}"></script>
 
 <body>
-    <!-- jQuery Validation Additional Methods -->
-    {{-- <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/additional-methods.min.js"></script> --}}
-    <!-- Init Theme JS -->
-    <script src="{{ asset('mazer/dist/assets/static/js/initTheme.js') }}"></script>
-
     <div id="app">
         @include('layouts.sidebar')
 
@@ -50,7 +38,21 @@
             @include('layouts.footer')
         </div>
     </div>
+    <!-- JavaScript -->
+    <script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
+    <!-- jQuery Validation -->
+    <script src="{{ asset('mazer/dist/assets/extensions/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('mazer/dist/assets/extensions/jquery-validation/additional-methods.min.js') }}"></script>
+    <script src="{{ asset('mazer/dist/assets/static/js/components/dark.js') }}"></script>
+    <script src="{{ asset('mazer/dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('mazer/dist/assets/compiled/js/app.js') }}"></script>
+    <!-- jQuery Validation Additional Methods -->
+    <!-- Init Theme JS -->
+    <script src="{{ asset('mazer/dist/assets/static/js/initTheme.js') }}"></script>
 
+
+    <!-- Parsley.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.3/parsley.min.js"></script>
 
     <script src="{{ asset('mazer/dist/assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script
@@ -58,7 +60,7 @@
     <script src="{{ asset('mazer/dist/assets/static/js/pages/datatables.js')}}"></script>
 
     <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{asset('mazer/dist/assets/extensions/sweetalert2/sweetalert2.all.min.js')}}"></script>
     <script>
         $(document).ready(function () {
             $('#laporanTable').DataTable({

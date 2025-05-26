@@ -12,16 +12,7 @@
     <div class="page-content">
         <div class="row">
             <div class="col-12 mb-3">
-                {{-- <form method="GET" action="{{ route('admin.kelola_pengguna.index') }}">
-                    <div class="input-group">
-                        <input type="text" name="keyword" class="form-control" placeholder="Cari NIP/NIM/NIDN..."
-                            value="{{ request('keyword') }}">
-                        <button class="btn btn-primary" type="submit">Filter</button>
-                        <a href="{{ route('admin.kelola_pengguna.index') }}" class="btn btn-secondary">Reset</a>
-                    </div>
-                </form> --}}
             </div>
-
             <div class="col-12">
                 <div class="card" style="box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
                     <div class="card-header d-flex justify-content-between align-items-center">
@@ -78,81 +69,46 @@
         </div>
     </div>
 @endsection
-<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static"
-    data-keyboard="false" data-width="75%" aria-hidden="true"></div>
-    <div class="modal-dialog modal-lg"> <!-- atau modal-md -->
-        <div class="modal-content">
-            <!-- konten dari AJAX akan disisipkan di sini -->
-        </div>
-    </div>
-</div>
-<!-- Modal Tambah Pengguna -->
-{{-- <div class="modal fade" id="modalTambahPengguna" tabindex="-1" aria-labelledby="modalTambahLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modalTambahLabel">Tambah Pengguna</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {{-- Konten form akan dimuat di sini melalui AJAX --}}
-            {{-- </div>
-        </div>
-    </div>
-</div> --}}
-<!-- Modal Edit Pengguna -->
-<div class="modal fade" id="modalEditPengguna" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modalEditLabel">Edit Pengguna</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {{-- Konten form akan dimuat di sini melalui AJAX --}}
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Modal -->
 @push('scripts')
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Form Pengguna</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent">Memuat...</div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
-        function modalAction(url = '') {
-            $('#myModal').load(url, function () {
-                $('#myModal').modal('show');
+
+        function modalAction(url) {
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (res) {
+                    $('#modalContent').html(res);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    $('#modalContent').html('<p class="text-danger">Gagal memuat data.</p>');
+                }
             });
         }
+
+        $(document).on('click', '.btnEditPengguna', function () {
+            var id = $(this).data('id');
+            modalAction('/admin/pengguna/edit_ajax/' + id);
+        });
+
         var dataUser;
         $(document).ready(function () {
             dataUser = $('#penggunaTable').DataTable();
-            // $('#btnTambahPengguna').on('click', function () {
-            //     $.ajax({
-            //         url: "{{ url('admin/pengguna/create_ajax') }}",
-            //         type: "GET",
-            //         success: function (response) {
-            //             $('#modalTambahPengguna .modal-body').html(response);
-            //             $('#modalTambahPengguna').modal('show');
-            //         },
-            //         error: function () {
-            //             alert('Gagal memuat form pengguna.');
-            //         }
-            //     });
-            // });
-            $(document).on('click', '.btnEditPengguna', function () {
-                var id = $(this).data('id');
-                $.ajax({
-                    url: "/admin/pengguna/edit_ajax/" + id,
-                    type: "GET",
-                    success: function (response) {
-                        $('#modalEditPengguna .modal-body').html(response);
-                        $('#modalEditPengguna').modal('show');
-                    },
-                    error: function () {
-                        alert('Gagal memuat form pengguna.');
-                    }
-                });
-            });
         });
-        
+
     </script>
-@endpush
+@endpush    
