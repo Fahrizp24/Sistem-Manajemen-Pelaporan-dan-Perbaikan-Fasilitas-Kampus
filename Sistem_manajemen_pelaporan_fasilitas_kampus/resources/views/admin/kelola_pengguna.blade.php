@@ -9,12 +9,6 @@
         </div>
     @endif
 
-    @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
     <div class="page-content">
         <div class="row">
             <div class="col-12 mb-3">
@@ -29,7 +23,7 @@
             </div>
 
             <div class="col-12">
-                <div class="card">
+                <div class="card" style="box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Daftar Pengguna</h5>
                         {{-- <button type="button" class="btn btn-success mb-3" id="btnTambahPengguna">+ Tambah

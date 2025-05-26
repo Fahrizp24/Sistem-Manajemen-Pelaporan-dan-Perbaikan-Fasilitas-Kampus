@@ -1,7 +1,7 @@
 @extends('layouts.template')
 
 @section('content')
-    <div class="card">
+    <div class="card" style="box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
         <div class="card-body table-responsive">
             <table class="table table-bordered" id="laporanTable">
                 <thead>

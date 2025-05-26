@@ -18,7 +18,7 @@
             <!-- Kolom kiri: Form Login -->
             <div class="col-lg-4 col-12 d-flex align-items-center justify-content-center">
                 <div id="auth-left" class="w-100 px-5">
-                    <div class="auth-logo text-left mb-4">
+                    <div class="auth-logo text-left mb-4" >
                         <img src="{{ asset('mazer/dist/asset/logoSistem.png') }}" alt="Logo" style="max-width: 150px;">
                     </div>
                     <h1 class="auth-title">LOGIN</h1>
@@ -54,11 +54,12 @@
             </div>
 
             <!-- Kolom kanan: Gambar Background -->
-            <div class="col-lg-8 d-none d-lg-block">
+            <div class="col-lg-8 d-none d-lg-block" style="height: 100vh;">
                 <div style="
-                    background-image: url('{{ asset('mazer/dist/asset/bg-login.jpg') }}');
+                    background-image: url('{{ asset('mazer/dist/asset/bg-login.png') }}');
                     background-size: cover;
-                    background-position: right;
+                    background-position: center center;
+                    background-repeat: no-repeat;
                     width: 100%;
                     height: 100%;
                 ">
