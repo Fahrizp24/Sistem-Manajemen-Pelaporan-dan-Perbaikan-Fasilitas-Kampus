@@ -94,11 +94,11 @@ Route::middleware(['auth'])->group(function () {
     // Teknisi Routes
     Route::middleware(['authorize:teknisi'])->group(function () {
         Route::prefix('teknisi')->group(function () {
-            // Route::prefix('profile')->group(function () {
-            //     Route::get('/', [TeknisiController::class, 'profile'])->name('teknisi.profile');
-            //     Route::put('/', [TeknisiController::class, 'updateProfile'])->name('teknisi.updateProfile');
-            //     Route::put('/change-password', [TeknisiController::class, 'updatePassword'])->name('teknisi.updatePassword');
-            // });
+            Route::prefix('profile')->group(function () {
+                Route::get('/', [TeknisiController::class, 'profile'])->name('teknisi.profile');
+                Route::put('/', [TeknisiController::class, 'updateProfile'])->name('teknisi.updateProfile');
+                Route::put('/change-password', [TeknisiController::class, 'updatePassword'])->name('teknisi.updatePassword');
+            });
 
             Route::prefix('penugasan')->group(function () {
                 Route::get('/', [TeknisiController::class, 'penugasan'])->name('teknisi.penugasan');

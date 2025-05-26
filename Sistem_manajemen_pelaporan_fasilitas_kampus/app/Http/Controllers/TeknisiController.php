@@ -110,7 +110,7 @@ class TeknisiController extends Controller
             'title' => 'Detail Penugasan',
             'subtitle' => 'Informasi lengkap mengenai penugasan'
         ];
-        return view('teknisi.show_detail_penugasan', compact('laporan', 'breadcrumb', 'page'));
+        return view('teknisi.detail_penugasan', compact('laporan', 'breadcrumb', 'page'));
     }
     
     public function ajukanKeSarpras($id)

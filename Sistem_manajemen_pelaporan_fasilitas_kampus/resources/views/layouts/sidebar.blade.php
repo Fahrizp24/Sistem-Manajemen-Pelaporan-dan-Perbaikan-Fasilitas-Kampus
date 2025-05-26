@@ -159,6 +159,13 @@
                 {{-- Teknisi --}}
                 @if($peran === 'teknisi')
                 <li class="sidebar-title">Menu</li>
+
+                <li class="sidebar-item {{ str_contains($currentUrl, '/pelapor/profile') ? 'active' : '' }}">
+                    <a href="{{ url('/teknisi/profile') }}" class='sidebar-link'>
+                        <i class="bi bi-person"></i>
+                        <span>Profil</span>
+                    </a>
+                </li>
         
                 <li class="sidebar-item {{ str_contains($currentUrl, '/teknisi/penugasan') ? 'active' : '' }}">
                     <a href="{{ url('teknisi/penugasan') }}" class='sidebar-link'>
