@@ -21,8 +21,8 @@ class UserModel extends Authenticatable
         'nama',
         'email',
         'password',
-        'peran',
-        'foto_profil'
+        'peran'
+        // 'foto_profil'
     ];
 
     // Define the attributes that should be hidden for arrays

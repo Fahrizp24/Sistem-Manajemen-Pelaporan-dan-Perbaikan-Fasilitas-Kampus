@@ -31,7 +31,7 @@ Route::middleware(['auth'])->group(function () {
             // Laporan
             Route::prefix('laporan')->group(function () {
                 Route::get('/', [AdminController::class, 'laporan'])->name('admin.laporan');
-                Route::get('/{id}', [LaporanController::class, 'show_laporan'])->name('admin.show_laporan');
+                Route::get('/laporan/{id}', [LaporanController::class, 'show_laporan'])->name('admin.show_laporan');
                 Route::post('/{id}', [AdminController::class, 'update_laporan'])->name('admin.update_laporan');
             });
         
@@ -63,13 +63,13 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('pengguna')->group(function () {
                 Route::get('/', [AdminController::class, 'kelola_pengguna'])->name('admin.pengguna');
                 Route::post('/',[AdminController::class, 'list_pengguna'])->name('admin.list_pengguna');
-                Route::get('/create_ajax', [AdminController::class, 'create_pengguna'])->name('admin.pengguna.create_pengguna');
-                Route::post('/kelola_pengguna', [AdminController::class, 'ajaxStorePengguna'])->name('admin.pengguna.ajaxstore');
+                Route::get('/create_ajax', [AdminController::class, 'create_ajax'])->name('admin.pengguna.create_pengguna');
+                Route::post('/ajax', [AdminController::class, 'store_ajax'])->name('admin.pengguna.ajax');
                 Route::post('/store', [AdminController::class, 'store_pengguna'])->name('admin.store_pengguna');
                 Route::get('/{id}', [AdminController::class, 'show_pengguna'])->name('admin.show_pengguna');
                 Route::get('/edit_ajax/{id}', [AdminController::class, 'edit_pengguna'])->name('admin.pengguna.edit_pengguna');
-                Route::post('/admin/pengguna/update/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
-                Route::delete('/{id}', [AdminController::class, 'destroy_pengguna'])->name('admin.destroy_pengguna');
+                Route::post('/pengguna/update/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
+                Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
             });
         
             // Statistik
@@ -118,8 +118,10 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('sarpras')->group(function () {
             Route::prefix('laporan_masuk')->group(function () {
                 Route::get('/', [SarprasController::class, 'list_laporan'])->name('sarpras.laporan');
-                Route::get('/{id}', [LaporanController::class, 'show_laporan'])->name('sarpras.show_laporan');
-                Route::post('/{id}', [SarprasController::class, 'update_laporan'])->name('sarpras.update_laporan');
+                Route::get('/{id}', [SarprasController::class, 'show_laporan'])->name('sarpras.show_laporan');
+                Route::post('/konfirmasi/{id}', [SarprasController::class, 'konfirmasi'])->name('sarpras.update_laporan');
+                Route::post('/pilih_teknisi/{id}', [SarprasController::class, 'pilih_teknisi'])->name('sarpras.update_laporan');
+                Route::post('/selesaikan/{id}', [SarprasController::class, 'selesaikan'])->name('sarpras.update_laporan');
             });
         
             Route::get('/sistem_rekomendasi', [SarprasController::class, 'sistem_pendukung_keputusan'])->name('sarpras.sistem_pendukung_keputusan');

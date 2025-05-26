@@ -2,7 +2,6 @@
     @csrf
     @method('PUT')
     <div class="card-header">
-        <h4 class="card-title">Edit Pengguna</h4>
     </div>
     <div class="card-body">
         <div class="form-body">
@@ -55,7 +54,7 @@ $(document).ready(function () {
                 data: $(form).serialize(),
                 success: function (response) {
                     if (response.status) {
-                        $('#myModal').modal('hide');
+                        $('#modalEditPengguna').modal('hide');
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',

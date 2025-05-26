@@ -1,7 +1,6 @@
-<form action="{{ route('admin.pengguna.ajaxstore') }}" method="POST" id="form-tambah">
+<form action="{{ route('admin.pengguna.ajax') }}" method="POST" id="form-tambah">
     @csrf
     <div class="card-header">
-        <h4 class="card-title">Tambah Pengguna</h4>
     </div>
     <div class="card-body">
         <div class="form-body">
@@ -50,45 +49,57 @@
     </div>
 </form>
 <script>
+        
     $(document).ready(function () {
         $("#form-tambah").validate({
             rules: {
                 username: { required: true, minlength: 3 },
                 nama: { required: true, minlength: 3 },
                 email: { required: true, email: true },
-                identitas: { required: true },
+                // identitas: { required: true },
                 peran: { required: true },
-                kata_sandi: { required: true, minlength: 6 }
+                password: { required: true, minlength: 6 }
             },
-            submitHandler: function (form, event) {
-            event.preventDefault(); // mencegah submit default, kalau event tersedia
-            $.ajax({
-                url: form.action,
-                method: form.method,
-                data: $(form).serialize(),
-                success: function (response) {
-                    if (response.status) {
-                        $('#myModal').modal('hide');
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message,
-                            timer: 1500,
-                            showConfirmButton: false
-                        }).then(() => {
-                            window.location.href = "{{ route('admin.pengguna') }}";
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal',
-                            text: response.message
-                        });
+            submitHandler: function (form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: $(form).serialize(),
+                    success: function (response) {
+                        if (response.status) {
+                            $('#myModal').modal('hide');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message
+                            });
+                            dataUser.ajax.reload();
+                        } else {
+                            $('.error-text').text('');
+                            $.each(response.msgField, function (prefix, val) {
+                                $('#error-' + prefix).text(val[0]);
+                            });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
+                        }
                     }
-                }
-            });
-            return false;  // pastikan ada ini supaya submit form dibatalkan
-        }
-        }
+                });
+                return false;
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
     });
 </script>

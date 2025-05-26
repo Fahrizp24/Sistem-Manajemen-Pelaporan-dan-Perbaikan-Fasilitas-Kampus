@@ -8,12 +8,12 @@
 
     {{-- Tabel Gedung --}}
     <div class="card">
-        <div class="card-header">
-            <a href="{{ url('admin/gedung/create') }}" class="btn btn-success mb-3">+ Tambah Gedung</a>
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Daftar Gedung</h5>
+            <a href="{{ url('admin/gedung/create') }}" class="btn btn-success mb-3">+ Tambah Gedung</a>
         </div>
         <div class="card-body">
-            <table class="table table-bordered">
+            <table class="table table-bordered" id="gedungTable">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -53,3 +53,10 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#gedungTable').DataTable();
+        });
+</script>
+@endpush

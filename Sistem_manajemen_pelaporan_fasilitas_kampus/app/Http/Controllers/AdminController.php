@@ -77,48 +77,44 @@ class AdminController extends Controller
     }
 
 
-    public function create_pengguna()
+    public function create_ajax()
     {
-        return view('admin.pengguna.create_ajax');
+        $user = UserModel::select('username', 'nama', 'email', 'password', 'peran')->get();
+
+        return view('admin.pengguna.create_ajax')->with('user', $user);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function ajaxStorePengguna(Request $request)
+    public function store_ajax(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:255',
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:pengguna,email',
-            // 'identitas' => 'nullable    |string|max:50',
-            'password' => 'required|string|min:6',
-            'peran' => 'required|in:admin,pelapor,sarpras,teknisi',
-        ]);
+        if ($request->ajax() || $request->wantsJson()) {
+        $rules = [
+            'username' => 'required|string',
+            'nama' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'peran' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Validasi gagal!',
+                'message' => 'Validasi Gagal',
                 'msgField' => $validator->errors()
             ]);
         }
 
-        // Simpan data
-        $pengguna = new UserModel();
-        $pengguna->username = $request->username;
-        $pengguna->nama = $request->nama;
-        $pengguna->email = $request->email;
-        // $pengguna->identitas = $request->identitas;
-        $pengguna->password = bcrypt($request->password);
-        $pengguna->peran = $request->peran;
-        $pengguna->save();
-
+        UserModel::create($request->all());
         return response()->json([
             'status' => true,
-            'message' => 'Pengguna berhasil ditambahkan!'
+            'message' => 'Data Berhasil Disimpan'
         ]);
-        
+        }
+        redirect('/');
     }
 
 
@@ -188,10 +184,15 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        $admin = UserModel::findOrFail($id);
-        $admin->delete();
+        $pengguna = UserModel::find($id); // Ganti UserModel dengan model yang sesuai
 
-        return redirect()->route('admin.index')->with('success', 'UserModel deleted successfully.');
+        if (!$pengguna) {
+            return redirect()->route('admin.pengguna')->with('error', 'Pengguna tidak ditemukan.');
+        }
+
+        $pengguna->delete();
+
+        return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil dihapus.');
     }
 
     function kelola_fasilitas()

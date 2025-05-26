@@ -7,12 +7,12 @@
     @endif
 
     <div class="card">
-        <div class="card-header">
-            <a href="{{ url('admin/fasilitas/create') }}" class="btn btn-success mb-3">+ Tambah Fasilitas</a>
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Daftar Fasilitas</h5>
+            <a href="{{ url('admin/fasilitas/create') }}" class="btn btn-success mb-3">+ Tambah Fasilitas</a>
         </div>
         <div class="card-body">
-            <table class="table table-bordered mb-0">
+            <table class="table table-bordered mb-0" id="fasilitasTable">
                 <thead>
                     <tr>
                         <th>Nama</th>
@@ -45,3 +45,10 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#fasilitasTable').DataTable();
+        });
+</script>
+@endpush

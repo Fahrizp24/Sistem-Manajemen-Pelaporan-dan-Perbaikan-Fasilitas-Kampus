@@ -60,11 +60,10 @@
                 <tr>
                     <th>Foto</th>
                     <td>
-                        @if($laporan->foto)
+                        @if ($laporan->foto)
                             <div style="max-width: 200px; max-height: 200px; overflow: hidden;">
-                                <img src="{{ Storage::url('foto_laporan/'.$laporan->foto) }}" 
-                                     class="img-fluid"
-                                     style="width: 100%; height: auto; object-fit: cover;">
+                                <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-fluid"
+                                    style="width: 100%; height: auto; object-fit: cover;">
                             </div>
                         @else
                             <span class="text-muted">Tidak ada foto</span>

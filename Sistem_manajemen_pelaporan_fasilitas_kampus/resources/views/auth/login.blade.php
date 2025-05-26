@@ -13,47 +13,56 @@
 
 <body>
     <script src="{{ asset('mazer/dist/assets/static/js/initTheme.js') }}"></script>
-    <div id="auth">
-        <div class="row h-100">
-            <div class="col-lg-5 col-12">
-                <div id="auth-left">
-                    <div class="auth-logo">
-                        <img src="{{ asset('mazer/dist/asset/logoo.png') }}" alt="Logo"></a>
+    <div id="auth" class="vh-100">
+        <div class="row h-100 g-0">
+            <!-- Kolom kiri: Form Login -->
+            <div class="col-lg-4 col-12 d-flex align-items-center justify-content-center">
+                <div id="auth-left" class="w-100 px-5">
+                    <div class="auth-logo text-left mb-4">
+                        <img src="{{ asset('mazer/dist/asset/logoSistem.png') }}" alt="Logo" style="max-width: 150px;">
                     </div>
                     <h1 class="auth-title">LOGIN</h1>
-                    <p class="auth-subtitle mb-5">Masuklah dengan data yang telah terdaftar.</p>
-                    
+                    <p class="auth-subtitle mb-4">Masuklah dengan data yang telah terdaftar.</p>
+
                     <form action="{{ url('login') }}" method="POST" id="form-login">
-                        @csrf <!-- Pindahkan ke dalam form -->
-                        
+                        @csrf
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" class="form-control form-control-xl" name="username" placeholder="Username"> <!-- Tambahkan name -->
+                            <input type="text" class="form-control form-control-xl" name="username" placeholder="Username">
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
                             </div>
                         </div>
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" name="password" placeholder="Password"> <!-- Tambahkan name -->
+                            <input type="password" class="form-control form-control-xl" name="password" placeholder="Password">
                             <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
                         </div>
-                        <div class="form-check form-check-lg d-flex align-items-end">
+                        <div class="form-check form-check-lg d-flex align-items-end mb-4">
                             <input class="form-check-input me-2" type="checkbox" name="remember" id="flexCheckDefault">
                             <label class="form-check-label text-gray-600" for="flexCheckDefault">
                                 Keep me logged in
                             </label>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Login</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg">Login</button>
                     </form>
-                    
-                    <div class="text-center mt-5 text-lg fs-4">
+
+                    <div class="text-center mt-4 text-lg fs-6">
                         <p><a class="font-bold" href="auth-forgot-password.html">Forgot password?</a></p>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-7 d-none d-lg-block">
-                <div id="auth-right"></div>
+
+            <!-- Kolom kanan: Gambar Background -->
+            <div class="col-lg-8 d-none d-lg-block">
+                <div style="
+                    background-image: url('{{ asset('mazer/dist/asset/bg-login.jpg') }}');
+                    background-size: cover;
+                    background-position: right;
+                    width: 100%;
+                    height: 100%;
+                ">
+                </div>
             </div>
         </div>
     </div>
