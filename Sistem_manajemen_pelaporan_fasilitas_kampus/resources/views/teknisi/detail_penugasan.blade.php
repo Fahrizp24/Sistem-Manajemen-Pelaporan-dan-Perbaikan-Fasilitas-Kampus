@@ -79,8 +79,8 @@
             <div class="card-footer text-end">
                 <form action="{{ url('/teknisi/penugasan/' . $laporan->laporan_id) }}" method="POST">
                     @csrf
-                    <input type="hidden" name="laporan_id" value="{{ $laporan->laporan_id }}">
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn btn-success" 
+                    onclick="return confirm('Anda Yakin Untuk Mengkonfirmasi Laporan Ini?')">
                         <i class="fas fa-paper-plane"></i> Ajukan ke Sarpras
                     </button>
                 </form>
@@ -88,3 +88,57 @@
         </div>
     </div>
 @endempty
+<script>
+    $(document).ready(function() {
+        $('form[action*="/teknisi/penugasan/telah_diperbaiki"]').validate({
+            submitHandler: function(form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: $(form).serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.status) {
+                            $('#detailModal').fadeOut(300, function() {
+                                $(this).modal('hide');
+                            });
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message
+                            });
+                        } else {
+                            $('.error-text').text('');
+                            if (response.msgField) {
+                                $.each(response.msgField, function(prefix, val) {
+                                    $('#error-' + prefix).text(val[0]);
+                                });
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
+                        }
+                    }
+                });
+                return false;
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+</script>

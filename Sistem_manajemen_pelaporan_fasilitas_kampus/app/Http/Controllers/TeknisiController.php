@@ -114,15 +114,31 @@ class TeknisiController extends Controller
         return view('teknisi.detail_penugasan', compact('laporan', 'breadcrumb', 'page'));
     }
     
-    public function ajukanKeSarpras($id)
-{
-        $laporan = LaporanModel::findOrFail($id);
+    public function ajukanKeSarpras(string $id, Request $request)
+    {
+        try {
+            $laporan = LaporanModel::findOrFail($id);
+            $laporan->status = 'telah diperbaiki';
+            $laporan->save();
 
-        // Misalnya hanya ubah status
-        $laporan->status = 'telah diperbaiki';
-        $laporan->save();
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Laporan berhasil diajukan ke sarpras.'
+                ]);
+            }
 
-        return redirect('/teknisi/penugasan')->with('success', 'Data berhasil disimpan.');
+            return redirect()->back()->with('success', 'Laporan berhasil diajukan ke sarpras.');
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengkonfirmasi laporan: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Gagal mengkonfirmasi laporan: ' . $e->getMessage());
+        }
     }
     
     public function riwayat_penugasan()

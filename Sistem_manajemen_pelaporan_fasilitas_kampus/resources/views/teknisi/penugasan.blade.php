@@ -8,7 +8,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table dataTable no-footer" id="table1">
+                    <table class="table dataTable no-footer" id="table-penugasan">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -61,7 +61,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table dataTable no-footer" id="table1">
+                    <table class="table dataTable no-footer" id="table-revisi">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -126,11 +126,6 @@
 @endsection
 
 @push('scripts')
-    <!-- Ensure jQuery is loaded before Bootstrap -->
-    <script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
-    <!-- Bootstrap Bundle with Popper (includes modal functionality) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
         function showDetailModal(url) {
             // Fetch the content
@@ -143,6 +138,57 @@
                     // Initialize the modal
                     var modal = new bootstrap.Modal(document.getElementById('detailModal'));
                     modal.show();
+
+                    const form = document.querySelector('#detailModal form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+
+                            // Submit form via AJAX
+                            fetch(form.action, {
+                                    method: form.method,
+                                    body: new FormData(form),
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        // Hide modal
+                                        modal.hide();
+
+                                        // Show success alert
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Sukses',
+                                            text: data.message || 'Aksi berhasil dilakukan',
+                                            timer: 2000,
+                                            showConfirmButton: false
+                                        });
+
+                                        // Optional: refresh page or update table
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 2000);
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Gagal',
+                                            text: data.message || 'Terjadi kesalahan'
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Terjadi kesalahan saat mengirim data'
+                                    });
+                                });
+                        });
+                    }
                 })
                 .catch(error => {
                     console.error('Error loading modal content:', error);
