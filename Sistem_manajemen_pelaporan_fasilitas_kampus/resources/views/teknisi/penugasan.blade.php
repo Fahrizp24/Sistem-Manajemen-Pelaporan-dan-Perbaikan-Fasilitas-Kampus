@@ -3,7 +3,7 @@
 @section('content')
     <section class="section">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header bg-primary text-white">
                 <h5 class="card-title">Daftar Penugasan</h5>
             </div>
             <div class="card-body">
@@ -21,7 +21,60 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($laporan as $item)
+                            @foreach ($penugasan as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $item->fasilitas->gedung->nama }}</td>
+                                    <td>{{ $item->fasilitas->nama }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y') }}</td>
+                                    <td>{{ Str::limit($item->deskripsi, 50) }}</td>
+                                    <td>
+                                        @php
+                                            $badgeClass = [
+                                                'diajukan' => 'bg-secondary',
+                                                'diterima' => 'bg-primary',
+                                                'ditolak' => 'bg-danger',
+                                                'diajukan sarpras' => 'bg-warning',
+                                                'diterima admin' => 'bg-info',
+                                                'dilaksanakan' => 'bg-success',
+                                                'selesai' => 'bg-dark',
+                                            ][$item->status] ?? 'bg-secondary';
+                                        @endphp
+                                        <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
+                                    </td>
+                                    <td>
+                                        <button onclick="showDetailModal('{{ url('teknisi/penugasan/'.$item->laporan_id) }}')" 
+                                            class="btn btn-sm btn-primary">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title">Daftar Revisi</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table dataTable no-footer" id="table1">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Gedung</th>
+                                <th>Fasilitas</th>
+                                <th>Tanggal Laporan</th>
+                                <th>Deskripsi</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($revisi as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->fasilitas->gedung->nama }}</td>

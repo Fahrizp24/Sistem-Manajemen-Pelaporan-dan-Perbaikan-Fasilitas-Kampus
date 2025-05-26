@@ -92,9 +92,10 @@ class TeknisiController extends Controller
         $teknisi_id = Auth::id();
 
         $activeMenu = 'penugasan';
-        $laporan = LaporanModel::where('teknisi_id', $teknisi_id)->where('status', 'diperbaiki')->get();
+        $penugasan = LaporanModel::where('teknisi_id', $teknisi_id)->where('status', 'diperbaiki')->get();
+        $revisi = LaporanModel::where('teknisi_id', $teknisi_id)->where('status', 'revisi')->get();
 
-        return view('teknisi.penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
+        return view('teknisi.penugasan', compact('penugasan', 'revisi', 'breadcrumb', 'page', 'activeMenu'));
     }
 
     public function detail_penugasan($id)
@@ -124,8 +125,6 @@ class TeknisiController extends Controller
         return redirect('/teknisi/penugasan')->with('success', 'Data berhasil disimpan.');
     }
     
-
-
     public function riwayat_penugasan()
     {
         $breadcrumb = (object) [
