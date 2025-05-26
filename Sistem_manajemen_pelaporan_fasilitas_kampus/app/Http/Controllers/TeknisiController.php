@@ -116,17 +116,17 @@ class TeknisiController extends Controller
         return view('teknisi.detail_penugasan', compact('laporan', 'breadcrumb', 'page'));
     }
     
-    public function update_penugasan(Request $request, $id)
-    {
-         $laporan = LaporanModel::findOrFail($id);
+    public function ajukanKeSarpras($id)
+{
+        $laporan = LaporanModel::findOrFail($id);
 
-        // Contoh: ubah status laporan menjadi 'diajukan'
+        // Misalnya hanya ubah status
         $laporan->status = 'telah diperbaiki';
         $laporan->save();
 
-        return redirect()->back()->with('success', 'Laporan berhasil diajukan ke Sarpras.');
-        
+        return redirect('/teknisi/penugasan')->with('success', 'Data berhasil disimpan.');
     }
+
 
     public function riwayat_penugasan()
     {

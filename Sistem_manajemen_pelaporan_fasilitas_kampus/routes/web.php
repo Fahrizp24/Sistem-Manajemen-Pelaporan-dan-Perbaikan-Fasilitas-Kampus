@@ -103,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('penugasan')->group(function () {
                 Route::get('/', [TeknisiController::class, 'penugasan'])->name('teknisi.penugasan');
                 Route::get('/{id}', [TeknisiController::class, 'detail_penugasan'])->name('teknisi.detail_penugasan');
-                Route::post('/{id}', [TeknisiController::class, 'update_penugasan'])->name('teknisi.update_penugasan');
+                Route::post('/{id}', [TeknisiController::class, 'ajukanKeSarpras'])->name('teknisi.ajukan');
             });
         
             Route::prefix('riwayat_penugasan')->group(function () {

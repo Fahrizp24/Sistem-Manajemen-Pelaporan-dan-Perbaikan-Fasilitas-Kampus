@@ -23,6 +23,7 @@
             <div class="card-tools"></div>
         </div>
         <div class="card-body">
+            {{-- Tampilkan detail laporan --}}
             <table class="table table-bordered table-striped table-hover table-sm">
                 <tr>
                     <th>Pelapor</th>
@@ -37,7 +38,7 @@
                     <td>{{ $laporan->fasilitas->nama }}</td>
                 </tr>
                 <tr>
-                    <th>Status </th>
+                    <th>Status</th>
                     <td>{{ $laporan->status }}</td>
                 </tr>
                 <tr>
@@ -55,6 +56,7 @@
                 <tr>
                     <th>Ditugaskan Kepada</th>
                     <td>{{ $laporan->teknisi->nama ?? '-' }}</td>
+                </tr>
                 <tr>
                     <th>Foto</th>
                     <td>
@@ -74,11 +76,13 @@
                     <td>{{ $laporan->deskripsi }}</td>
                 </tr>
             </table>
-            <div class="mt-3 text-end">
-                <form action="{{ url('/teknisi/penugasan/' . $laporan->id) }}" method="POST">
+
+            <div class="card-footer text-end">
+                <form action="{{ url('/teknisi/penugasan/' . $laporan->laporan_id) }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-success" onclick="return confirm('Ajukan laporan ini ke Sarpras?')">
-                        Ajukan ke Sarpras
+                    <input type="hidden" name="laporan_id" value="{{ $laporan->laporan_id }}">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-paper-plane"></i> Ajukan ke Sarpras
                     </button>
                 </form>
             </div>
