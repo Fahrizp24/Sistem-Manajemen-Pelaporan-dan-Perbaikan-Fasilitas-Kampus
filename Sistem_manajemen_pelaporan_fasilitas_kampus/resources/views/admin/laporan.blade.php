@@ -9,6 +9,7 @@
                         <th>No</th>
                         <th>Pelapor</th>
                         <th>Fasilitas</th>
+                        <th>Gedung</th>
                         <th>Deskripsi</th>
                         <th>Status</th>
                         <th>Urgensi</th>
@@ -22,6 +23,7 @@
         <td>{{ $no++ }}</td>
         <td>{{ $item->pelapor->nama ?? '-' }}</td>
         <td>{{ $item->fasilitas->nama ?? '-' }}</td>
+        <td>{{ $item->gedung->nama ?? '-' }}</td>
         <td>{{ $item->deskripsi }}</td>
         
         
@@ -59,6 +61,7 @@
       <div class="modal-body">
         <p><strong>Pelapor:</strong> <span id="modal-pelapor"></span></p>
         <p><strong>Fasilitas:</strong> <span id="modal-fasilitas"></span></p>
+        <p><strong>Gedung:</strong> <span id="modal-gedung"></span></p>
         <p><strong>Deskripsi:</strong> <span id="modal-deskripsi"></span></p>
         <p><strong>Status:</strong> <span id="modal-status"></span></p>
         <p><strong>Urgensi:</strong> <span id="modal-urgensi"></span></p>
@@ -96,6 +99,7 @@
                     if(res) {
                         $('#modal-pelapor').text(res.pelapor?.nama || '-');
                         $('#modal-fasilitas').text(res.fasilitas?.nama || '-');
+                        $('#modal-gedung').text(res.gedung?.nama || '-');
                         $('#modal-deskripsi').text(res.deskripsi || '-');
                         $('#modal-status').text(res.status || '-');
                         $('#modal-urgensi').text(res.urgensi || '-');
