@@ -25,14 +25,14 @@
 <!-- JavaScript -->
 <script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
 <!-- jQuery Validation -->
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script> --}}
 <script src="{{ asset('mazer/dist/assets/static/js/components/dark.js') }}"></script>
 <script src="{{ asset('mazer/dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
 <script src="{{ asset('mazer/dist/assets/compiled/js/app.js') }}"></script>
 
 <body>
     <!-- jQuery Validation Additional Methods -->
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/additional-methods.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/additional-methods.min.js"></script> --}}
     <!-- Init Theme JS -->
     <script src="{{ asset('mazer/dist/assets/static/js/initTheme.js') }}"></script>
 
@@ -51,9 +51,6 @@
         </div>
     </div>
 
-
-    <!-- Parsley.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.3/parsley.min.js"></script>
 
     <script src="{{ asset('mazer/dist/assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script

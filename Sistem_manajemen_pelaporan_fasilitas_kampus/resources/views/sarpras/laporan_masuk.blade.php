@@ -162,11 +162,12 @@
 @endsection
 
 @push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('assets/extensions/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('mazer/dist/assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('mazer/dist/assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#table-sarpras, #table-admin', '#table-teknisi').DataTable({
@@ -186,20 +187,73 @@
                 }
             });
         });
+
         function showDetailModal(url) {
             // Fetch the content
             fetch(url)
                 .then(response => response.text())
                 .then(html => {
                     document.getElementById('modalContent').innerHTML = html;
-                    
+
                     // Initialize the modal
                     var modal = new bootstrap.Modal(document.getElementById('detailModal'));
                     modal.show();
+
+                    // Add form submission handler if form exists
+                    const form = document.querySelector('#detailModal form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+
+                            // Submit form via AJAX
+                            fetch(form.action, {
+                                    method: form.method,
+                                    body: new FormData(form),
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        // Hide modal
+                                        modal.hide();
+
+                                        // Show success alert
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Sukses',
+                                            text: data.message || 'Aksi berhasil dilakukan',
+                                            timer: 2000,
+                                            showConfirmButton: false
+                                        });
+
+                                        // Optional: refresh page or update table
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 2000);
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Gagal',
+                                            text: data.message || 'Terjadi kesalahan'
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Terjadi kesalahan saat mengirim data'
+                                    });
+                                });
+                        });
+                    }
                 })
                 .catch(error => {
                     console.error('Error loading modal content:', error);
-                    document.getElementById('modalContent').innerHTML = 
+                    document.getElementById('modalContent').innerHTML =
                         '<div class="alert alert-danger">Error loading content</div>';
                     var modal = new bootstrap.Modal(document.getElementById('detailModal'));
                     modal.show();

@@ -86,20 +86,27 @@
                     <form action="{{ url('/sarpras/laporan_masuk/pilih_teknisi/' . $laporan->laporan_id) }}"
                         method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-success">
-                            Pilih Teknisi
-                        </button>
+                        <select class="form-select" name="teknisi" id="teknisi" required>
+                            <option value="" disabled selected>Pilih Teknisi</option>
+                            @foreach ($teknisi as $item)
+                                <option value="{{ $item->pengguna_id }}">{{ $item->nama }}</option>
+                            @endforeach
+                        </select>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-success" onclick="return confirmSubmit()">
+                                Submit
+                            </button>
+                        </div>
                     </form>
                 @elseif($source == 'teknisi')
-                    <form action="{{ url('/teknisi/penugasan/selesaikan/' . $laporan->laporan_id) }}" method="POST">
+                    <form action="{{ url('/sarpras/laporan_masuk/selesaikan/' . $laporan->laporan_id) }}" method="POST">
                         @csrf
                         <div class="row g-3 align-items-center">
                             <div class="col-auto">
-                                <select class="form-select" name="status_penugasan" id="statusPenugasan" required>
+                                <select class="form-select" name="hasil" id="hasil" required>
                                     <option value="" disabled selected>Status Penyelesaian</option>
-                                    <option value="selesai">Selesai Diperbaiki</option>
-                                    <option value="butuh_bahan">Butuh Bahan/Part</option>
-                                    <option value="tidak_bisa">Tidak Bisa Diperbaiki</option>
+                                    <option value="selesai">Tutup dan Selesai</option>
+                                    <option value="revisi">Revisi</option>
                                 </select>
                             </div>
                             <div class="col-auto">
@@ -191,8 +198,6 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-
-                            dataBarang.ajax.reload();
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
@@ -226,41 +231,54 @@
 
         // Form Selesaikan Penugasan (Teknisi)
         $('form[action*="/teknisi/penugasan/selesaikan/"]').on('submit', function(e) {
-            e.preventDefault();
+            submitHandler: function(form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: $(form).serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.status) {
+                            $('#myModal').fadeOut(300, function() {
+                                $(this).modal('hide');
+                            });
 
-            const status = $('#statusPenugasan').val();
-            let message = '';
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message
+                            });
+                        } else {
+                            $('.error-text').text('');
+                            if (response.msgField) {
+                                $.each(response.msgField, function(prefix, val) {
+                                    $('#error-' + prefix).text(val[0]);
+                                });
+                            }
 
-            if (!status) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Peringatan',
-                    text: 'Pilih status penyelesaian terlebih dahulu!',
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
+                        }
+                    }
                 });
-                return;
+                return false;
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
             }
-
-            if (status === 'selesai') {
-                message = 'Anda yakin menandai laporan ini sebagai SELESAI DIPERBAIKI?';
-            } else if (status === 'butuh_bahan') {
-                message = 'Anda yakin melaporkan bahwa perbaikan BUTUH BAHAN/PART?';
-            } else if (status === 'tidak_bisa') {
-                message = 'Anda yakin melaporkan bahwa perbaikan TIDAK BISA DILAKUKAN?';
-            }
-
-            Swal.fire({
-                title: 'Konfirmasi Penyelesaian',
-                text: message,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Simpan!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    handleFormSubmit($(this), 'Status penugasan berhasil diperbarui!');
-                }
-            });
         });
     });
 </script>
