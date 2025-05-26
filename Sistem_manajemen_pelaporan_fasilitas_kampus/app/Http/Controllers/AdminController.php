@@ -27,7 +27,8 @@ class AdminController extends Controller
 
     public function laporan()
     {
-        $laporan = DB::table('laporan')->get();
+        $laporan = LaporanModel::with('fasilitas.gedung')->where('status', 'konfirmasi')->get();
+        
         $breadcrumb = (object) [
             'title' => 'Laporan',
             'list' => ['Admin Laporan']
