@@ -1,6 +1,6 @@
-<form action="{{ url('/user/update_ajax', $user->pengguna_id) }}" method="POST" id="form-edit">
+<form action="{{ url('/admin/pengguna/update', $user->pengguna_id) }}" method="POST" id="form-edit">
     @csrf
-    @method('PUT')
+    @method('POST')
     <div class="card-header">
     </div>
     <div class="card-body">
@@ -44,38 +44,37 @@ $(document).ready(function () {
         rules: {
             nama: { required: true, minlength: 3 },
             email: { required: true, email: true },
-            identitas: { required: true },
+            password: { required: true },
             peran: { required: true }
         },
         submitHandler: function (form) {
             $.ajax({
                 url: form.action,
-                method: form.method,
+                type: form.method,
                 data: $(form).serialize(),
                 success: function (response) {
                     if (response.status) {
-                        $('#modalEditPengguna').modal('hide');
+                        $('#myModal').modal('hide');
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',
                             text: response.message
                         });
-                        if (typeof dataUser !== 'undefined') {
-                            dataUser.ajax.reload();
-                        } else {
-                            location.reload();
-                        }
+                        dataUser.ajax.reload(null, false);
                     } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Gagal',
                             text: response.message
                         });
-                        $('.error-text').text('');
-                        $.each(response.msgField, function (prefix, val) {
-                            $('#error-' + prefix).text(val[0]);
-                        });
                     }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat menyimpan data'
+                    });
                 }
             });
             return false;

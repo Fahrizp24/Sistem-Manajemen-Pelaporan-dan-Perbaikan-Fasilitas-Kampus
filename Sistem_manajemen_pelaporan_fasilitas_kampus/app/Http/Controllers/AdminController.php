@@ -79,9 +79,7 @@ class AdminController extends Controller
 
     public function create_ajax()
     {
-        $user = UserModel::select('username', 'nama', 'email', 'password', 'peran')->get();
-
-        return view('admin.pengguna.create_ajax')->with('user', $user);
+        return view('admin.pengguna.create_ajax');
     }
 
     /**
@@ -89,13 +87,12 @@ class AdminController extends Controller
      */
     public function store_ajax(Request $request)
     {
-        if ($request->ajax() || $request->wantsJson()) {
         $rules = [
             'username' => 'required|string',
             'nama' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'peran' => 'required'
+            'peran' => 'required|in:admin,sarpras,pelapor,teknisi',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -105,16 +102,22 @@ class AdminController extends Controller
                 'status' => false,
                 'message' => 'Validasi Gagal',
                 'msgField' => $validator->errors()
-            ]);
+            ], 422); // Tambahkan status code 422 untuk validation error
         }
 
-        UserModel::create($request->all());
+        $pengguna = new UserModel();
+        $pengguna->username = $request->username;
+        $pengguna->nama = $request->nama;
+        $pengguna->email = $request->email;
+        $pengguna->password = Hash::make($request->password);
+        $pengguna->peran = $request->peran;
+        $pengguna->save();
+
         return response()->json([
             'status' => true,
-            'message' => 'Data Berhasil Disimpan'
+            'message' => 'Pengguna berhasil ditambahkan.'
         ]);
-        }
-        redirect('/');
+
     }
 
 
@@ -147,35 +150,27 @@ class AdminController extends Controller
             'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
             'password' => 'nullable|string|min:6',
             'peran' => 'required|string|in:admin,sarpras,teknisi',
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            // 'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $pengguna = UserModel::findOrFail($id);
+        $user = UserModel::findOrFail($id);
+        $user->nama = $request->nama;
+        $user->email = $request->email;
+        $user->identitas = $request->identitas;
+        $user->peran = $request->peran;
 
-        // Update field satu per satu
-        $pengguna->nama = $request->nama;
-        $pengguna->email = $request->email;
-        $pengguna->identitas = $request->identitas;
-        $pengguna->peran = $request->peran;
-
-        // Jika password diisi, update dan hash
+        // Jika ada field password dikirim dan tidak kosong
         if ($request->filled('password')) {
-            $pengguna->kata_sandi = Hash::make($request->kata_sandi);
+            $request->validate(['password' => 'min:6']);
+            $user->password = Hash::make($request->password);
         }
 
-        // Jika ada file foto yang diupload
-        if ($request->hasFile('foto_profil')) {
-            $file = $request->file('foto_profil');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/foto_profil'), $filename);
-            $pengguna->foto_profil = $filename;
-        }
+        $user->save();
 
-        if ($pengguna->save()) {
-            return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil diperbarui.');
-        } else {
-            return redirect()->route('admin.pengguna')->with('error', 'Gagal memperbarui pengguna.');
-        }
+        return response()->json([
+            'status' => true,
+            'message' => 'Data pengguna berhasil diperbarui.'
+        ]);
     }
 
 

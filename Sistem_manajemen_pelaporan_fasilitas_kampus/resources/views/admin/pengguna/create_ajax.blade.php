@@ -49,57 +49,67 @@
     </div>
 </form>
 <script>
-        
-    $(document).ready(function () {
-        $("#form-tambah").validate({
-            rules: {
-                username: { required: true, minlength: 3 },
-                nama: { required: true, minlength: 3 },
-                email: { required: true, email: true },
-                // identitas: { required: true },
-                peran: { required: true },
-                password: { required: true, minlength: 6 }
+$(document).ready(function() {
+    $("#form-tambah").validate({
+        rules: {
+            username: { required: true, minlength: 3 },
+            nama: { required: true, minlength: 3 },
+            email: { required: true, email: true },
+            peran: { required: true },
+            password: { required: true, minlength: 6 }
+        },
+        messages: {
+            username: {
+                required: "Username wajib diisi",
+                minlength: "Minimal 3 karakter"
             },
-            submitHandler: function (form) {
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: $(form).serialize(),
-                    success: function (response) {
-                        if (response.status) {
-                            $('#myModal').modal('hide');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message
-                            });
-                            dataUser.ajax.reload();
-                        } else {
-                            $('.error-text').text('');
-                            $.each(response.msgField, function (prefix, val) {
-                                $('#error-' + prefix).text(val[0]);
-                            });
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Terjadi Kesalahan',
-                                text: response.message
-                            });
-                        }
-                    }
-                });
-                return false;
-            },
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function (element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
+            password: {
+                required: "Password wajib diisi",
+                minlength: "Minimal 6 karakter"
             }
-        });
+        },
+        errorElement: 'div',
+        errorPlacement: function(error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.mb-3').append(error);
+        },
+        highlight: function(element) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function(element) {
+            $(element).removeClass('is-invalid');
+        },
+        submitHandler: function(form) {
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status) {
+                        $('#myModal').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        dataUser.ajax.reload(null, false);
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            $(`#error-${key}`).text(value[0]);
+                            $(`[name="${key}"]`).addClass('is-invalid');
+                        });
+                    }
+                }
+            });
+            return false;
+        }
     });
+});
 </script>
