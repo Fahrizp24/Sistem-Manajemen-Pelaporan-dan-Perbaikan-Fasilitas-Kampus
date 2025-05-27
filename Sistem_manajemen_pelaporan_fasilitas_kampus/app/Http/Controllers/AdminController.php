@@ -173,7 +173,6 @@ class AdminController extends Controller
             'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
             'password' => 'nullable|string|min:6',
             'peran' => 'required|string|in:admin,sarpras,teknisi',
-            // 'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $user = UserModel::findOrFail($id);

@@ -37,14 +37,14 @@ Route::middleware(['auth'])->group(function () {
         
             // Fasilitas
             Route::prefix('fasilitas')->group(function () {
-                Route::get('/', [AdminController::class, 'kelola_fasilitas'])->name('admin.fasilitas');
-                Route::post('/',[AdminController::class, 'list_fasilitas'])->name('admin.list_fasilitas');
-                Route::get('/create', [FasilitasController::class, 'create_fasilitas'])->name('admin.create_fasilitas');
-                Route::post('/store', [FasilitasController::class, 'store_fasilitas'])->name('admin.store_fasilitas');
+                Route::post('/data', [FasilitasController::class, 'data_fasilitas'])->name('admin.data_fasilitas');
+                Route::get('/', [FasilitasController::class, 'index'])->name('admin.fasilitas');
+                Route::get('/create_ajax', [FasilitasController::class, 'create_ajax'])->name('admin.create_fasilitas');
+                Route::post('/store_ajax', [FasilitasController::class, 'store_ajax'])->name('admin.store_fasilitas');
                 Route::get('/{id}', [FasilitasController::class, 'show_fasilitas'])->name('admin.show_fasilitas');
-                Route::get('/{id}/edit', [FasilitasController::class, 'edit_fasilitas'])->name('admin.edit_fasilitas');
-                Route::post('/{id}', [FasilitasController::class, 'update_fasilitas'])->name('admin.update_fasilitas');
-                Route::delete('/{id}', [FasilitasController::class, 'destroy_fasilitas'])->name('admin.destroy_fasilitas');
+                Route::get('/edit_ajax/{id}', [FasilitasController::class, 'edit_ajax'])->name('admin.edit_fasilitas');
+                Route::put('/update/{id}', [FasilitasController::class, 'update_fasilitas'])->name('admin.update_fasilitas');
+                Route::delete('/{id}', [FasilitasController::class, 'destroy'])->name('admin.destroy_fasilitas');
             });
         
             // Gedung
