@@ -13,12 +13,34 @@ use App\Models\FasilitasModel;
 use App\Models\GedungModel;
 use App\Models\LaporanModel;
 use Illuminate\Support\Facades\Hash;
+use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    public function data_pengguna(Request $request)
+{
+    if ($request->ajax()) {
+        $data = UserModel::select(['pengguna_id', 'username', 'nama', 'email', 'peran']);
+        // dd($data);
+        return DataTables::of($data)
+            ->addIndexColumn() // untuk DT_RowIndex
+            ->addColumn('aksi', function($row) {
+                $btn = '
+                <button type="button" class="btn btn-sm btn-primary btnEditPengguna" data-id="'.$row->pengguna_id.'">Edit</button>
+                <form action="'.route('admin.destroy', $row->pengguna_id).'" id="formDeletePengguna" method="POST" style="display:inline;">
+                    '.csrf_field().method_field('DELETE').'
+                    <button class="btn btn-sm btn-danger">Hapus</button>
+                </form>';
+                return $btn;
+            })
+            ->rawColumns(['aksi']) // supaya tombol tidak di-escape HTML-nya
+            ->make(true);
+    }
+}
     public function index()
     {
         $admin = UserModel::all();
@@ -28,7 +50,7 @@ class AdminController extends Controller
     public function laporan()
     {
         $laporan = LaporanModel::with('fasilitas.gedung')->where('status', 'konfirmasi')->get();
-        
+
         $breadcrumb = (object) [
             'title' => 'Laporan',
             'list' => ['Admin Laporan']
@@ -155,9 +177,9 @@ class AdminController extends Controller
         ]);
 
         $user = UserModel::findOrFail($id);
+        $user->username = $request->username;
         $user->nama = $request->nama;
         $user->email = $request->email;
-        $user->identitas = $request->identitas;
         $user->peran = $request->peran;
 
         // Jika ada field password dikirim dan tidak kosong

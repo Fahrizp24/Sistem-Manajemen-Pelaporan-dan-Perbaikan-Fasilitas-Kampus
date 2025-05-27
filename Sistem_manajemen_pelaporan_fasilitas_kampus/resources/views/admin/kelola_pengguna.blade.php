@@ -17,8 +17,6 @@
                 <div class="card" style="box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Daftar Pengguna</h5>
-                        {{-- <button type="button" class="btn btn-success mb-3" id="btnTambahPengguna">+ Tambah
-                            Pengguna</button> --}}
                         <button type="button" class="btn btn-success mb-3"
                             onclick="modalAction('{{url('admin/pengguna/create_ajax')}}')">+ Tambah Pengguna</button>
                     </div>
@@ -27,40 +25,15 @@
                             <thead class="table-white">
                                 <tr>
                                     <th>No</th>
+                                    <th>Username</th>
                                     <th>Nama</th>
                                     <th>Email</th>
-                                    <th>NIP/NIM/NIDN</th>
                                     <th>Peran</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($pengguna as $index => $user)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $user->nama }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>{{ $user->identitas }}</td>
-                                        <td>{{ ucfirst($user->peran) }}</td>
-                                        <td>
 
-                                            <button type="button" class="btn btn-sm btn-primary btnEditPengguna"
-                                                data-id="{{ $user->pengguna_id }}">Edit</button>
-                                            <form action="{{ route('admin.destroy', $user->pengguna_id) }}" method="POST"
-                                                style="display:inline;"
-                                                onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-sm btn-danger">Hapus</button>
-                                            </form>
-
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">Tidak ada data.</td>
-                                    </tr>
-                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -107,8 +80,40 @@
 
         var dataUser;
         $(document).ready(function () {
-            dataUser = $('#penggunaTable').DataTable();
+            dataUser = $('#penggunaTable').DataTable({
+                processing: true,
+                serverSide: false,
+                ajax: { url: "{{ route('admin.data_pengguna') }}", type: "POST" },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'username', name: 'username' },
+                    { data: 'nama', name: 'nama' },
+                    { data: 'email', name: 'email' },
+                    { data: 'peran', name: 'peran' },
+                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                ]
+            });
+        });
+        $(document).on('submit', '#formDeletePengguna', function (e) {
+            e.preventDefault(); // Cegah form langsung submit
+
+            let form = this;
+
+            Swal.fire({
+                title: "Yakin nih mau dihapus?",
+                text: "Data gak bakal bisa dibalikin lagi loh kalo dihapus!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Gajadi deh",
+                confirmButtonText: "Yup, Hapus ajalah!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit form secara manual
+                }
+            });
         });
 
     </script>
-@endpush    
+@endpush

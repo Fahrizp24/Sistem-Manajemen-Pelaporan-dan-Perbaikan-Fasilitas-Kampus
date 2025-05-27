@@ -19,11 +19,6 @@
                     <input type="email" name="email" class="form-control" placeholder="Email">
                 </div>
 
-                {{-- <div class="col-md-4"><label>Identitas</label></div>
-                <div class="col-md-8">
-                    <input type="text" name="identitas" class="form-control" placeholder="NIP/NIM/NIDN">
-                </div> --}}
-
                 <div class="col-md-4"><label>Peran</label></div>
                 <div class="col-md-8">
                     <select name="peran" class="form-control">

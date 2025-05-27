@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-<meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - FIXIT</title>
-    
+
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('mazer/dist/assets/compiled/svg/favicon.svg') }}" type="image/x-icon">
     <link rel="shortcut icon"
@@ -41,8 +41,11 @@
     <!-- JavaScript -->
     <script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
     <!-- jQuery Validation -->
-    <script src="{{ asset('mazer/dist/assets/extensions/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('mazer/dist/assets/extensions/jquery-validation/additional-methods.min.js') }}"></script>
+    <!-- jQuery Validate -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
+
+
     <script src="{{ asset('mazer/dist/assets/static/js/components/dark.js') }}"></script>
     <script src="{{ asset('mazer/dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('mazer/dist/assets/compiled/js/app.js') }}"></script>
@@ -51,8 +54,9 @@
     <script src="{{ asset('mazer/dist/assets/static/js/initTheme.js') }}"></script>
 
 
-    <!-- Parsley.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.3/parsley.min.js"></script>
+
+    <!-- Parsley -->
+    <script src="{{asset('mazer/dist/assets/extensions/parsleyjs/parsley.min.js')}}"></script>
 
     <script src="{{ asset('mazer/dist/assets/extensions/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script
@@ -80,6 +84,13 @@
                 }
             });
         });
+    </script>
+    <script>
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
     </script>
     @stack('scripts')
 </body>
