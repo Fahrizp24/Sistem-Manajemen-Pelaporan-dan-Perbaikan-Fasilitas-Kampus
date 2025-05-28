@@ -1,7 +1,6 @@
 @extends('layouts.template')
 
 @section('content')
-    {{-- ✅ Flash message success/error --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -19,6 +18,8 @@
                         <h5 class="card-title mb-0">Daftar Pengguna</h5>
                         <button type="button" class="btn btn-success mb-3"
                             onclick="modalAction('{{url('admin/pengguna/create_ajax')}}')">+ Tambah Pengguna</button>
+                        <button type="button" class="btn btn-success mb-3"
+                            onclick="modalAction('{{url('admin/pengguna/import_pengguna')}}')">+ Import Pengguna</button>
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered table-striped mb-0" id="penggunaTable">

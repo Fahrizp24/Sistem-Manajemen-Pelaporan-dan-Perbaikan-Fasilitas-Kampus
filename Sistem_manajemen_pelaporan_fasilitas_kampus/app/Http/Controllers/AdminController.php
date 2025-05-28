@@ -22,25 +22,25 @@ class AdminController extends Controller
      */
 
     public function data_pengguna(Request $request)
-{
-    if ($request->ajax()) {
-        $data = UserModel::select(['pengguna_id', 'username', 'nama', 'email', 'peran']);
-        // dd($data);
-        return DataTables::of($data)
-            ->addIndexColumn() // untuk DT_RowIndex
-            ->addColumn('aksi', function($row) {
-                $btn = '
-                <button type="button" class="btn btn-sm btn-primary btnEditPengguna" data-id="'.$row->pengguna_id.'">Edit</button>
-                <form action="'.route('admin.destroy', $row->pengguna_id).'" id="formDeletePengguna" method="POST" style="display:inline;">
-                    '.csrf_field().method_field('DELETE').'
+    {
+        if ($request->ajax()) {
+            $data = UserModel::select(['pengguna_id', 'username', 'nama', 'email', 'peran']);
+            // dd($data);
+            return DataTables::of($data)
+                ->addIndexColumn() // untuk DT_RowIndex
+                ->addColumn('aksi', function ($row) {
+                    $btn = '
+                <button type="button" class="btn btn-sm btn-primary btnEditPengguna" data-id="' . $row->pengguna_id . '">Edit</button>
+                <form action="' . route('admin.destroy', $row->pengguna_id) . '" id="formDeletePengguna" method="POST" style="display:inline;">
+                    ' . csrf_field() . method_field('DELETE') . '
                     <button class="btn btn-sm btn-danger">Hapus</button>
                 </form>';
-                return $btn;
-            })
-            ->rawColumns(['aksi']) // supaya tombol tidak di-escape HTML-nya
-            ->make(true);
+                    return $btn;
+                })
+                ->rawColumns(['aksi']) // supaya tombol tidak di-escape HTML-nya
+                ->make(true);
+        }
     }
-}
     public function index()
     {
         $admin = UserModel::all();
@@ -140,7 +140,6 @@ class AdminController extends Controller
             'status' => true,
             'message' => 'Pengguna berhasil ditambahkan.'
         ]);
-
     }
 
 
@@ -210,6 +209,74 @@ class AdminController extends Controller
         $pengguna->delete();
 
         return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil dihapus.');
+    }
+
+    public function import_pengguna()
+    {
+        return view('admin.pengguna.import_pengguna');
+    }
+
+
+    public function import_pengguna_store(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file_pengguna' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+    
+            $file = $request->file('file_pengguna');
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $data = $sheet->toArray(null, false, true, true);
+    
+            $insert = [];
+            if (count($data) > 1) {
+                foreach ($data as $baris => $value) {
+                    if ($baris == 1) continue; // Lewati header
+    
+                    // Pastikan minimal username dan email tidak kosong
+                    if (!empty($value['A']) && !empty($value['C'])) {
+                        $insert[] = [
+                            'username' => $value['A'],
+                            'nama' => $value['B'] ?? null, // Gunakan null jika kosong
+                            'email' => $value['C'],
+                            'password' =>Hash::make( $value['D']), 
+                            'peran' => $value['E'] ?? 'pelapor', // Beri nilai default jika kosong
+                        ];
+                    }
+                }
+    
+                if (count($insert) > 0) {
+                    UserModel::insertOrIgnore($insert);
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Data berhasil diimport',
+                        'total_data' => count($insert)
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Tidak ada data valid yang ditemukan'
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'File kosong atau format tidak sesuai'
+                ]);
+            }
+        }
+        return redirect('/admin/kelola_pengguna');
     }
 
     function kelola_fasilitas()
@@ -293,5 +360,4 @@ class AdminController extends Controller
         $activeMenu = 'statistik';
         return view('admin.statistik', compact('breadcrumb', 'page', 'activeMenu'));
     }
-
 }

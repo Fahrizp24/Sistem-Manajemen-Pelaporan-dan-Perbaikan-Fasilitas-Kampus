@@ -8,7 +8,7 @@
                 <div class="text-center">
                     <div class="user-profile">
                         <!-- Pastikan path gambar sesuai dengan struktur folder Anda -->
-                        <img src="{{ asset('storage/photo/'.$teknisi->foto_profil.'.jpg') }}" alt="User Image" class="img-fluid rounded-circle" width="150">
+                        <img src="{{ asset('storage/foto_profil/'.$teknisi->foto_profil.'.jpg') }}" alt="User Image" class="img-fluid rounded-circle" width="150">
                     </div>
                     <h4 class="mt-3 mb-0">{{$teknisi->nama}}</h4>
                     <p class="text-muted">{{$teknisi->username}}</p>
