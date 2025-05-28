@@ -1,9 +1,9 @@
-<form action="{{ url('/admin/pengguna/import_pengguna_store') }}" method="POST" id="form-import" enctype="multipart/form-data">
+<form action="{{ url('/admin/fasilitas/import_fasilitas_store') }}" method="POST" id="form-import" enctype="multipart/form-data">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Import Data Pengguna</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Import Data Fasilitas</h5>
 
                 <button type="button" class="close" data-dismiss="modal" aria-
                     label="Close"><span aria-hidden="true">&times;</span></button>
@@ -13,17 +13,16 @@
                 <div class="form-group">
                     <label>Download Template</label>
 
-                    <a href="{{ asset('storage/template_pengguna.xlsx') }}" class="btn btn-info btn-sm" download><i class="fa fa-file-excel"></i>Download</a>
+                    <a href="{{ asset('storage/template_fasilitas.xlsx') }}" class="btn btn-info btn-sm" download><i class="fa fa-file-excel"></i>Download</a>
 
                     <small id="error-kategori_id" class="error-text form-text text-danger"></small>
-
                 </div> 
                 <div class="form-group">
                     <label>Pilih File</label>
 
-                    <input type="file" name="file_pengguna" id="file_pengguna" class="form-control" required>
+                    <input type="file" name="file_fasilitas" id="file_fasilitas" class="form-control" required>
 
-                    <small id="error-file_pengguna" class="error-text form-text text-danger"></small>
+                    <small id="error-file_fasilitas" class="error-text form-text text-danger"></small>
 
                 </div>
             </div>
@@ -39,7 +38,7 @@
     $(document).ready(function() {
         $("#form-import").validate({
             rules: {
-                file_pengguna: {
+                file_fasilitas: {
                     required: true,
                     extension: "xlsx"
                 },
@@ -60,7 +59,7 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            tablePengguna.ajax.reload(); // reload datatable
+                            tableFasilitas.ajax.reload(); // reload datatable
                         } else { // jika error
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {

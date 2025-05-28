@@ -13,8 +13,12 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Daftar Fasilitas</h5>
                 <button type="button" class="btn btn-success mb-3"
-                    onclick="modalAction('{{ route('admin.create_fasilitas') }}')">
+                    onclick="modalAction('{{ url('admin/fasilitas/create_ajax') }}')">
                     + Tambah Fasilitas
+                </button>
+                <button type="button" class="btn btn-success mb-3"
+                    onclick="modalAction('{{ url('admin/fasilitas/import_fasilitas') }}')">
+                    + Import Fasilitas
                 </button>
 
             </div>
@@ -54,28 +58,27 @@
 @endsection
 @push('scripts')
     <script>
-
         function modalAction(url) {
             $.ajax({
                 url: url,
                 type: "GET",
-                success: function (res) {
+                success: function(res) {
                     $('#modalContent').html(res);
                     $('#myModal').modal('show');
                 },
-                error: function () {
+                error: function() {
                     $('#modalContent').html('<p class="text-danger">Gagal memuat data.</p>');
                 }
             });
         }
 
-        $(document).on('click', '.btnEditFasilitas', function () {
+        $(document).on('click', '.btnEditFasilitas', function() {
             var id = $(this).data('id');
             modalAction('/admin/fasilitas/edit_ajax/' + id);
         });
 
         var dataFasilitas;
-        $(document).ready(function () {
+        $(document).ready(function() {
             dataFasilitas = $('#fasilitasTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -83,19 +86,43 @@
                     url: "{{ route('admin.data_fasilitas') }}",
                     type: "POST"
                 },
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'nama', name: 'nama' },
-                    { data: 'deskripsi', name: 'deskripsi' },
-                    { data: 'kategori', name: 'kategori' },
-                    { data: 'gedung.nama', name: 'gedung.nama' },
-                    { data: 'status', name: 'status' },
-                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'deskripsi',
+                        name: 'deskripsi'
+                    },
+                    {
+                        data: 'kategori',
+                        name: 'kategori'
+                    },
+                    {
+                        data: 'gedung.nama',
+                        name: 'gedung.nama'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        orderable: false,
+                        searchable: false
+                    }
                 ]
             });
         });
 
-        $(document).on('submit', '#formDeleteFasilitas', function (e) {
+        $(document).on('submit', '#formDeleteFasilitas', function(e) {
             e.preventDefault(); // Cegah form langsung submit
             let form = this;
             let url = $(form).attr('action');
@@ -115,6 +142,5 @@
                 }
             });
         });
-
     </script>
 @endpush

@@ -39,6 +39,8 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('fasilitas')->group(function () {
                 Route::post('/data', [FasilitasController::class, 'data_fasilitas'])->name('admin.data_fasilitas');
                 Route::get('/', [FasilitasController::class, 'index'])->name('admin.fasilitas');
+                Route::get('/import_fasilitas', [AdminController::class, 'import_fasilitas'])->name('admin.pengguna.import_fasilitas');
+                Route::post('/import_fasilitas_store', [AdminController::class, 'import_fasilitas_store'])->name('admin.pengguna.import_fasilitas_store');
                 Route::get('/create_ajax', [FasilitasController::class, 'create_ajax'])->name('admin.create_fasilitas');
                 Route::post('/store_ajax', [FasilitasController::class, 'store_ajax'])->name('admin.store_fasilitas');
                 Route::get('/{id}', [FasilitasController::class, 'show_fasilitas'])->name('admin.show_fasilitas');

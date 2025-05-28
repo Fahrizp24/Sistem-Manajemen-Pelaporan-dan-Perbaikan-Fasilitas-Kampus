@@ -295,6 +295,72 @@ class AdminController extends Controller
         return view('admin.kelola_fasilitas', compact('fasilitas', 'breadcrumb', 'page'));
     }
 
+        public function import_fasilitas()
+    {
+        return view('admin.fasilitas.import_fasilitas');
+    }
+
+
+    public function import_fasilitas_store(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file_fasilitas' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+    
+            $file = $request->file('file_fasilitas');
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $data = $sheet->toArray(null, false, true, true);
+    
+            $insert = [];
+            if (count($data) > 1) {
+                foreach ($data as $baris => $value) {
+                    if ($baris == 1) continue; // Lewati header
+    
+                    // Pastikan minimal username dan email tidak kosong
+                    if (!empty($value['A']) && !empty($value['C'])) {
+                        $insert[] = [
+                            'nama' => $value['A'],
+                            'deskripsi' => $value['B'] ?? null, // Gunakan null jika kosong
+                            'kategori' => $value['C'],
+                            'gedung_id' =>$value['D'], 
+                        ];
+                    }
+                }
+                if (count($insert) > 0) {
+                    FasilitasModel::insertOrIgnore($insert);
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Data berhasil diimport',
+                        'total_data' => count($insert)
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Tidak ada data valid yang ditemukan'
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'File kosong atau format tidak sesuai'
+                ]);
+            }
+        }
+        return redirect('/admin/kelola_pengguna');
+    }
+
     function kelola_gedung()
     {
         $breadcrumb = (object) [
