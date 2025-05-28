@@ -1,13 +1,11 @@
 @extends('layouts.template')
 @section('content')
-<div class="row">
-    <!-- [ Profile ] start -->
-    <div class="col-xl-4">
-        <div class="card">
+<div class="row min-vh-50 d-flex justify-content-center align-items-center">
+    <div class="col-xl-4 col-lg-6 col-md-8">
+        <div class="card mx-auto">
             <div class="card-body">
                 <div class="text-center">
                     <div class="user-profile">
-                        <!-- Pastikan path gambar sesuai dengan struktur folder Anda -->
                         <img src="{{ asset('storage/foto_profil/'.$pelapor->foto_profil.'.jpg') }}" alt="User Image" class="img-fluid rounded-circle" width="150">
                     </div>
                     <h4 class="mt-3 mb-0">{{$pelapor->nama}}</h4>
@@ -35,105 +33,6 @@
             </div>
         </div>
     </div>
-    
-    {{-- <div class="col-xl-8">
-        <div class="card">
-            <div class="card-header">
-                <h5>Edit Profile</h5>
-            </div>
-            <div class="card-body">
-                <form method="POST" action="#">
-                    @csrf
-                    @method('PUT')
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Full Name</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="name" value="John Doe" required>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Email</label>
-                        <div class="col-sm-9">
-                            <input type="email" class="form-control" value="john.doe@example.com" disabled>
-                            <small class="text-muted">Contact admin to change email</small>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Phone</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" name="phone" value="+1 234 567 890">
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Address</label>
-                        <div class="col-sm-9">
-                            <textarea class="form-control" name="address" rows="3">123 Main Street, New York, USA</textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Bio</label>
-                        <div class="col-sm-9">
-                            <textarea class="form-control" name="bio" rows="3">Senior Web Developer with 5+ years of experience in Laravel development.</textarea>
-                            <small class="text-muted">A short bio about yourself</small>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <label class="col-sm-3 col-form-label"></label>
-                        <div class="col-sm-9">
-                            <button type="submit" class="btn btn-primary me-2">Update Profile</button>
-                            <button type="reset" class="btn btn-outline-secondary">Cancel</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        
-        <div class="card">
-            <div class="card-header">
-                <h5>Change Password</h5>
-            </div>
-            <div class="card-body">
-                <form method="POST" action="#">
-                    @csrf
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Current Password</label>
-                        <div class="col-sm-9">
-                            <input type="password" class="form-control" name="current_password" required>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">New Password</label>
-                        <div class="col-sm-9">
-                            <input type="password" class="form-control" name="new_password" required>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Confirm Password</label>
-                        <div class="col-sm-9">
-                            <input type="password" class="form-control" name="new_password_confirmation" required>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <label class="col-sm-3 col-form-label"></label>
-                        <div class="col-sm-9">
-                            <button type="submit" class="btn btn-primary me-2">Change Password</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div> --}}
-    <!-- [ Profile ] end -->
 </div>
 @endsection
 

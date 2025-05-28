@@ -106,13 +106,6 @@
                 @if($peran === 'admin')
                 <li class="sidebar-title">Menu</li>
         
-                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan') && !str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
-                    <a href="{{ url('admin/laporan') }}" class='sidebar-link'>
-                        <i class="bi bi-file-text"></i>
-                        <span>Laporan</span>
-                    </a>
-                </li>
-        
                 <li class="sidebar-item {{ str_contains($currentUrl, '/admin/pengguna') ? 'active' : '' }}">
                     <a href="{{ url('/admin/pengguna') }}" class='sidebar-link'>
                         <i class="bi bi-people"></i>
@@ -134,6 +127,21 @@
                     </a>
                 </li>
         
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/statistik') ? 'active' : '' }}">
+                    <a href="{{ url('admin/statistik') }}" class='sidebar-link'>
+                        <i class="bi bi-bar-chart-fill"></i>
+                        <span>Statistik</span>
+                    </a>
+                </li>
+                <li class="sidebar-title">Laporan</li>
+
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan') && !str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
+                    <a href="{{ url('admin/laporan') }}" class='sidebar-link'>
+                        <i class="bi bi-file-text"></i>
+                        <span>Laporan</span>
+                    </a>
+                </li>
+
                 <li class="sidebar-item {{ str_contains($currentUrl, '/admin/sistem_rekomendasi') ? 'active' : '' }}">
                     <a href="{{ url('admin/sistem_rekomendasi') }}" class='sidebar-link'>
                         <i class="bi bi-lightbulb"></i>
@@ -145,13 +153,6 @@
                     <a href="{{ url('admin/laporan_periodik') }}" class='sidebar-link'>
                         <i class="bi bi-calendar-range"></i>
                         <span>Laporan Periodik</span>
-                    </a>
-                </li>
-        
-                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/statistik') ? 'active' : '' }}">
-                    <a href="{{ url('admin/statistik') }}" class='sidebar-link'>
-                        <i class="bi bi-bar-chart-fill"></i>
-                        <span>Statistik</span>
                     </a>
                 </li>
                 @endif
