@@ -94,8 +94,9 @@ class PelaporController extends Controller
         ];
 
         $gedung = GedungModel::all();
+        $user = UserModel::find(Auth::user()->pengguna_id);
         $activeMenu = 'Laporkan Kerusakan';
-        return view('pelapor.laporkan_kerusakan', compact('gedung', 'breadcrumb', 'page', 'activeMenu'));
+        return view('pelapor.laporkan_kerusakan', compact('gedung', 'breadcrumb', 'page', 'activeMenu','user'));
     }
 
     public function get_fasilitas_by_gedung(Request $request)

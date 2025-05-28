@@ -19,6 +19,21 @@
                                 enctype="multipart/form-data" data-parsley-validate>
                                 @csrf
                                 <div class="row">
+
+                                    <div class="col-12">
+                                        <div class="form-group mandatory mt-3">
+                                            <label for="gedung_id" class="form-label">Nama</label>
+                                            <input type="text" class="form-control" id="disabledInput" placeholder="{{$user->nama}}" disabled="">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group mandatory mt-3">
+                                            <label for="gedung_id" class="form-label">NIM/NIP/NIPSN</label>
+                                            <input type="text" class="form-control" id="disabledInput" placeholder="{{$user->username}}" disabled="">
+                                        </div>
+                                    </div>
+                                    
                                     <div class="col-12">
                                         <div class="form-group mandatory mt-3">
                                             <label for="gedung_id" class="form-label">Gedung</label>
@@ -79,7 +94,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // Handler untuk select gedung
             $('#gedung_id').change(function() {
                 var gedungId = $(this).val();
                 var fasilitasSelect = $('#fasilitas_id');
