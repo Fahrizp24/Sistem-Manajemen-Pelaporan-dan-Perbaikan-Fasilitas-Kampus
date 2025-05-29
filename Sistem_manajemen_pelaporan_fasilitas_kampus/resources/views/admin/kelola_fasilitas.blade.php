@@ -9,7 +9,7 @@
             </div>
         @endif
 
-        <div class="card" style="box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);">
+        <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Daftar Fasilitas</h5>
                 <button type="button" class="btn btn-success mb-3"
