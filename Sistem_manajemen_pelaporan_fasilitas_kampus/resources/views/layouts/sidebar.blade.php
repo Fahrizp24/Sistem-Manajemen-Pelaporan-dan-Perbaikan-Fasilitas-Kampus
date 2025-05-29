@@ -86,11 +86,18 @@
                         <span>Laporan Masuk</span>
                     </a>
                 </li>
+
+                <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/ajukan_laporan') ? 'active' : '' }}">
+                    <a href="{{ url('sarpras/ajukan_laporan') }}" class='sidebar-link'>
+                        <i class="bi bi-lightbulb"></i>
+                        <span>Ajukan Laporan</span>
+                    </a>
+                </li>
         
                 <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/sistem_rekomendasi') ? 'active' : '' }}">
                     <a href="{{ url('sarpras/sistem_rekomendasi') }}" class='sidebar-link'>
                         <i class="bi bi-lightbulb"></i>
-                        <span>Sistem Rekomendasi</span>
+                        <span>Kelola Sistem Rekomendasi</span>
                     </a>
                 </li>
         

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CrispModel;
+use App\Models\KriteriaModel;
 use App\Models\LaporanModel;
 use App\Models\TeknisiModel;
 use Illuminate\Http\Request;
@@ -9,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class SarprasController extends Controller
 {
@@ -56,30 +59,58 @@ class SarprasController extends Controller
     }
 
 
-    public function konfirmasi(string $id, Request $request)
+    public function terima(string $id, Request $request)
     {
         try {
             $laporan = LaporanModel::findOrFail($id);
-            $laporan->status = 'konfirmasi';
+            $laporan->status = 'diterima';
             $laporan->save();
 
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Laporan berhasil dikonfirmasi.'
+                    'message' => 'Laporan berhasil diterima.'
                 ]);
             }
 
-            return redirect()->back()->with('success', 'Laporan berhasil dikonfirmasi.');
+            return redirect()->back()->with('success', 'Laporan berhasil diterima.');
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal mengkonfirmasi laporan: ' . $e->getMessage()
+                    'message' => 'Gagal menerima laporan: ' . $e->getMessage()
                 ], 500);
             }
 
-            return redirect()->back()->with('error', 'Gagal mengkonfirmasi laporan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menerima laporan: ' . $e->getMessage());
+        }
+    }
+
+    
+    public function tolak(string $id, Request $request)
+    {
+        try {
+            $laporan = LaporanModel::findOrFail($id);
+            $laporan->status = 'tidak diterima';
+            $laporan->save();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Laporan berhasil ditolak.'
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Laporan berhasil ditolak.');
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menolak laporan: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Gagal menolak laporan: ' . $e->getMessage());
         }
     }
 
@@ -160,6 +191,46 @@ class SarprasController extends Controller
         return view('sarpras.sistem_pendukung_keputusan', compact('breadcrumb', 'page'));
     }
 
+    public function data_kriteria(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = KriteriaModel::select(['kriteria_id','kode', 'nama', 'bobot', 'jenis', 'deskripsi'])->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('aksi', function ($row) {
+                    $btn = '
+                    <button type="button" class="btn btn-sm btn-primary btnEditKriteria" data-id="' . $row->kriteria_id . '">Edit</button>
+                    <form action="' . url('sarpras.destroy_kriteria', $row->kriteria_id) . '" id="formDeleteKriteria" method="POST" style="display:inline;">
+                        ' . csrf_field() . method_field('DELETE') . '
+                        <button class="btn btn-sm btn-danger">Hapus</button>
+                    </form>';
+                    return $btn;
+                })
+                ->rawColumns(['aksi'])
+                ->make(true);
+        }
+    }
+
+    public function data_crisp(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = CrispModel::with('kriteria')->select(['crisp_id','kriteria_id', 'judul', 'deskripsi', 'poin'])->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('aksi', function ($row) {
+                    $btn = '
+                    <button type="button" class="btn btn-sm btn-primary btnEditKriteria" data-id="' . $row->crisp_id . '">Edit</button>
+                    <form action="' . route('sarpras.destroy_crisp', $row->crisp_id) . '" id="formDeleteKriteria" method="POST" style="display:inline;">
+                        ' . csrf_field() . method_field('DELETE') . '
+                        <button class="btn btn-sm btn-danger">Hapus</button>
+                    </form>';
+                    return $btn;
+                })
+                ->rawColumns(['aksi'])
+                ->make(true);
+        }
+    }
+
     public function statistik()
     {
         $breadcrumb = (object) [
@@ -172,4 +243,21 @@ class SarprasController extends Controller
         ];
         return view('sarpras.statistik', compact('breadcrumb', 'page'));
     }
+
+    public function ajukan_laporan()
+    {
+        $breadcrumb = (object) [
+            'title' => 'Ajukan Laporan',
+            'list' => ['Ajukan Laporan']
+        ];
+
+        $page = (object) [
+            'title' => 'Ajukan Laporan',
+            'subtitle' => 'Ajukan Laporan Kerusakan Sarana dan Prasarana'
+        ];
+
+        $activeMenu = 'laporan';
+        return view('sarpras.ajukan_laporan', compact('breadcrumb', 'page', 'activeMenu'));
+    }
+    
 }

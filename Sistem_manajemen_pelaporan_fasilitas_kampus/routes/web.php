@@ -123,12 +123,24 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('laporan_masuk')->group(function () {
                 Route::get('/', [SarprasController::class, 'list_laporan'])->name('sarpras.laporan');
                 Route::get('/{id}', [SarprasController::class, 'show_laporan'])->name('sarpras.show_laporan');
-                Route::post('/konfirmasi/{id}', [SarprasController::class, 'konfirmasi'])->name('sarpras.update_laporan');
+                Route::post('/terima/{id}', [SarprasController::class, 'terima'])->name('sarpras.update_laporan');
+                Route::post('/tolak/{id}', [SarprasController::class, 'tolak'])->name('sarpras.update_laporan');
                 Route::post('/pilih_teknisi/{id}', [SarprasController::class, 'pilih_teknisi'])->name('sarpras.update_laporan');
                 Route::post('/selesaikan/{id}', [SarprasController::class, 'selesaikan'])->name('sarpras.update_laporan');
             });
         
-            Route::get('/sistem_rekomendasi', [SarprasController::class, 'sistem_pendukung_keputusan'])->name('sarpras.sistem_pendukung_keputusan');
+            Route::prefix('sistem_rekomendasi')->group(function () {
+                Route::get('/', [SarprasController::class, 'sistem_pendukung_keputusan'])->name('sarpras.sistem_pendukung_keputusan');
+                Route::post('/data_kriteria', [SarprasController::class, 'data_kriteria'])->name('sarpras.data_kriteria');
+                Route::delete('/{id}', [SarprasController::class, 'destroy'])->name('sarpras.destroy_kriteria');  
+                Route::post('/data_crisp', [SarprasController::class, 'data_crisp'])->name('sarpras.data_crisp');
+                Route::delete('/{id}', [SarprasController::class, 'destroy'])->name('sarpras.destroy_crisp');    
+            });
+
+            Route::prefix('ajukan_laporan')->group(function () {
+                Route::get('/', [SarprasController::class, 'ajukan_laporan'])->name('sarpras.ajukan_laporan');
+            });
+            
             Route::get('/statistik', [SarprasController::class, 'statistik'])->name('sarpras.statistik');
         });
     });

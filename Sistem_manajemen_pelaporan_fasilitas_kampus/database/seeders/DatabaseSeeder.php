@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             LaporanSeeder::class,
             UmpanBalikSeeder::class,
             KriteriaSeeder::class,
+            CrispSeeder::class,
         ]);
     }
 }

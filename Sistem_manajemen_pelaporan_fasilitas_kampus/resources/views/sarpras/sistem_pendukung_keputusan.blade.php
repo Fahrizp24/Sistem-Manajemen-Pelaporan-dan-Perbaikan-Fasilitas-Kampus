@@ -1,84 +1,182 @@
 @extends('layouts.template')
 
 @section('content')
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
-<section class="section">
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <div id="table1_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
-                    <div class="row">
-                       
+    <div class="page-content">
+        <div class="row">
+            <div class="col-12">
+                {{-- kriteria --}}
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Daftar Kriteria</h5>
+                        <button type="button" class="btn btn-success mb-3"
+                            onclick="modalAction('{{url('sarpras/kriteria/create_ajax')}}')">+ Tambah kriteria</button>
                     </div>
-                    <div class="row dt-row">
-                        <div class="col-sm-12">
-                            <table class="table dataTable no-footer" id="table1" aria-describedby="table1_info">
-                                <thead>
-                                    <tr>
-                                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="No: activate to sort column ascending"
-                                            style="width: 50px;">No</th>
-                                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="Nama Pelapor: activate to sort column ascending"
-                                            style="width: 150px;">Nama Pelapor</th>
-                                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="Fasilitas: activate to sort column ascending"
-                                            style="width: 150px;">Nama Fasilitas</th>
-                                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="Skor: activate to sort column ascending"
-                                            style="width: 100px;">Skor</th>
-                                        <th class="sorting" tabindex="0" aria-controls="table1" rowspan="1" colspan="1"
-                                            aria-label="Aksi: activate to sort column ascending"
-                                            style="width: 100px;">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{-- @foreach($laporan_kerusakan as $key => $item)
-                                    <tr class="{{ $key % 2 == 0 ? 'even' : 'odd' }}">
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->user->name ?? 'N/A' }}</td>
-                                        <td>{{ $item->fasilitas }}</td>
-                                        <td>
-                                            @if(isset($item->skor))
-                                                <span class="badge bg-{{ $item->skor >= 7 ? 'success' : ($item->skor >= 4 ? 'warning' : 'danger') }}">
-                                                    {{ $item->skor }}
-                                                </span>
-                                            @else
-                                                <span class="badge bg-secondary">N/A</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('laporan.detail', $item->id) }}" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-eye"></i> Detail
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach --}}
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped mb-0" id="kriteriaTable">
+                            <thead class="table-white">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Kode</th>
+                                    <th>Nama</th>
+                                    <th>Jenis</th>
+                                    <th>Bobot</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12 col-md-5">
-                            <div class="dataTables_info" id="table1_info" role="status" aria-live="polite">
-                                {{-- Showing {{ $laporan_kerusakan->firstItem() }} to {{ $laporan_kerusakan->lastItem() }} of {{ $laporan_kerusakan->total() }} entries --}}
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-7">
-                            <div class="dataTables_paginate paging_simple_numbers" id="table1_paginate">
-                                {{-- {{ $laporan_kerusakan->links('pagination::bootstrap-5') }} --}}
-                            </div>
-                        </div>
+                </div>
+                {{-- crisp --}}
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Daftar Crisp</h5>
+                        <button type="button" class="btn btn-success mb-3"
+                            onclick="modalAction('{{url('sarpras/crisp/create_ajax')}}')">+ Tambah crisp</button>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered table-striped mb-0" id="crispTable">
+                            <thead class="table-white">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Kriteria</th>
+                                    <th>Judul</th>
+                                    <th>Poin</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
 @endsection
-
+<!-- Modal -->
 @push('scripts')
-<script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('mazer/dist/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
-<script src="{{ asset('assets/static/js/pages/parsley.js') }}"></script>
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent">Memuat...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function modalAction(url) {
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (res) {
+                    $('#modalContent').html(res);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    $('#modalContent').html('<p class="text-danger">Gagal memuat data.</p>');
+                }
+            });
+        }
+
+        $(document).on('click', '.btnEditKriteria', function () {
+            var id = $(this).data('id');
+            modalAction('/sarpras/kriteria/edit_ajax/' + id);
+        });
+
+        var dataKriteria;
+        $(document).ready(function () {
+            dataKriteria = $('#kriteriaTable').DataTable({
+                processing: true,
+                serverSide: false,
+                ajax: { url: "{{ route('sarpras.data_kriteria') }}", type: "POST" },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'kode', name: 'kode' },
+                    { data: 'nama', name: 'nama' },
+                    { data: 'jenis', name: 'jenis' },
+                    { data: 'bobot', name: 'bobot' },                    
+                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                ]
+            });
+        });
+        $(document).on('submit', '#formDeleteKriteria', function (e) {
+            e.preventDefault(); // Cegah form langsung submit
+
+            let form = this;
+
+            Swal.fire({
+                title: "Yakin nih mau dihapus?",
+                text: "Data gak bakal bisa dibalikin lagi loh kalo dihapus!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Gajadi deh",
+                confirmButtonText: "Yup, Hapus ajalah!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit form secara manual
+                }
+            });
+        });
+
+        //crisp
+        $(document).on('click', '.btnEditCrisp', function () {
+            var id = $(this).data('id');
+            modalAction('/sarpras/crisp/edit_ajax/' + id);
+        });
+
+        var dataCrisp;
+        $(document).ready(function () {
+            dataCrisp = $('#crispTable').DataTable({
+                processing: true,
+                serverSide: false,
+                ajax: { url: "{{ route('sarpras.data_crisp') }}", type: "POST" },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'kriteria.nama', name: 'kriteria.nama' },
+                    { data: 'judul', name: 'judul' },
+                    { data: 'poin', name: 'poin' },             
+                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                ]
+            });
+        });
+        $(document).on('submit', '#formDeleteCrisp', function (e) {
+            e.preventDefault(); // Cegah form langsung submit
+
+            let form = this;
+
+            Swal.fire({
+                title: "Yakin nih mau dihapus?",
+                text: "Data gak bakal bisa dibalikin lagi loh kalo dihapus!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Gajadi deh",
+                confirmButtonText: "Yup, Hapus ajalah!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit form secara manual
+                }
+            });
+        });
+
+    </script>
 @endpush

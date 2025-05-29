@@ -10,7 +10,7 @@
                 <!-- Tabel Kiri - Laporan Sarpras -->
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="card-title">Daftar Laporan Yang Butuh Dikonfirmasi</h5>
+                        <h5 class="card-title">Daftar Laporan Yang Butuh Diterima/Ditolak</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

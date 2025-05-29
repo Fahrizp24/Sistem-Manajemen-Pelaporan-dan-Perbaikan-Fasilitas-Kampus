@@ -75,11 +75,18 @@
             </table>
             <div class="mt-3 text-end">
                 @if ($source == 'pelapor')
-                    <form action="{{ url('/sarpras/laporan_masuk/konfirmasi/' . $laporan->laporan_id) }}" method="POST">
+                    <form action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-success"
-                            onclick="return confirm('Anda Yakin Untuk Mengkonfirmasi Laporan Ini?')">
-                            Konfirmasi Laporan
+                            onclick="return confirm('Anda Yakin Untuk Meneterima Laporan Ini?')">
+                            Menerima Laporan
+                        </button>
+                    </form>
+                    <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
+                            Menolak Laporan
                         </button>
                     </form>
                 @elseif($source == 'admin')
@@ -125,8 +132,8 @@
 <script>
     $(document).ready(function() {
 
-        // Form Konfirmasi Laporan (Pelapor)
-        $('form[action*="/sarpras/laporan_masuk/konfirmasi/"]').validate({
+        // Form terima Laporan (Pelapor)
+        $('form[action*="/sarpras/laporan_masuk/terima/"]').validate({
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,
@@ -144,6 +151,57 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
+                                text: response.message
+                            });
+                        } else {
+                            $('.error-text').text('');
+                            if (response.msgField) {
+                                $.each(response.msgField, function(prefix, val) {
+                                    $('#error-' + prefix).text(val[0]);
+                                });
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
+                        }
+                    }
+                });
+                return false;
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
+        $('form[action*="/sarpras/laporan_masuk/tolak/"]').validate({
+            submitHandler: function(form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: $(form).serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.status) {
+                            $('#detailModal').fadeOut(300, function() {
+                                $(this).modal('hide');
+                            });
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil ditolak',
                                 text: response.message
                             });
                         } else {
