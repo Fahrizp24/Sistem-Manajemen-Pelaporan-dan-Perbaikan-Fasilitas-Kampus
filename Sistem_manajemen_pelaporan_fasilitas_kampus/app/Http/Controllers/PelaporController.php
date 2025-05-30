@@ -11,6 +11,7 @@ use App\Models\UserModel;
 use App\Models\LaporanModel;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Hash;
 
 class PelaporController extends Controller
 {
@@ -34,52 +35,49 @@ class PelaporController extends Controller
         return view('pelapor.profile', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu, 'pelapor' => $pelapor]);
     }
 
-    public function update_profile(Request $request)
-    {
-        $id = Auth::user()->pengguna_id;
+    public function updateProfile(Request $request)
+{
+    $validated = $request->validate([
+        'nama' => 'nullable|string|max:255',
+        'email' => 'nullable|string|email|max:255',
+        'prodi' => 'nullable|string|max:255',
+        'jurusan' => 'nullable|string|max:255',
+        'no_telp' => 'nullable|string|max:20'
+    ]);
 
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
-            'password' => 'required|string|max:15',
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $pelapor = UserModel::findOrFail($id);
-
-        // Update field biasa
-        $pelapor->nama = $request->nama;
-        $pelapor->email = $request->email;
-        $pelapor->password = bcrypt($request->password); // pastikan di-hash jika perlu
-
-        // Jika ada upload file baru
-        if ($request->hasFile('foto_profil')) {
-            $filename = $pelapor->pengguna_id . '.' . $request->file('foto_profil')->getClientOriginalExtension();
-            $newPath = 'public/foto_profil/' . $filename;
-
-            // Jika sebelumnya bukan 'default', hapus file lama
-            if ($pelapor->foto_profil && $pelapor->foto_profil !== 'default') {
-                $oldPath = storage_path('app/public/foto_profil/' . $pelapor->foto_profil);
-                if (file_exists($oldPath)) {
-                    unlink($oldPath);
-                }
-            }
-
-            // Simpan file baru
-            $request->file('foto_profil')->storeAs('public/foto_profil', $filename);
-            $pelapor->foto_profil = $filename;
+    // Hanya update field yang diisi
+    $user = auth()->user();
+    foreach ($validated as $key => $value) {
+        if ($value !== null) {
+            $user->$key = $value;
         }
+    }
+    $user->save();
 
-        $pelapor->save();
+    return back()->with('success', 'Profil berhasil diperbarui!');
+}
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Profil berhasil diubah',
-            'data' => [
-                'foto' => asset('storage/foto_profil/' . $pelapor->foto_profil)
-            ]
+public function updatePassword(Request $request)
+{
+    $request->validate([
+        'current_password' => 'nullable',
+        'new_password' => 'nullable|string|min:8|confirmed'
+    ]);
+
+    // Jika ada input password baru
+    if ($request->filled('new_password')) {
+        // Verifikasi password lama hanya jika diisi
+        if ($request->filled('current_password') && !Hash::check($request->current_password, auth()->user()->password)) {
+            return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai']);
+        }
+        
+        auth()->user()->update([
+            'password' => Hash::make($request->new_password)
         ]);
     }
+
+    return back()->with('success', 'Profil berhasil diperbarui!');
+}
 
     public function laporkan_kerusakan()
     {

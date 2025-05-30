@@ -172,3 +172,4 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 });
+// Profile Routes
