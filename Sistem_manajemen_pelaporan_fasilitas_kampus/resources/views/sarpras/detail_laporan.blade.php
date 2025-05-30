@@ -75,31 +75,13 @@
             </table>
             <div class="mt-3">
                 @if ($source == 'pelapor')
-                <form class="form" method="POST" action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}" enctype="multipart/form-data" data-parsley-validate>
-                    @csrf
-                    <div class="row">
-                        @foreach ($kriteria as $kriteriaItem)
-                        <div class="col-12">
-                            <div class="form-group mandatory mt-3">
-                                <label for="kriteria_{{ $kriteriaItem->kriteria_id }}" class="form-label">{{ $kriteriaItem->nama }}</label>
-                                <select id="kriteria_{{ $kriteriaItem->kriteria_id }}" 
-                                        name="kriteria[{{ $kriteriaItem->kriteria_id }}]" 
-                                        class="form-select" 
-                                        data-parsley-required="true">
-                                    <option value="">Pilih {{ strtolower($kriteriaItem->nama) }}</option>
-                                    @foreach ($crisp->where('kriteria_id', $kriteriaItem->kriteria_id) as $crispItem)
-                                        <option value="{{ $crispItem->poin }}">{{ $crispItem->judul }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                
-                    <button type="submit" class="btn btn-success mt-3 text-end" onclick="return confirm('Anda Yakin Untuk Menerima Laporan Ini?')">
-                        Menerima Laporan
-                    </button>
-                </form>
+                    <form action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-success"
+                            onclick="return confirm('Anda Yakin Untuk Meneterima Laporan Ini?')">
+                            Menerima Laporan
+                        </button>
+                    </form>
                     <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-danger"
