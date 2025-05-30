@@ -12,14 +12,16 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Daftar Fasilitas</h5>
-                <button type="button" class="btn btn-success mb-3"
-                    onclick="modalAction('{{ url('admin/fasilitas/create_ajax') }}')">
-                    + Tambah Fasilitas
-                </button>
-                <button type="button" class="btn btn-success mb-3"
-                    onclick="modalAction('{{ url('admin/fasilitas/import_fasilitas') }}')">
-                    + Import Fasilitas
-                </button>
+                <div>
+                    <button type="button" class="btn btn-success mb-3"
+                        onclick="modalAction('{{ url('admin/fasilitas/create_ajax') }}')">
+                        + Tambah Fasilitas
+                    </button>
+                    <button type="button" class="btn btn-success mb-3"
+                        onclick="modalAction('{{ url('admin/fasilitas/import_fasilitas') }}')">
+                        + Import Fasilitas
+                    </button>
+                </div>
 
             </div>
             <div class="card-body">
