@@ -89,7 +89,7 @@ class LaporanSeeder extends Seeder
                 'teknisi_id' => 2,
                 'deskripsi' => 'Lampu mati',
                 'foto' => 'default.jpg',
-                'status' => 'selesai',
+                'status' => 'diperbaiki',
                 'urgensi' => 'tinggi',
                 'created_at' => now(),
                 'updated_at' => now()
@@ -221,7 +221,7 @@ class LaporanSeeder extends Seeder
                 'teknisi_id' => 2,
                 'deskripsi' => 'Printer error',
                 'foto' => 'default.jpg',
-                'status' => 'selesai',
+                'status' => 'diperbaiki',
                 'urgensi' => 'tinggi',
                 'created_at' => now(),
                 'updated_at' => now()
