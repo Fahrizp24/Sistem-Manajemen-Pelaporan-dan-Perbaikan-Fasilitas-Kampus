@@ -75,19 +75,24 @@
             </table>
             <div class="mt-3">
                 @if ($source == 'pelapor')
-                    <form action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-success"
-                            onclick="return confirm('Anda Yakin Untuk Meneterima Laporan Ini?')">
-                            Menerima Laporan
-                        </button>
-                    </form>
-                    <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-danger"
-                            onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
-                            Menolak Laporan
-                        </button>
+                    <div class="d-flex justify-content-center gap-2">
+                        <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
+                                Tolak Laporan
+                            </button>
+                        </form>
+
+                        <form action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-success"
+                                onclick="return confirm('Anda Yakin Untuk Menerima Laporan Ini?')">
+                                Terima Laporan
+                            </button>
+                        </form>
+                    </div>
+
                     </form>
                 @elseif($source == 'admin')
                     <form action="{{ url('/sarpras/laporan_masuk/pilih_teknisi/' . $laporan->laporan_id) }}"
