@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             UmpanBalikSeeder::class,
             KriteriaSeeder::class,
             CrispSeeder::class,
+            SpkSeeder::class,
+            SpkKriteriaSeeder::class,
         ]);
     }
 }
