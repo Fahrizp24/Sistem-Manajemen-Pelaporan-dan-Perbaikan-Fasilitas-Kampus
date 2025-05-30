@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\SpkModel;
 
 class SarprasController extends Controller
 {
@@ -51,25 +52,44 @@ class SarprasController extends Controller
             'title' => 'Detail Penugasan',
             'subtitle' => 'Informasi lengkap mengenai penugasan'
         ];
-        
-        $teknisi = UserModel::where('peran','teknisi')->get();
+
+        $teknisi = UserModel::where('peran', 'teknisi')->get();
 
         $source = request()->query('source', 'default');
-        return view('sarpras.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source','teknisi'));
+        $kriteria = KriteriaModel::orderBy('kriteria_id')->get();
+        $crisp = CrispModel::orderBy('kriteria_id')->orderBy('poin')->get();
+        return view('sarpras.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
     }
 
 
     public function terima(string $id, Request $request)
     {
         try {
+            // Simpan data SPK
+            $spk = new SpkModel();
+            $spk->laporan_id = $id;
+
+            // Mapping nilai kriteria ke kolom SPK
+            $spk->tingkat_keparahan = $request->kriteria[1] ?? 0; // Kriteria 1
+            $spk->dampak_operasional = $request->kriteria[2] ?? 0; // Kriteria 2
+            $spk->frekuensi_penggunaan = $request->kriteria[3] ?? 0; // Kriteria 3
+            $spk->risiko_keamanan = $request->kriteria[4] ?? 0; // Kriteria 4
+            $spk->biaya_perbaikan = $request->kriteria[5] ?? 0; // Kriteria 5
+            $spk->waktu_perbaikan = $request->kriteria[6] ?? 0; // Kriteria 6
+
+            $spk->save();
+
+            // Update status laporan
             $laporan = LaporanModel::findOrFail($id);
             $laporan->status = 'diterima';
             $laporan->save();
 
             if ($request->ajax()) {
+
                 return response()->json([
                     'success' => true,
-                    'message' => 'Laporan berhasil diterima.'
+                    'message' => 'Laporan berhasil diterima.',
+                    // 'data' => $spk
                 ]);
             }
 
@@ -85,8 +105,6 @@ class SarprasController extends Controller
             return redirect()->back()->with('error', 'Gagal menerima laporan: ' . $e->getMessage());
         }
     }
-
-    
     public function tolak(string $id, Request $request)
     {
         try {
@@ -156,7 +174,7 @@ class SarprasController extends Controller
                         'message' => 'Laporan berhasil diselesaikan.'
                     ]);
                 }
-            } else if($request->hasil === 'revisi') {
+            } else if ($request->hasil === 'revisi') {
                 $laporan->status = 'revisi';
                 $laporan->save();
 
@@ -194,7 +212,7 @@ class SarprasController extends Controller
     public function data_kriteria(Request $request)
     {
         if ($request->ajax()) {
-            $data = KriteriaModel::select(['kriteria_id','kode', 'nama', 'bobot', 'jenis', 'deskripsi'])->get();
+            $data = KriteriaModel::select(['kriteria_id', 'kode', 'nama', 'bobot', 'jenis', 'deskripsi'])->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('aksi', function ($row) {
@@ -214,7 +232,7 @@ class SarprasController extends Controller
     public function data_crisp(Request $request)
     {
         if ($request->ajax()) {
-            $data = CrispModel::with('kriteria')->select(['crisp_id','kriteria_id', 'judul', 'deskripsi', 'poin'])->get();
+            $data = CrispModel::with('kriteria')->select(['crisp_id', 'kriteria_id', 'judul', 'deskripsi', 'poin'])->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('aksi', function ($row) {
@@ -258,35 +276,33 @@ class SarprasController extends Controller
 
         $activeMenu = 'laporan';
 
-        $laporan = \App\Models\LaporanModel::where('status', 'diterima')->get();
+        $laporan = LaporanModel::where('status', 'diterima')->get();
 
         return view('sarpras.ajukan_laporan', compact('breadcrumb', 'page', 'activeMenu', 'laporan'));
     }
 
     public function proses_spk(Request $request)
-{
-    $laporanIds = $request->input('laporan_ids', []);
+    {
+        $laporanIds = $request->input('laporan_ids', []);
 
-    // Validasi data
-    if (empty($laporanIds)) {
-        return response()->json(['error' => 'Tidak ada laporan yang dipilih.'], 400);
+        // Validasi data
+        if (empty($laporanIds)) {
+            return response()->json(['error' => 'Tidak ada laporan yang dipilih.'], 400);
+        }
+
+        // Ambil laporan berdasarkan ID
+        $laporan = LaporanModel::whereIn('id', $laporanIds)->get();
+
+        // Proses SPK di sini (contoh dummy: skor random)
+        $hasil = $laporan->map(function ($item) {
+            return [
+                'judul' => $item->judul,
+                'skor' => rand(70, 100) / 100  // misal skor antara 0.70 s.d 1.00
+            ];
+        })->sortByDesc('skor')->values();
+
+        return response()->json([
+            'data' => $hasil
+        ]);
     }
-
-    // Ambil laporan berdasarkan ID
-    $laporan = LaporanModel::whereIn('id', $laporanIds)->get();
-
-    // Proses SPK di sini (contoh dummy: skor random)
-    $hasil = $laporan->map(function ($item) {
-        return [
-            'judul' => $item->judul,
-            'skor' => rand(70, 100) / 100  // misal skor antara 0.70 s.d 1.00
-        ];
-    })->sortByDesc('skor')->values();
-
-    return response()->json([
-        'data' => $hasil
-    ]);
-}
-
-    
 }

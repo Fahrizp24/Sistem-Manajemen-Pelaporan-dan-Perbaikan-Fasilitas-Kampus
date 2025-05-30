@@ -36,48 +36,49 @@ class PelaporController extends Controller
     }
 
     public function updateProfile(Request $request)
-{
-    $validated = $request->validate([
-        'nama' => 'nullable|string|max:255',
-        'email' => 'nullable|string|email|max:255',
-        'prodi' => 'nullable|string|max:255',
-        'jurusan' => 'nullable|string|max:255',
-        'no_telp' => 'nullable|string|max:20'
-    ]);
-
-    // Hanya update field yang diisi
-    $user = auth()->user();
-    foreach ($validated as $key => $value) {
-        if ($value !== null) {
-            $user->$key = $value;
-        }
-    }
-    $user->save();
-
-    return back()->with('success', 'Profil berhasil diperbarui!');
-}
-
-public function updatePassword(Request $request)
-{
-    $request->validate([
-        'current_password' => 'nullable',
-        'new_password' => 'nullable|string|min:8|confirmed'
-    ]);
-
-    // Jika ada input password baru
-    if ($request->filled('new_password')) {
-        // Verifikasi password lama hanya jika diisi
-        if ($request->filled('current_password') && !Hash::check($request->current_password, auth()->user()->password)) {
-            return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai']);
-        }
-        
-        auth()->user()->update([
-            'password' => Hash::make($request->new_password)
+    {
+        $validated = $request->validate([
+            'nama' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255',
+            'prodi' => 'nullable|string|max:255',
+            'jurusan' => 'nullable|string|max:255',
+            'no_telp' => 'nullable|string|max:20'
         ]);
+
+        // Hanya update field yang diisi
+        $user = UserModel::find(auth()->user()->pengguna_id);
+        foreach ($validated as $key => $value) {
+            if ($value !== null) {
+                $user->$key = $value;
+            }
+        }
+        $user->save();
+
+        return back()->with('success', 'Profil berhasil diperbarui!');
     }
 
-    return back()->with('success', 'Profil berhasil diperbarui!');
-}
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'nullable',
+            'new_password' => 'nullable|string|min:8|confirmed'
+        ]);
+
+        // Jika ada input password baru
+        if ($request->filled('new_password')) {
+            // Verifikasi password lama hanya jika diisi
+            if ($request->filled('current_password') && !Hash::check($request->current_password, auth()->user()->password)) {
+                return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai']);
+            }
+
+            $user = UserModel::find(auth()->user()->pengguna_id);
+            $user->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+        }
+
+        return back()->with('success', 'Profil berhasil diperbarui!');
+    }
 
     public function laporkan_kerusakan()
     {
@@ -94,7 +95,7 @@ public function updatePassword(Request $request)
         $gedung = GedungModel::all();
         $user = UserModel::find(Auth::user()->pengguna_id);
         $activeMenu = 'Laporkan Kerusakan';
-        return view('pelapor.laporkan_kerusakan', compact('gedung', 'breadcrumb', 'page', 'activeMenu','user'));
+        return view('pelapor.laporkan_kerusakan', compact('gedung', 'breadcrumb', 'page', 'activeMenu', 'user'));
     }
 
     public function get_fasilitas_by_gedung(Request $request)
@@ -170,11 +171,10 @@ public function updatePassword(Request $request)
             'sarpras',    // Admin/SARPRAS yang menugaskan
             'teknisi'           // Teknisi yang ditugaskan
         ])->find($id); // Ganti $id dengan ID laporan yang ingin ditampilkan
-        
+
         return view('pelapor.show_detail_laporan', [
             'laporan' => $laporan,
             'page' => (object) ['title' => 'Detail Laporan']
         ]);
     }
-
 }

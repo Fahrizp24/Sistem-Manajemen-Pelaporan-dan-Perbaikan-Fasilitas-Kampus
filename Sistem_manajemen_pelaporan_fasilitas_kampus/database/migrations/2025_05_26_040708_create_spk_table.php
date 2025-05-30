@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('frekuensi_penggunaan', 5, 2);
             $table->decimal('risiko_keamanan', 5, 2);
             $table->decimal('biaya_perbaikan', 10, 2);
-            $table->decimal('downtime', 5, 2);
+            $table->decimal('waktu_perbaikan', 5, 2);
             $table->timestamps();
         });
     }
