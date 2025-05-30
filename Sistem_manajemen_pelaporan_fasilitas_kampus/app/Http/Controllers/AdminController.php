@@ -47,6 +47,7 @@ class AdminController extends Controller
         return view('admin.index', compact('admin'));
     }
 
+
     public function laporan()
     {
         $laporan = LaporanModel::with('fasilitas.gedung')->where('status', 'konfirmasi')->get();
@@ -200,7 +201,7 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        $pengguna = UserModel::find($id); // Ganti UserModel dengan model yang sesuai
+        $pengguna = UserModel::find($id); 
 
         if (!$pengguna) {
             return redirect()->route('admin.pengguna')->with('error', 'Pengguna tidak ditemukan.');

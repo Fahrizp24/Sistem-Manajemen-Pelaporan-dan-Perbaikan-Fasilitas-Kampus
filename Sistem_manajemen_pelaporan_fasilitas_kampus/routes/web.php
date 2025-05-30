@@ -51,14 +51,14 @@ Route::middleware(['auth'])->group(function () {
         
             // Gedung
             Route::prefix('gedung')->group(function () {
-                Route::get('/', [AdminController::class, 'kelola_gedung'])->name('admin.gedung');
-                Route::post('/',[AdminController::class, 'list_gedung'])->name('admin.list_gedung');
-                Route::get('/create', [GedungController::class, 'create_gedung'])->name('admin.create_gedung');
-                Route::post('/store', [GedungController::class, 'store_gedung'])->name('admin.store_gedung');
+                Route::post('/data', [GedungController::class, 'data_gedung'])->name('admin.data_gedung');
+                Route::get('/', [GedungController::class, 'index'])->name('admin.gedung');
+                Route::get('/create_gedung', [GedungController::class, 'create'])->name('admin.gedung.create_gedung');
+                Route::post('/store', [GedungController::class, 'store'])->name('admin.store_gedung');
                 Route::get('/{id}', [GedungController::class, 'show_gedung'])->name('admin.show_gedung');
-                Route::get('/{id}/edit', [GedungController::class, 'edit_gedung'])->name('admin.edit_gedung');
-                Route::post('/{id}', [GedungController::class, 'update_gedung'])->name('admin.update_gedung');
-                Route::delete('/{id}', [AdminController::class, 'destroy_gedung'])->name('admin.destroy_gedung');
+                Route::get('/edit/{id}', [GedungController::class, 'edit'])->name('admin.edit_gedung');
+                Route::put('/update/{id}', [GedungController::class, 'update'])->name('admin.update_gedung');
+                Route::delete('/{id}', [GedungController::class, 'destroy'])->name('admin.destroy_gedung');
             });
         
             // Pengguna

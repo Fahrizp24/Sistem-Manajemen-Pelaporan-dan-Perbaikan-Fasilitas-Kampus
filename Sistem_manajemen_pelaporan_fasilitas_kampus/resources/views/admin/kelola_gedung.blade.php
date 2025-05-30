@@ -1,62 +1,108 @@
 @extends('layouts.template')
 
 @section('content')
-<div class="page-content">
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <div class="page-content">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
-    {{-- Tabel Gedung --}}
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Daftar Gedung</h5>
-            <a href="{{ url('admin/gedung/create') }}" class="btn btn-success mb-3">+ Tambah Gedung</a>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered" id="gedungTable">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Gedung</th>
-                        <th>Deskripsi</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($gedung as $index => $item)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $item->nama }}</td>
-                        <td>{{ $item->deskripsi }}</td>
-                        <td>
-                            <a href="#" class="btn btn-info btn-sm">Detail</a>
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#editForm{{ $item->gedung_id }}">Edit</button>
-                            <a href="{{ url('admin/gedung/create', $item->gedung_id) }}" onclick="return confirm('Hapus gedung ini?')" class="btn btn-danger btn-sm">Hapus</a>
-
-                            {{-- Form Edit Collapse --}}
-                            <div class="collapse mt-2" id="editForm{{ $item->gedung_id }}">
-                                <form method="POST" action="{{ url('admin/gedung/create', $item->gedung_id) }}">
-                                    @csrf
-                                    <input type="text" name="nama" value="{{ $item->nama }}" required class="form-control mb-1">
-                                    <textarea name="deskripsi" class="form-control mb-1">{{ $item->deskripsi }}</textarea>
-                                    <button class="btn btn-sm btn-primary">Simpan Perubahan</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                        <tr><td colspan="4" class="text-center">Belum ada data gedung.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
+        {{-- Tabel Gedung --}}
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Daftar Gedung</h5>
+                <button type="button" class="btn btn-success mb-3"
+                    onclick="modalAction('{{url('admin/gedung/create_gedung')}}')">+ Tambah Gedung</button>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered" id="gedungTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Gedung</th>
+                            <th>Deskripsi</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 @endsection
+<!-- Modal -->
 @push('scripts')
-<script>
-    $(document).ready(function() {
-        $('#gedungTable').DataTable();
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Form Gedung</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent">Memuat...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function modalAction(url) {
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (res) {
+                    $('#modalContent').html(res);
+                    $('#myModal').modal('show');
+                },
+                error: function () {
+                    $('#modalContent').html('<p class="text-danger">Gagal memuat data.</p>');
+                }
+            });
+        }
+
+        $(document).on('click', '.btnEditGedung', function () {
+            var id = $(this).data('id');
+            modalAction('/admin/gedung/edit/' + id);
         });
-</script>
+
+        var dataGedung;
+        $(document).ready(function () {
+            dataGedung = $('#gedungTable').DataTable({
+                processing: true,
+                serverSide: false,
+                ajax: { url: "{{ route('admin.data_gedung') }}", type: "POST" },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'nama', name: 'nama' },
+                    { data: 'deskripsi', name: 'deskripsi' },
+                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                ]
+            });
+        });
+        $(document).on('submit', '#formDeleteGedung', function (e) {
+            e.preventDefault(); // Cegah form langsung submit
+
+            let form = this;
+
+            Swal.fire({
+                title: "Yakin nih mau dihapus?",
+                text: "Data gak bakal bisa dibalikin lagi loh kalo dihapus!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Gajadi deh",
+                confirmButtonText: "Yup, Hapus ajalah!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit form secara manual
+                }
+            });
+        });
+
+    </script>
 @endpush
