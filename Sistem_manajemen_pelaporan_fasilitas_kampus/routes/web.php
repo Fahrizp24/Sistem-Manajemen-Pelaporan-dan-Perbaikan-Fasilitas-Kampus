@@ -34,6 +34,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/laporan/{id}', [LaporanController::class, 'show_laporan'])->name('admin.show_laporan');
                 Route::post('/{id}', [AdminController::class, 'update_laporan'])->name('admin.update_laporan');
             });
+            // Laporan 2
+            Route::prefix('laporan2')->group(function () {
+                Route::get('/', [AdminController::class, 'laporan2'])->name('admin.laporan2');
+                Route::get('/laporan2/{id}', [LaporanController::class, 'show_laporan2'])->name( 'admin.show_laporan2');
+                Route::post('/{id}', [AdminController::class, 'update_laporan2'])->name('admin.update_laporan2');
+            });
         
             // Fasilitas
             Route::prefix('fasilitas')->group(function () {

@@ -53,6 +53,8 @@
     <!-- jQuery Validation Additional Methods -->
     <!-- Init Theme JS -->
     <script src="{{ asset('mazer/dist/assets/static/js/initTheme.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 
 
 

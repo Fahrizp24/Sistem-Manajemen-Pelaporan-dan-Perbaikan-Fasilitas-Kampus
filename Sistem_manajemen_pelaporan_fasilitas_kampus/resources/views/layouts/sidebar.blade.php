@@ -142,10 +142,16 @@
                 </li>
                 <li class="sidebar-title">Laporan</li>
 
-                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan') && !str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan') && !str_contains($currentUrl, '/admin/laporan2') && !str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
                     <a href="{{ url('admin/laporan') }}" class='sidebar-link'>
                         <i class="bi bi-file-text"></i>
-                        <span>Laporan</span>
+                        <span>Laporan</span>    
+                    </a>
+                </li>
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan2') && !str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
+                    <a href="{{ url('admin/laporan2') }}" class='sidebar-link'>
+                        <i class="bi bi-file-text"></i>
+                        <span>Laporan 2</span>
                     </a>
                 </li>
 

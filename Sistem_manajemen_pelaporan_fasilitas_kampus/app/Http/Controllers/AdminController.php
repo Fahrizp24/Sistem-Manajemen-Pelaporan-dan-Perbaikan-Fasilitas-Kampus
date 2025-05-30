@@ -65,6 +65,23 @@ class AdminController extends Controller
         $activeMenu = 'laporan';
         return view('admin.laporan', ['laporan' => $laporan, 'breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
+    public function laporan2()
+    {
+        $laporan2 = LaporanModel::with('fasilitas.gedung')->get();
+
+        $breadcrumb = (object) [
+            'title' => 'Laporan',
+            'list' => ['Admin Laporan']
+        ];
+
+        $page = (object) [
+            'title' => 'Laporan',
+            'subtitle' => 'List Laporan Fasilitas'
+        ];
+
+        $activeMenu = 'laporan2';
+        return view('admin.laporan2', ['laporan2' => $laporan2, 'breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+    }
 
     public function profile()
     {
@@ -413,18 +430,46 @@ class AdminController extends Controller
     }
 
     public function statistik()
-    {
-        $breadcrumb = (object) [
-            'title' => 'Statistik',
-            'list' => ['Statistik Laporan']
-        ];
+{
+    $breadcrumb = (object) [
+        'title' => 'Statistik',
+        'list' => ['Statistik Laporan']
+    ];
 
-        $page = (object) [
-            'title' => 'Statistik',
-            'subtitle' => 'Statistik Laporan'
-        ];
+    $page = (object) [
+        'title' => 'Statistik',
+        'subtitle' => 'Statistik Laporan'
+    ];
 
-        $activeMenu = 'statistik';
-        return view('admin.statistik', compact('breadcrumb', 'page', 'activeMenu'));
-    }
+    $activeMenu = 'statistik';
+
+    // Data untuk chart status laporan (line chart)
+    $statusLaporan = DB::table('laporan')
+        ->select('status', DB::raw('COUNT(*) as total'))
+        ->groupBy('status')
+        ->get();
+
+    $statusLabels = $statusLaporan->pluck('status');
+    $statusData = $statusLaporan->pluck('total');
+
+    // Data untuk chart tingkat urgensi (bar chart)
+    $kerusakan = DB::table('laporan')
+        ->select('urgensi', DB::raw('COUNT(*) as total'))
+        ->groupBy('urgensi')
+        ->orderByRaw("FIELD(urgensi, 'tinggi', 'sedang', 'rendah')")
+        ->get();
+
+    $urgensiLabels = $kerusakan->pluck('urgensi');
+    $urgensiData = $kerusakan->pluck('total');
+
+    return view('admin.statistik', compact(
+        'breadcrumb', 
+        'page', 
+        'activeMenu', 
+        'statusLabels', 
+        'statusData',
+        'urgensiLabels',
+        'urgensiData'
+    ));
+}
 }
