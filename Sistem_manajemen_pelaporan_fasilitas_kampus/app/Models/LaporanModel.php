@@ -56,4 +56,16 @@ class LaporanModel extends Model
     {
         return $this->belongsTo(UserModel::class, 'teknisi_id', 'pengguna_id');
     }
+
+    public function spk()
+    {
+        return $this->hasOne(SpkModel::class, 'laporan_id');
+    }
+
+    public function spk_kriteria()
+    {
+        return $this->hasMany(SpkModel::class);
+    }
+
+
 }

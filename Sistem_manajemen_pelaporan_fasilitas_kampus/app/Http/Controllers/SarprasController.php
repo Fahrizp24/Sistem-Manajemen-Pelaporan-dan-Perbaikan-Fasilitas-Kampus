@@ -61,40 +61,47 @@ class SarprasController extends Controller
         return view('sarpras.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
     }
 
-
     public function terima(string $id, Request $request)
     {
+        DB::beginTransaction();
+
         try {
-            // Simpan data SPK
-            $spk = new SpkModel();
-            $spk->laporan_id = $id;
+            $validated = $request->validate([
+                'kriteria' => 'required|array',
+                'kriteria.*' => 'required|numeric'
+            ]);
 
-            // Mapping nilai kriteria ke kolom SPK
-            $spk->tingkat_keparahan = $request->kriteria[1] ?? 0; // Kriteria 1
-            $spk->dampak_operasional = $request->kriteria[2] ?? 0; // Kriteria 2
-            $spk->frekuensi_penggunaan = $request->kriteria[3] ?? 0; // Kriteria 3
-            $spk->risiko_keamanan = $request->kriteria[4] ?? 0; // Kriteria 4
-            $spk->biaya_perbaikan = $request->kriteria[5] ?? 0; // Kriteria 5
-            $spk->waktu_perbaikan = $request->kriteria[6] ?? 0; // Kriteria 6
+            // Simpan data SPK 
+            $spk = SpkModel::create([
+                'laporan_id' => $id
+            ]);
 
-            $spk->save();
+            // Siapkan data untuk relasi many-to-many
+            $kriteriaData = [];
+            foreach ($request->kriteria as $kriteriaId => $nilai) {
+                $kriteriaData[$kriteriaId] = ['nilai' => $nilai];
+            }
+
+            // Gunakan sync() atau attach() setelah SPK tersimpan
+            $spk->kriteria()->sync($kriteriaData);
 
             // Update status laporan
-            $laporan = LaporanModel::findOrFail($id);
-            $laporan->status = 'diterima';
-            $laporan->save();
+            LaporanModel::findOrFail($id)->update(['status' => 'diterima']);
+
+            DB::commit();
 
             if ($request->ajax()) {
-
                 return response()->json([
                     'success' => true,
                     'message' => 'Laporan berhasil diterima.',
-                    // 'data' => $spk
+                    'data' => $spk->load('kriteria')
                 ]);
             }
 
             return redirect()->back()->with('success', 'Laporan berhasil diterima.');
         } catch (\Exception $e) {
+            DB::rollBack();
+
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
@@ -105,6 +112,7 @@ class SarprasController extends Controller
             return redirect()->back()->with('error', 'Gagal menerima laporan: ' . $e->getMessage());
         }
     }
+
     public function tolak(string $id, Request $request)
     {
         try {
@@ -276,33 +284,146 @@ class SarprasController extends Controller
 
         $activeMenu = 'laporan';
 
-        $laporan = LaporanModel::where('status', 'diterima')->get();
+        $kriteria = KriteriaModel::all();
 
-        return view('sarpras.ajukan_laporan', compact('breadcrumb', 'page', 'activeMenu', 'laporan'));
+        return view('sarpras.ajukan_laporan', compact('breadcrumb', 'page', 'activeMenu', 'kriteria'));
     }
 
-    public function proses_spk(Request $request)
+    public function data_laporan(Request $request)
     {
-        $laporanIds = $request->input('laporan_ids', []);
+        $data = LaporanModel::with(['fasilitas.gedung', 'spk.kriteria'])->where('status', 'diterima')->get();
+        $allKriteria = KriteriaModel::all();
 
-        // Validasi data
-        if (empty($laporanIds)) {
-            return response()->json(['error' => 'Tidak ada laporan yang dipilih.'], 400);
-        }
+        return datatables()->of($data)
+            ->addIndexColumn()
+            ->addColumn('gedung', fn($row) => $row->fasilitas->gedung->nama ?? '-')
+            ->addColumn('fasilitas', fn($row) => $row->fasilitas->nama ?? '-')
+            ->addColumn('kriteria', function ($row) use ($allKriteria) {
+                $columns = [];
 
-        // Ambil laporan berdasarkan ID
-        $laporan = LaporanModel::whereIn('id', $laporanIds)->get();
+                $spk = $row->spk;
 
-        // Proses SPK di sini (contoh dummy: skor random)
-        $hasil = $laporan->map(function ($item) {
-            return [
-                'judul' => $item->judul,
-                'skor' => rand(70, 100) / 100  // misal skor antara 0.70 s.d 1.00
+                foreach ($allKriteria as $k) {
+                    $nilai = '-';
+
+                    if ($spk) {
+                        $match = $spk->kriteria->where('pivot.kriteria_id', $k->kriteria_id)->first();
+                        $nilai = $match ? $match->pivot->nilai : '-';
+                    }
+
+                    $columns['kriteria_' . $k->kriteria_id] = $nilai;
+                }
+
+                return $columns;
+            })
+            ->addColumn('aksi', function ($row) {
+                return '<button onclick="modalAction(\'' . url('laporan.edit', $row->id) . '\')" class="btn btn-sm btn-info">Edit</button>';
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
+    }
+
+
+
+    public function proses_spk()
+    {
+        // Ambil semua laporan yang sudah diterima beserta relasi
+        $laporans = LaporanModel::with(['fasilitas.gedung', 'spk.kriteria'])
+            ->where('status', 'diterima')
+            ->get();
+
+    
+        // Bentuk data matriks alternatif
+        $data = [];
+        $kriteria = [];
+    
+        foreach ($laporans as $laporan) {
+            $judul = ($laporan->fasilitas->nama ?? '-') . ' - ' . ($laporan->fasilitas->gedung->nama ?? '-');
+        
+            $spk = $laporan->spk; // ambil SPK pertama jika ada
+        
+            if (!$spk) {
+                continue; // skip laporan ini kalau tidak ada SPK-nya
+            }
+        
+            $nilaiKriteria = [];
+        
+            foreach ($spk->kriteria as $item) {
+                $nilaiKriteria[$item->nama] = (float) $item->pivot->nilai;
+        
+                if (!in_array($item->nama, $kriteria)) {
+                    $kriteria[] = $item->nama;
+                }
+            }
+        
+            $data[] = [
+                'judul' => $judul,
+                'kriteria' => $nilaiKriteria
             ];
-        })->sortByDesc('skor')->values();
-
-        return response()->json([
-            'data' => $hasil
+        }
+    
+        // Hitung F* (nilai terbaik) dan F- (nilai terburuk)
+        $f_star = [];
+        $f_minus = [];
+        foreach ($kriteria as $k) {
+            $nilai = array_column(array_column($data, 'kriteria'), $k);
+            $f_star[$k] = max($nilai);
+            $f_minus[$k] = min($nilai);
+        }
+    
+        // Hitung S, R, dan Q untuk setiap alternatif
+        $S = $R = $Q = [];
+        $v = 0.5; // parameter VIKOR (bisa diatur)
+    
+        foreach ($data as $i => $d) {
+            $s = $r = 0;
+            $temp = [];
+    
+            foreach ($d['kriteria'] as $k => $nilai) {
+                $bobot = 1 / count($kriteria); // Bobot merata
+                $f_star_val = $f_star[$k] ?: 1; // Hindari pembagian 0
+    
+                $temp[$k] = $bobot * (($f_star[$k] - $nilai) / ($f_star[$k] - $f_minus[$k] ?: 1));
+    
+                $s += $temp[$k];
+                $r = max($r, $temp[$k]);
+            }
+    
+            $S[$i] = $s;
+            $R[$i] = $r;
+        }
+    
+        // Hitung nilai Q
+        $s_max = max($S); $s_min = min($S);
+        $r_max = max($R); $r_min = min($R);
+    
+        foreach ($data as $i => $d) {
+            $Q[$i] = $v * (($S[$i] - $s_min) / ($s_max - $s_min ?: 1)) + (1 - $v) * (($R[$i] - $r_min) / ($r_max - $r_min ?: 1));
+        }
+    
+        // Gabungkan hasil ranking
+        $result = [];
+        foreach ($data as $i => $d) {
+            $result[] = [
+                'judul' => $d['judul'],
+                'Q' => round($Q[$i], 4),
+                'S' => round($S[$i], 4),
+                'R' => round($R[$i], 4),
+            ];
+        }
+    
+        // Urutkan berdasarkan nilai Q terkecil (semakin kecil semakin baik)
+        usort($result, fn($a, $b) => $a['Q'] <=> $b['Q']);
+    
+        // Tambahkan ranking
+        foreach ($result as $i => &$r) {
+            $r['ranking'] = $i + 1;
+        }
+    
+         return response()->json([
+            'success' => true,
+            'data' => $result
         ]);
     }
+    
 }

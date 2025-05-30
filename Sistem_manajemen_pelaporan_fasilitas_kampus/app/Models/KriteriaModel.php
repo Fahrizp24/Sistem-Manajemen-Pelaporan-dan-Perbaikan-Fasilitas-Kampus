@@ -23,8 +23,16 @@ class KriteriaModel extends Model
         'nama',
         'bobot'
     ];
+    
     function crisp(): HasMany
     {
         return $this->hasMany(CrispModel::class, 'kriteria_id', 'kriteria_id');
+    }
+
+    public function spk()
+    {
+        return $this->belongsToMany(SPKModel::class, 'spk_kriteria', 'kriteria_id', 'spk_id')
+            ->withPivot('nilai')
+            ->withTimestamps();
     }
 }
