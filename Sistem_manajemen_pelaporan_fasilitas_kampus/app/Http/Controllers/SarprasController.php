@@ -257,7 +257,36 @@ class SarprasController extends Controller
         ];
 
         $activeMenu = 'laporan';
-        return view('sarpras.ajukan_laporan', compact('breadcrumb', 'page', 'activeMenu'));
+
+        $laporan = \App\Models\LaporanModel::where('status', 'diterima')->get();
+
+        return view('sarpras.ajukan_laporan', compact('breadcrumb', 'page', 'activeMenu', 'laporan'));
     }
+
+    public function proses_spk(Request $request)
+{
+    $laporanIds = $request->input('laporan_ids', []);
+
+    // Validasi data
+    if (empty($laporanIds)) {
+        return response()->json(['error' => 'Tidak ada laporan yang dipilih.'], 400);
+    }
+
+    // Ambil laporan berdasarkan ID
+    $laporan = LaporanModel::whereIn('id', $laporanIds)->get();
+
+    // Proses SPK di sini (contoh dummy: skor random)
+    $hasil = $laporan->map(function ($item) {
+        return [
+            'judul' => $item->judul,
+            'skor' => rand(70, 100) / 100  // misal skor antara 0.70 s.d 1.00
+        ];
+    })->sortByDesc('skor')->values();
+
+    return response()->json([
+        'data' => $hasil
+    ]);
+}
+
     
 }

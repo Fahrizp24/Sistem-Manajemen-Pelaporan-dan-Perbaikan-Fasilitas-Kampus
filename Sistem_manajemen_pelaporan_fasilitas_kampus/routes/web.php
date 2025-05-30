@@ -139,6 +139,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('ajukan_laporan')->group(function () {
                 Route::get('/', [SarprasController::class, 'ajukan_laporan'])->name('sarpras.ajukan_laporan');
+                Route::post('/proses_spk', [SarprasController::class, 'proses_spk'])->name('proses.spk');
             });
             
             Route::get('/statistik', [SarprasController::class, 'statistik'])->name('sarpras.statistik');
