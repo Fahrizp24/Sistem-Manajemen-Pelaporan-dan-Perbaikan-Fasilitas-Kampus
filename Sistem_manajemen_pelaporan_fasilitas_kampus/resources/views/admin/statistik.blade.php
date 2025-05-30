@@ -85,11 +85,46 @@
                 },
                 options: {
                     responsive: true,
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // Menghilangkan legend (kotak warna)
+                        },
+                        title: {
+                            display: true,
+                            text: 'Jumlah Laporan',
+                            position: 'left', // Posisi title di kiri
+                            align: 'center', 
+                            font: {
+                                size: 14
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 30
+                            }
+                        }
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
                             ticks: {
                                 precision: 0
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Jumlah',
+                        font: {
+                            weight: 'bold'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tingkat Urgensi',
+                            font: {
+                                weight: 'bold'
                             }
                         }
                     }
