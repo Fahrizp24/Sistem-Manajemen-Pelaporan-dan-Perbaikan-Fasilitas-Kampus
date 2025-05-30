@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use PhpParser\Node\NullableType;
 
 return new class extends Migration
 {
@@ -15,10 +16,12 @@ return new class extends Migration
             $table->id('pengguna_id');
             $table->string('username')->unique();
             $table->string('nama');
+            $table->string('program_studi')->nullable();
+            $table->string('jurusan')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('peran', ['admin', 'pelapor', 'sarpras', 'teknisi']);
-            $table->string('foto_profil')->default('default');
+            $table->string('foto_profil')->nullable();
             $table->timestamps();
         });
     }
