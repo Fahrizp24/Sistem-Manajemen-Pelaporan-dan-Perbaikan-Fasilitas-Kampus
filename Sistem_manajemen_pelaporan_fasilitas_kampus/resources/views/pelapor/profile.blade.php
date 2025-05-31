@@ -57,7 +57,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Peran</label>
                                     <div>
-                                        <span class="badge bg-primary py-2 px-3">{{ $pelapor->peran }}</span>
+                                        <span class="badge bg-primary py-2 px-3 divider">{{ $pelapor->peran }}</span>
                                     </div>
                                 </div>
                             </div>
