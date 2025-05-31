@@ -33,15 +33,17 @@
                                             $badgeClass =
                                                 [
                                                     'diajukan' => 'bg-secondary',
-                                                    'diterima' => 'bg-primary',
-                                                    'ditolak' => 'bg-danger',
-                                                    'diajukan sarpras' => 'bg-warning',
-                                                    'diterima admin' => 'bg-info',
-                                                    'dilaksanakan' => 'bg-success',
-                                                    'selesai' => 'bg-dark',
+                                                    'diterima' => 'bg-info',
+                                                    'tidak diterima' => 'bg-danger',
+                                                    'konfirmasi' => 'bg-primary',
+                                                    'memilih teknisi' => 'bg-info',
+                                                    'diperbaiki' => 'bg-warning',
+                                                    'telah diperbaiki' => 'bg-warning',
+                                                    'revisi' => 'bg-warning',
+                                                    'selesai' => 'bg-success',
                                                 ][$item->status] ?? 'bg-secondary';
                                         @endphp
-                                        <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
+                                        <span class="divider badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
                                     </td>
                                     <td>
                                         <button
@@ -151,7 +153,7 @@
         }
     </script>
 @endpush
-@css
+{{-- @css
     .rater-base {
     display: inline-block;
     position: relative;
@@ -180,4 +182,4 @@
     .rater-readonly .rater-star {
     cursor: default;
     }
-@endcss
+@endcss --}}

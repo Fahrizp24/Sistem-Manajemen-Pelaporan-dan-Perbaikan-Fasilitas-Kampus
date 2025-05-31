@@ -16,7 +16,7 @@
                             <th>Gedung</th>
                             <th>Nama Fasilitas</th>
                             @foreach ($kriteria as $k)
-                                <th>{{ $k->nama }}</th>
+                                <th>{{ explode(' ', $k->nama)[0] }}</th>
                             @endforeach
                             <th>Aksi</th>
                         </tr>
@@ -175,8 +175,8 @@
 
                         // Tampilkan hasil dan isi ke dalam tabel
                         if (response && response.data && response.data.length > 0) {
-        response.data.forEach((item, index) => {
-            $('#hasilSPKBody').append(`
+                            response.data.forEach((item, index) => {
+                                $('#hasilSPKBody').append(`
                 <tr>
                     <td>${item.ranking}</td>
                     <td>${item.judul}</td>
@@ -185,9 +185,9 @@
                     <td>${item.R}</td>
                 </tr>
             `);
-        });
+                            });
 
-        $('#hasilSPKCard').show();
+                            $('#hasilSPKCard').show();
                         } else {
                             $('#hasilSPKBody').html(
                                 '<tr><td colspan="3" class="text-center">Tidak ada hasil SPK</td></tr>'
