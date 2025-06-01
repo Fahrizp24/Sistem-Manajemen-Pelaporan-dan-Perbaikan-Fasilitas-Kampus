@@ -182,7 +182,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-gradient-indigo text-blue">
-                    <h5 class="modal-title" id="modalLabel">Detail Laporan</h5>
+                    <h4 class="modal-title" id="modalLabel">Detail Laporan</h4>
                     <button type="button" class="btn-close btn-close-blue" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
@@ -195,7 +195,7 @@
 
 @push('scripts')
     <script>
-        // Inisialisasi DataTable jika diperlukan
+        // Inisialisasi DataTable
         $(document).ready(function() {
             $('#table-sarpras, #table-admin, #table-teknisi').DataTable({
                 responsive: true

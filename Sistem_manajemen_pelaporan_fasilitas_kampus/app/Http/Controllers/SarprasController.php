@@ -64,7 +64,7 @@ class SarprasController extends Controller
     public function terima(string $id, Request $request)
     {
         DB::beginTransaction();
-
+        
         try {
             $validated = $request->validate([
                 'kriteria' => 'required|array',
@@ -325,6 +325,120 @@ class SarprasController extends Controller
 
 
 
+    private function normalisasiVektor(array $data): array
+    {
+        // Ambil semua nama kriteria dari alternatif pertama
+        $kriteria = array_keys($data[0]['kriteria']);
+
+        // 1. Hitung penyebut (akar jumlah kuadrat per kriteria)
+        $penyebut = [];
+        foreach ($kriteria as $k) {
+            $penyebut[$k] = sqrt(array_sum(array_map(function ($d) use ($k) {
+                return pow($d['kriteria'][$k], 2);
+            }, $data)));
+        }
+
+        // 2. Hitung nilai normalisasi per alternatif
+        $normalisasi = [];
+        foreach ($data as $i => $alt) {
+            $normalisasi[$i]['judul'] = $alt['judul'];
+            foreach ($kriteria as $k) {
+                $normalisasi[$i]['kriteria'][$k] = $alt['kriteria'][$k] / ($penyebut[$k] ?: 1);
+            }
+        }
+
+        return $normalisasi;
+    }
+
+    private function nilaiTerbobot(array $data, array $bobot): array
+    {
+        $hasil = [];
+
+        foreach ($data as $i => $alt) {
+            $hasil[$i]['judul'] = $alt['judul'];
+            foreach ($alt['kriteria'] as $namaKriteria => $nilaiNormal) {
+                $bobotKriteria = $bobot[$namaKriteria] ?? 0;
+                $hasil[$i]['kriteria'][$namaKriteria] = $nilaiNormal * $bobotKriteria;
+            }
+        }
+
+        return $hasil;
+    }
+
+    private function solusiIdeal(array $data, array $jenis): array
+    {
+        $kriteriaList = array_keys($data[0]['kriteria']);
+        $idealPositif = [];
+        $idealNegatif = [];
+
+        foreach ($kriteriaList as $kriteria) {
+            $nilai = array_column(array_column($data, 'kriteria'), $kriteria);
+            if (($jenis[$kriteria] ?? 'benefit') === 'benefit') {
+                $idealPositif[$kriteria] = max($nilai);
+                $idealNegatif[$kriteria] = min($nilai);
+            } else {
+                $idealPositif[$kriteria] = min($nilai);
+                $idealNegatif[$kriteria] = max($nilai);
+            }
+        }
+        return [$idealPositif, $idealNegatif];
+    }
+
+    private function jarakSolusiIdeal(array $data, array $idealPositif, array $idealNegatif): array
+    {
+        $result = [];
+
+        foreach ($data as $i => $alt) {
+            $dPlus = 0;
+            $dMinus = 0;
+
+            foreach ($alt['kriteria'] as $kriteria => $nilai) {
+                $dPlus += pow($idealPositif[$kriteria] - $nilai, 2);
+                $dMinus += pow($nilai - $idealNegatif[$kriteria], 2);
+            }
+
+            $result[] = [
+                'judul' => $alt['judul'],
+                'D_plus' => round(sqrt($dPlus), 4),
+                'D_minus' => round(sqrt($dMinus), 4),
+            ];
+        }
+
+        return $result;
+    }
+
+    private function hitungPreferensi(array $jarak): array
+    {
+        $hasil = [];
+
+        foreach ($jarak as $item) {
+            $Dplus = $item['D_plus'];
+            $Dminus = $item['D_minus'];
+
+            // Perhitungan nilai preferensi V berdasarkan rumus Vi = D- / (D+ + D-)
+            $Vi = ($Dplus + $Dminus) == 0 ? 0 : $Dminus / ($Dplus + $Dminus);
+
+            $hasil[] = [
+                'judul' => $item['judul'],
+                'D_plus' => round($Dplus, 4),
+                'D_minus' => round($Dminus, 4),
+                'V' => round($Vi, 4),
+            ];
+        }
+
+        // Urutkan berdasarkan nilai V dari yang terkecil (semakin kecil V, semakin baik)
+        usort($hasil, fn($a, $b) => $a['V'] <=> $b['V']);
+
+        // Tambahkan peringkat
+        foreach ($hasil as $i => &$r) {
+            $r['ranking'] = $i + 1;
+        }
+
+        return $hasil;
+    }
+
+
+
     public function proses_spk()
     {
         // Ambil semua laporan yang sudah diterima beserta relasi
@@ -332,98 +446,53 @@ class SarprasController extends Controller
             ->where('status', 'diterima')
             ->get();
 
-    
+
         // Bentuk data matriks alternatif
         $data = [];
         $kriteria = [];
-    
+
         foreach ($laporans as $laporan) {
             $judul = ($laporan->fasilitas->nama ?? '-') . ' - ' . ($laporan->fasilitas->gedung->nama ?? '-');
-        
-            $spk = $laporan->spk; // ambil SPK pertama jika ada
-        
+
+            $spk = $laporan->spk; // ambil SPK 
+
             if (!$spk) {
                 continue; // skip laporan ini kalau tidak ada SPK-nya
             }
-        
+
             $nilaiKriteria = [];
-        
+
             foreach ($spk->kriteria as $item) {
                 $nilaiKriteria[$item->nama] = (float) $item->pivot->nilai;
-        
+
                 if (!in_array($item->nama, $kriteria)) {
                     $kriteria[] = $item->nama;
                 }
             }
-        
+
             $data[] = [
                 'judul' => $judul,
                 'kriteria' => $nilaiKriteria
             ];
         }
-    
-        // Hitung F* (nilai terbaik) dan F- (nilai terburuk)
-        $f_star = [];
-        $f_minus = [];
-        foreach ($kriteria as $k) {
-            $nilai = array_column(array_column($data, 'kriteria'), $k);
-            $f_star[$k] = max($nilai);
-            $f_minus[$k] = min($nilai);
+
+        $normalisasi = $this->normalisasiVektor($data);
+
+        $bobotKriteria = [];
+        foreach (KriteriaModel::all() as $k) {
+            $bobotKriteria[$k->nama] = floatval($k->bobot);
+            $jenisKriteria[$k->nama] = strtolower($k->jenis);
         }
-    
-        // Hitung S, R, dan Q untuk setiap alternatif
-        $S = $R = $Q = [];
-        $v = 0.5; // parameter VIKOR (bisa diatur)
-    
-        foreach ($data as $i => $d) {
-            $s = $r = 0;
-            $temp = [];
-    
-            foreach ($d['kriteria'] as $k => $nilai) {
-                $bobot = 1 / count($kriteria); // Bobot merata
-                $f_star_val = $f_star[$k] ?: 1; // Hindari pembagian 0
-    
-                $temp[$k] = $bobot * (($f_star[$k] - $nilai) / ($f_star[$k] - $f_minus[$k] ?: 1));
-    
-                $s += $temp[$k];
-                $r = max($r, $temp[$k]);
-            }
-    
-            $S[$i] = $s;
-            $R[$i] = $r;
-        }
-    
-        // Hitung nilai Q
-        $s_max = max($S); $s_min = min($S);
-        $r_max = max($R); $r_min = min($R);
-    
-        foreach ($data as $i => $d) {
-            $Q[$i] = $v * (($S[$i] - $s_min) / ($s_max - $s_min ?: 1)) + (1 - $v) * (($R[$i] - $r_min) / ($r_max - $r_min ?: 1));
-        }
-    
-        // Gabungkan hasil ranking
-        $result = [];
-        foreach ($data as $i => $d) {
-            $result[] = [
-                'judul' => $d['judul'],
-                'Q' => round($Q[$i], 4),
-                'S' => round($S[$i], 4),
-                'R' => round($R[$i], 4),
-            ];
-        }
-    
-        // Urutkan berdasarkan nilai Q terkecil (semakin kecil semakin baik)
-        usort($result, fn($a, $b) => $a['Q'] <=> $b['Q']);
-    
-        // Tambahkan ranking
-        foreach ($result as $i => &$r) {
-            $r['ranking'] = $i + 1;
-        }
-    
-         return response()->json([
+        $terbobot = $this->nilaiTerbobot($normalisasi, $bobotKriteria);
+
+        [$idealPositif, $idealNegatif] = $this->solusiIdeal($terbobot, $jenisKriteria);
+        $jarak = $this->jarakSolusiIdeal($terbobot, $idealPositif, $idealNegatif);
+
+        $hasilAkhir = $this->hitungPreferensi($jarak);
+
+        return response()->json([
             'success' => true,
-            'data' => $result
+            'data' => $hasilAkhir
         ]);
     }
-    
 }

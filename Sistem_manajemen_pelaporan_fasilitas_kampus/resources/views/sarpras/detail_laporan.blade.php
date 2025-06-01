@@ -72,21 +72,42 @@
 
         <div class="mt-3 text-center">
             @if ($source == 'pelapor')
-                <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST" class="d-inline">
-                    @csrf
-                    <button type="submit" class="btn btn-danger mx-1"
-                        onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
-                        Tolak Laporan
-                    </button>
-                </form>
+                    <form class="form" method="POST"
+                        action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}"
+                        enctype="multipart/form-data" data-parsley-validate>
+                        @csrf
+                        <div class="row">
+                            <div class="divider divider-left">
+                                <h4 class="divider-text">Berikan Penilaian Kriteria</h4>
+                            </div>
 
-                <form action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}" method="POST" class="d-inline">
-                    @csrf
-                    <button type="submit" class="btn btn-success mx-1"
-                        onclick="return confirm('Anda Yakin Untuk Menerima Laporan Ini?')">
-                        Terima Laporan
-                    </button>
-                </form>
+                            @foreach ($kriteria as $kriteriaItem)
+                                <div class="col-12">
+                                    <div class="form-group mandatory mt-3 divider divider-left">
+                                        <label for="kriteria_{{ $kriteriaItem->kriteria_id }}" class="form-label divider-text" style="padding:0">{{ $kriteriaItem->nama }}</label>
+                                        <select id="kriteria_{{ $kriteriaItem->kriteria_id }}" name="kriteria[{{ $kriteriaItem->kriteria_id }}]" class="form-select" data-parsley-required="true" required>
+                                            <option value="">Pilih {{ strtolower($kriteriaItem->nama) }}</option>
+                                            @foreach ($crisp->where('kriteria_id', $kriteriaItem->kriteria_id) as $crispItem)
+                                                <option value="{{ $crispItem->poin }}">{{ $crispItem->judul }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <button type="submit" class="btn btn-success mt-3 text-end"
+                            onclick="return confirm('Anda Yakin Untuk Menerima Laporan Ini?')">
+                            Menerima Laporan
+                        </button>
+                    </form>
+                    <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
+                            Menolak Laporan
+                        </button>
+                    </form>
             @elseif($source == 'admin')
                 <form action="{{ url('/sarpras/laporan_masuk/pilih_teknisi/' . $laporan->laporan_id) }}" method="POST">
                     @csrf

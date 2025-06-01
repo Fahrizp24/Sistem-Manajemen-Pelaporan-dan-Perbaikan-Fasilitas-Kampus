@@ -40,9 +40,9 @@
                         <tr>
                             <th>Ranking</th>
                             <th>Judul Laporan</th>
-                            <th>Nilai Q</th>
-                            <th>Nilai S</th>
-                            <th>Nilai R</th>
+                            <th>Nilai D+</th>
+                            <th>Nilai D-</th>
+                            <th>Nilai V</th>
                         </tr>
                     </thead>
                     <tbody id="hasilSPKBody">
@@ -177,14 +177,14 @@
                         if (response && response.data && response.data.length > 0) {
                             response.data.forEach((item, index) => {
                                 $('#hasilSPKBody').append(`
-                <tr>
-                    <td>${item.ranking}</td>
-                    <td>${item.judul}</td>
-                    <td>${item.Q}</td>
-                    <td>${item.S}</td>
-                    <td>${item.R}</td>
-                </tr>
-            `);
+                                    <tr>
+                                        <td>${item.ranking}</td>
+                                        <td>${item.judul}</td>
+                                        <td>${item.D_plus}</td>
+                                        <td>${item.D_minus}</td>
+                                        <td>${item.V}</td>
+                                    </tr>
+                                `);
                             });
 
                             $('#hasilSPKCard').show();
