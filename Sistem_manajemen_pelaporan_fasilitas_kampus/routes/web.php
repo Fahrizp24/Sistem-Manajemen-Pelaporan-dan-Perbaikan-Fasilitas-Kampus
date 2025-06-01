@@ -80,6 +80,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/edit_ajax/{id}', [AdminController::class, 'edit_pengguna'])->name('admin.pengguna.edit_pengguna');
                 Route::put('/update/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
                 Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
+                Route::post('/reset_password/{id}', [AdminController::class, 'resetPassword'])->name('admin.pengguna.reset_password');
+
             });
         
             // Statistik
@@ -90,6 +92,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', [AdminController::class, 'laporan_periodik'])->name('admin.laporan_periodik');
                 Route::get('/{id}', [AdminController::class, 'show_laporan_periodik'])->name('admin.show_laporan_periodik');
                 Route::post('/{id}', [AdminController::class, 'update_laporan_periodik'])->name('admin.update_laporan_periodik');
+                Route::get('/export_laporan_periodik', [AdminController::class, 'export_laporan_periodik'])->name('admin.export_laporan_periodik');
+
             });
 
             //sistem rekomendasi

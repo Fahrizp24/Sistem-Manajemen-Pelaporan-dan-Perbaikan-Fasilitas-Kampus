@@ -189,7 +189,7 @@ class AdminController extends Controller
             'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
             'password' => 'nullable|string|min:6',
-            'peran' => 'required|string|in:admin,sarpras,teknisi',
+            'peran' => 'required|string|in:admin,sarpras,pelapor, teknisi',
         ]);
 
         $user = UserModel::findOrFail($id);
@@ -218,7 +218,7 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        $pengguna = UserModel::find($id); 
+        $pengguna = UserModel::find($id);
 
         if (!$pengguna) {
             return redirect()->route('admin.pengguna')->with('error', 'Pengguna tidak ditemukan.');
@@ -227,6 +227,20 @@ class AdminController extends Controller
         $pengguna->delete();
 
         return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil dihapus.');
+    }
+
+    public function resetPassword($id)
+    {
+        $pengguna = UserModel::findOrFail($id);
+
+        // Reset password = username
+        $pengguna->password = Hash::make($pengguna->username);
+        $pengguna->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password berhasil direset menjadi username.'
+        ]);
     }
 
     public function import_pengguna()
@@ -249,31 +263,32 @@ class AdminController extends Controller
                     'msgField' => $validator->errors()
                 ]);
             }
-    
+
             $file = $request->file('file_pengguna');
             $reader = IOFactory::createReader('Xlsx');
             $reader->setReadDataOnly(true);
             $spreadsheet = $reader->load($file->getRealPath());
             $sheet = $spreadsheet->getActiveSheet();
             $data = $sheet->toArray(null, false, true, true);
-    
+
             $insert = [];
             if (count($data) > 1) {
                 foreach ($data as $baris => $value) {
-                    if ($baris == 1) continue; // Lewati header
-    
+                    if ($baris == 1)
+                        continue; // Lewati header
+
                     // Pastikan minimal username dan email tidak kosong
                     if (!empty($value['A']) && !empty($value['C'])) {
                         $insert[] = [
                             'username' => $value['A'],
                             'nama' => $value['B'] ?? null, // Gunakan null jika kosong
                             'email' => $value['C'],
-                            'password' =>Hash::make( $value['D']), 
+                            'password' => Hash::make($value['D']),
                             'peran' => $value['E'] ?? 'pelapor', // Beri nilai default jika kosong
                         ];
                     }
                 }
-    
+
                 if (count($insert) > 0) {
                     UserModel::insertOrIgnore($insert);
                     return response()->json([
@@ -313,7 +328,7 @@ class AdminController extends Controller
         return view('admin.kelola_fasilitas', compact('fasilitas', 'breadcrumb', 'page'));
     }
 
-        public function import_fasilitas()
+    public function import_fasilitas()
     {
         return view('admin.fasilitas.import_fasilitas');
     }
@@ -333,26 +348,27 @@ class AdminController extends Controller
                     'msgField' => $validator->errors()
                 ]);
             }
-    
+
             $file = $request->file('file_fasilitas');
             $reader = IOFactory::createReader('Xlsx');
             $reader->setReadDataOnly(true);
             $spreadsheet = $reader->load($file->getRealPath());
             $sheet = $spreadsheet->getActiveSheet();
             $data = $sheet->toArray(null, false, true, true);
-    
+
             $insert = [];
             if (count($data) > 1) {
                 foreach ($data as $baris => $value) {
-                    if ($baris == 1) continue; // Lewati header
-    
+                    if ($baris == 1)
+                        continue; // Lewati header
+
                     // Pastikan minimal username dan email tidak kosong
                     if (!empty($value['A']) && !empty($value['C'])) {
                         $insert[] = [
                             'nama' => $value['A'],
                             'deskripsi' => $value['B'] ?? null, // Gunakan null jika kosong
                             'kategori' => $value['C'],
-                            'gedung_id' =>$value['D'], 
+                            'gedung_id' => $value['D'],
                         ];
                     }
                 }
@@ -411,7 +427,7 @@ class AdminController extends Controller
         return view('admin.sistem_rekomendasi', compact('breadcrumb', 'page', 'activeMenu'));
     }
 
-    function laporan_periodik()
+    public function laporan_periodik(Request $request)
     {
         $breadcrumb = (object) [
             'title' => 'Laporan Periodik',
@@ -423,53 +439,129 @@ class AdminController extends Controller
             'subtitle' => 'Detail Laporan Periodik'
         ];
 
-        $laporan = LaporanModel::where('status', 'selesai');
-
         $activeMenu = 'laporan_periodik';
-        return view('admin.laporan_periodik', compact('breadcrumb', 'page', 'activeMenu'));
+
+        // Default values
+        $bulan = $request->input('bulan', date('m'));
+        $tahun = $request->input('tahun', date('Y'));
+
+        // Query untuk status perbaikan
+        $statusPerbaikan = LaporanModel::select('status', DB::raw('COUNT(*) as total'))
+            ->whereYear('created_at', $tahun)
+            ->when($bulan != 'all', function ($query) use ($bulan) {
+                return $query->whereMonth('created_at', $bulan);
+            })
+            ->groupBy('status')
+            ->get();
+
+        // Query untuk kepuasan pengguna
+        $kepuasan = DB::table('umpan_balik')
+            ->select('penilaian as rating', DB::raw('COUNT(*) as total'))
+            ->whereYear('created_at', $tahun)
+            ->when($bulan != 'all', function ($query) use ($bulan) {
+                return $query->whereMonth('created_at', $bulan);
+            })
+            ->groupBy('penilaian')
+            ->get();
+
+        // Hitung rata-rata rating
+        $averageRating = DB::table('umpan_balik')
+            ->whereYear('created_at', $tahun)
+            ->when($bulan != 'all', function ($query) use ($bulan) {
+                return $query->whereMonth('created_at', $bulan);
+            })
+            ->avg('penilaian');
+
+        // Query untuk tren kerusakan per bulan
+        $trenKerusakan = LaporanModel::select(
+            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereYear('created_at', $tahun)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('bulan')
+            ->get();
+
+        return view('admin.laporan_periodik', compact(
+            'breadcrumb',
+            'page',
+            'activeMenu',
+            'statusPerbaikan',
+            'kepuasan',
+            'averageRating',
+            'trenKerusakan',
+            'bulan',
+            'tahun'
+        ));
+    }
+
+    public function export_laporan_periodik(Request $request)
+    {
+        $bulan_awal = $request->input('bulan_awal', 1);
+        $bulan_akhir = $request->input('bulan_akhir', 12);
+        $tahun = $request->input('tahun', date('Y'));
+
+        $data = LaporanModel::select(
+            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereYear('created_at', $tahun)
+            ->whereBetween(DB::raw('MONTH(created_at)'), [$bulan_awal, $bulan_akhir])
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('bulan')
+            ->get();
+
+        $pdf = PDF::loadView('admin.laporan_periodik_pdf', [
+            'data' => $data,
+            'bulan_awal' => $bulan_awal,
+            'bulan_akhir' => $bulan_akhir,
+            'tahun' => $tahun
+        ]);
+
+        return $pdf->download('laporan_periodik_' . $tahun . '.pdf');
     }
 
     public function statistik()
-{
-    $breadcrumb = (object) [
-        'title' => 'Statistik',
-        'list' => ['Statistik Laporan']
-    ];
+    {
+        $breadcrumb = (object) [
+            'title' => 'Statistik',
+            'list' => ['Statistik Laporan']
+        ];
 
-    $page = (object) [
-        'title' => 'Statistik',
-        'subtitle' => 'Statistik Laporan'
-    ];
+        $page = (object) [
+            'title' => 'Statistik',
+            'subtitle' => 'Statistik Laporan'
+        ];
 
-    $activeMenu = 'statistik';
+        $activeMenu = 'statistik';
 
-    // Data untuk chart status laporan (line chart)
-    $statusLaporan = DB::table('laporan')
-        ->select('status', DB::raw('COUNT(*) as total'))
-        ->groupBy('status')
-        ->get();
+        // Data untuk chart status laporan (line chart)
+        $statusLaporan = DB::table('laporan')
+            ->select('status', DB::raw('COUNT(*) as total'))
+            ->groupBy('status')
+            ->get();
 
-    $statusLabels = $statusLaporan->pluck('status');
-    $statusData = $statusLaporan->pluck('total');
+        $statusLabels = $statusLaporan->pluck('status');
+        $statusData = $statusLaporan->pluck('total');
 
-    // Data untuk chart tingkat urgensi (bar chart)
-    $kerusakan = DB::table('laporan')
-        ->select('urgensi', DB::raw('COUNT(*) as total'))
-        ->groupBy('urgensi')
-        ->orderByRaw("FIELD(urgensi, 'tinggi', 'sedang', 'rendah')")
-        ->get();
+        // Data untuk chart tingkat urgensi (bar chart)
+        $kerusakan = DB::table('laporan')
+            ->select('urgensi', DB::raw('COUNT(*) as total'))
+            ->groupBy('urgensi')
+            ->orderByRaw("FIELD(urgensi, 'tinggi', 'sedang', 'rendah')")
+            ->get();
 
-    $urgensiLabels = $kerusakan->pluck('urgensi');
-    $urgensiData = $kerusakan->pluck('total');
+        $urgensiLabels = $kerusakan->pluck('urgensi');
+        $urgensiData = $kerusakan->pluck('total');
 
-    return view('admin.statistik', compact(
-        'breadcrumb', 
-        'page', 
-        'activeMenu', 
-        'statusLabels', 
-        'statusData',
-        'urgensiLabels',
-        'urgensiData'
-    ));
-}
+        return view('admin.statistik', compact(
+            'breadcrumb',
+            'page',
+            'activeMenu',
+            'statusLabels',
+            'statusData',
+            'urgensiLabels',
+            'urgensiData'
+        ));
+    }
 }

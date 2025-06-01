@@ -29,9 +29,9 @@
                         <option value="admin" {{ $user->peran == 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="sarpras" {{ $user->peran == 'sarpras' ? 'selected' : '' }}>Sarpras</option>
                         <option value="teknisi" {{ $user->peran == 'teknisi' ? 'selected' : '' }}>Teknisi</option>
-                        <option value="teknisi" {{ $user->peran == 'pelapor' ? 'selected' : '' }}>Mahasiswa</option>
-                        <option value="teknisi" {{ $user->peran == 'pelapor' ? 'selected' : '' }}>Dosen</option>
-                        <option value="teknisi" {{ $user->peran == 'pelapor' ? 'selected' : '' }}>Tendik</option>
+                        <option value="pelapor" {{ $user->peran == 'pelapor' ? 'selected' : '' }}>Mahasiswa</option>
+                        <option value="pelapor" {{ $user->peran == 'pelapor' ? 'selected' : '' }}>Dosen</option>
+                        <option value="pelapor" {{ $user->peran == 'pelapor' ? 'selected' : '' }}>Tendik</option>
                     </select>
                 </div>
 
@@ -93,6 +93,47 @@
                     }
                 });
                 return false;
+            }
+        });
+    });
+    $(document).on('click', '.btnResetPassword', function () {
+        let id = $(this).data('id');
+        let username = $(this).data('username');
+
+        Swal.fire({
+            title: 'Yakin reset password?',
+            text: "Password akan direset menjadi username: " + username,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Ya, Reset!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/admin/pengguna/reset_password/' + id,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: 'Terjadi kesalahan saat mereset password.'
+                        });
+                    }
+                });
             }
         });
     });
