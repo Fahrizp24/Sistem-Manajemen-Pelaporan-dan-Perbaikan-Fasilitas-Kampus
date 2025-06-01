@@ -79,6 +79,13 @@
                 {{-- Sarana Prasarana --}}
                 @if($peran === 'sarpras')
                 <li class="sidebar-title">Menu</li>
+
+                <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/profile') ? 'active' : '' }}">
+                    <a href="{{ url('/sarpras/profile') }}" class='sidebar-link'>
+                        <i class="bi bi-person"></i>
+                        <span>Profil</span>
+                    </a>
+                </li>
         
                 <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/laporan_masuk') ? 'active' : '' }}">
                     <a href="{{ url('sarpras/laporan_masuk') }}" class='sidebar-link'>
@@ -112,6 +119,13 @@
                 {{-- Admin --}}
                 @if($peran === 'admin')
                 <li class="sidebar-title">Menu</li>
+
+                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/profile') ? 'active' : '' }}">
+                    <a href="{{ url('/admin/profile') }}" class='sidebar-link'>
+                        <i class="bi bi-person"></i>
+                        <span>Profil</span>
+                    </a>
+                </li>
         
                 <li class="sidebar-item {{ str_contains($currentUrl, '/admin/pengguna') ? 'active' : '' }}">
                     <a href="{{ url('/admin/pengguna') }}" class='sidebar-link'>
@@ -174,7 +188,7 @@
                 @if($peran === 'teknisi')
                 <li class="sidebar-title">Menu</li>
 
-                <li class="sidebar-item {{ str_contains($currentUrl, '/pelapor/profile') ? 'active' : '' }}">
+                <li class="sidebar-item {{ str_contains($currentUrl, '/teknisi/profile') ? 'active' : '' }}">
                     <a href="{{ url('/teknisi/profile') }}" class='sidebar-link'>
                         <i class="bi bi-person"></i>
                         <span>Profil</span>

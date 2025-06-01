@@ -206,8 +206,7 @@
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
-                            });
-
+                            })
                             // Mengganti foto profil dengan foto baru
                             // `?t=` digunakan untuk menghindari cache (memaksa browser memuat ulang gambar)
                             $('#foto-profil').attr('src', response.foto_profil + '?t=' + new Date().getTime());

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class TeknisiController extends Controller
 {
@@ -31,51 +33,87 @@ class TeknisiController extends Controller
         return view('teknisi.profile', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu, 'teknisi' => $teknisi]);
     }
 
-    public function update_profile(Request $request)
+    public function updateProfile(Request $request)
     {
-        $id = Auth::user()->pengguna_id;
-
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
-            'password' => 'required|string|max:15',
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        $validated = $request->validate([
+            'nama' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255',
+            'prodi' => 'nullable|string|max:255',
+            'jurusan' => 'nullable|string|max:255',
+            'no_telp' => 'nullable|string|max:20'
         ]);
 
-        $teknisi = UserModel::findOrFail($id);
+        // Hanya update field yang diisi
+        $user = UserModel::find(auth()->user()->pengguna_id);
+        foreach ($validated as $key => $value) {
+            if ($value !== null) {
+                $user->$key = $value;
+            }
+        }
+        $user->save();
 
-        // Update field biasa
-        $teknisi->nama = $request->nama;
-        $teknisi->email = $request->email;
-        $teknisi->password = bcrypt($request->password); // pastikan di-hash jika perlu
+        return back()->with('success', 'Profil berhasil diperbarui!');
+    }
 
-        // Jika ada upload file baru
-        if ($request->hasFile('foto_profil')) {
-            $filename = $teknisi->pengguna_id . '.' . $request->file('foto_profil')->getClientOriginalExtension();
-            $newPath = 'public/foto_profil/' . $filename;
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'nullable',
+            'new_password' => 'nullable|string|min:8|confirmed'
+        ]);
 
-            // Jika sebelumnya bukan 'default', hapus file lama
-            if ($teknisi->foto_profil && $teknisi->foto_profil !== 'default') {
-                $oldPath = storage_path('app/public/foto_profil/' . $teknisi->foto_profil);
-                if (file_exists($oldPath)) {
-                    unlink($oldPath);
-                }
+        // Jika ada input password baru
+        if ($request->filled('new_password')) {
+            // Verifikasi password lama hanya jika diisi
+            if ($request->filled('current_password') && !Hash::check($request->current_password, auth()->user()->password)) {
+                return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai']);
             }
 
-            // Simpan file baru
-            $request->file('foto_profil')->storeAs('public/foto_profil', $filename);
-            $teknisi->foto_profil = $filename;
+            $user = UserModel::find(auth()->user()->pengguna_id);
+            $user->update([
+                'password' => Hash::make($request->new_password)
+            ]);
         }
 
-        $teknisi->save();
+        return back()->with('success', 'Profil berhasil diperbarui!');
+    }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Profil berhasil diubah',
-            'data' => [
-                'foto' => asset('storage/foto_profil/' . $teknisi->foto_profil)
-            ]
+    public function updateFoto(Request $request)
+    {
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
+
+        try {
+            $user = UserModel::findOrFail(Auth::id());
+            $file = $request->file('foto');
+
+            // Nama file unik
+            $filename = $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public/foto_profil', $filename);
+
+            // Hapus foto lama kalau ada
+            if ($user->foto_profil && Storage::exists('public/foto_profil/' . $user->foto_profil)) {
+                Storage::delete('public/foto_profil/' . $user->foto_profil);
+            }
+
+            // Simpan nama file ke DB
+            $user->foto_profil = $filename;
+            $user->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Foto berhasil diupload',
+                'foto_profil' => asset('storage/foto_profil/' . $filename),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Upload gagal',
+                'msgField' => [],
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function penugasan()

@@ -13,9 +13,113 @@ use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\SpkModel;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class SarprasController extends Controller
 {
+    public function profile()
+    {
+        $breadcrumb = (object) [
+            'title' => 'Profile',
+            'list' => ['Detail Profile']
+        ];
+
+        $page = (object) [
+            'title' => 'Profile',
+            'subtitle' => 'Detail Profile'
+        ];
+
+        $activeMenu = 'profile';
+
+        $sarpras = UserModel::find(Auth::user()->pengguna_id);
+
+        return view('sarpras.profile', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu, 'sarpras' => $sarpras]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $validated = $request->validate([
+            'nama' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255',
+            'prodi' => 'nullable|string|max:255',
+            'jurusan' => 'nullable|string|max:255',
+            'no_telp' => 'nullable|string|max:20'
+        ]);
+
+        // Hanya update field yang diisi
+        $user = UserModel::find(auth()->user()->pengguna_id);
+        foreach ($validated as $key => $value) {
+            if ($value !== null) {
+                $user->$key = $value;
+            }
+        }
+        $user->save();
+
+        return back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'nullable',
+            'new_password' => 'nullable|string|min:8|confirmed'
+        ]);
+
+        // Jika ada input password baru
+        if ($request->filled('new_password')) {
+            // Verifikasi password lama hanya jika diisi
+            if ($request->filled('current_password') && !Hash::check($request->current_password, auth()->user()->password)) {
+                return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai']);
+            }
+
+            $user = UserModel::find(auth()->user()->pengguna_id);
+            $user->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+        }
+
+        return back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    public function updateFoto(Request $request)
+    {
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        try {
+            $user = UserModel::findOrFail(Auth::id());
+            $file = $request->file('foto');
+
+            // Nama file unik
+            $filename = $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public/foto_profil', $filename);
+
+            // Hapus foto lama kalau ada
+            if ($user->foto_profil && Storage::exists('public/foto_profil/' . $user->foto_profil)) {
+                Storage::delete('public/foto_profil/' . $user->foto_profil);
+            }
+
+            // Simpan nama file ke DB
+            $user->foto_profil = $filename;
+            $user->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Foto berhasil diupload',
+                'foto_profil' => asset('storage/foto_profil/' . $filename),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Upload gagal',
+                'msgField' => [],
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */

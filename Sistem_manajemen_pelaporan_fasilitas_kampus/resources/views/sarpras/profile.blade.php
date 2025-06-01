@@ -24,7 +24,7 @@
                 </div>
                 @endif
 
-                <form action="{{ route('teknisi.updateProfile') }}" method="POST">
+                <form action="{{ route('sarpras.updateProfile') }}" method="POST">
                     @csrf
                     @method('PUT')
                     
@@ -46,18 +46,18 @@
                             
                             <div class="mb-4">
                                 <label for="nama" class="form-label">Nama Lengkap</label>
-                                <input type="text" class="form-control" id="nama" name="nama" value="{{ $teknisi->nama }}" required>
+                                <input type="text" class="form-control" id="nama" name="nama" value="{{ $sarpras->nama }}" required>
                             </div>
                             
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <label for="username" class="form-label">Username</label>
-                                    <input type="text" class="form-control" id="username" value="{{ $teknisi->username }}" disabled>
+                                    <input type="text" class="form-control" id="username" value="{{ $sarpras->username }}" disabled>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Peran</label>
                                     <div>
-                                        <span class="badge bg-primary py-2 px-3 divider">{{ $teknisi->peran }}</span>
+                                        <span class="badge bg-primary py-2 px-3 divider">{{ $sarpras->peran }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -65,22 +65,22 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <label for="prodi" class="form-label">Program Studi</label>
-                                    <input type="text" class="form-control" id="prodi" name="prodi" value="{{ $teknisi->prodi ?? '' }}">
+                                    <input type="text" class="form-control" id="prodi" name="prodi" value="{{ $sarpras->prodi ?? '' }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="jurusan" class="form-label">Jurusan</label>
-                                    <input type="text" class="form-control" id="jurusan" name="jurusan" value="{{ $teknisi->jurusan ?? '' }}">
+                                    <input type="text" class="form-control" id="jurusan" name="jurusan" value="{{ $sarpras->jurusan ?? '' }}">
                                 </div>
                             </div>
                             
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <label for="no_telp" class="form-label">Nomor Telepon</label>
-                                    <input type="tel" class="form-control" id="no_telp" name="no_telp" value="{{ $teknisi->no_telp ?? '' }}">
+                                    <input type="tel" class="form-control" id="no_telp" name="no_telp" value="{{ $sarpras->no_telp ?? '' }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="{{ $teknisi->email }}" required>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ $sarpras->email }}" required>
                                 </div>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                 <h5 class="modal-title" id="changeFotoModalLabel">Ubah Foto</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('teknisi.updateFoto') }}" method="POST" id="form-upload" enctype="multipart/form-data">
+            <form action="{{ route('sarpras.updateFoto') }}" method="POST" id="form-upload" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -142,7 +142,7 @@
                 <h5 class="modal-title" id="changePasswordModalLabel">Ubah Password</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('teknisi.updatePassword') }}" method="POST">
+            <form action="{{ route('sarpras.updatePassword') }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">

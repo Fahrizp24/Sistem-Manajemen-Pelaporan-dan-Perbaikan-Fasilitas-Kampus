@@ -28,6 +28,13 @@ Route::middleware(['auth'])->group(function () {
     // Admin Routes
     Route::middleware(['authorize:admin'])->group(function () {
         Route::prefix('admin')->group(function () {
+            Route::prefix('profile')->group(function () {
+                Route::get('/', [AdminController::class, 'profile'])->name('admin.profile');
+                Route::put('/', [AdminController::class, 'updateProfile'])->name('admin.updateProfile');
+                Route::put('/change-password', [AdminController::class, 'updatePassword'])->name('admin.updatePassword');
+                Route::post('/change-foto', [AdminController::class, 'updateFoto'])->name('admin.updateFoto');
+            });
+
             // Laporan
             Route::prefix('laporan_masuk')->group(function () {
                 Route::get('/', [AdminController::class, 'laporan_masuk'])->name('admin.laporan');
@@ -112,6 +119,13 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', [TeknisiController::class, 'profile'])->name('teknisi.profile');
                 Route::put('/', [TeknisiController::class, 'updateProfile'])->name('teknisi.updateProfile');
                 Route::put('/change-password', [TeknisiController::class, 'updatePassword'])->name('teknisi.updatePassword');
+                Route::post('/change-foto', [TeknisiController::class, 'updateFoto'])->name('teknisi.updateFoto');
+            });
+
+            Route::prefix('profile')->group(function () {
+                Route::get('/', [TeknisiController::class, 'profile'])->name('teknisi.profile');
+                Route::put('/', [TeknisiController::class, 'updateProfile'])->name('teknisi.updateProfile');
+                Route::put('/change-password', [TeknisiController::class, 'updatePassword'])->name('teknisi.updatePassword');
             });
 
             Route::prefix('penugasan')->group(function () {
@@ -130,6 +144,13 @@ Route::middleware(['auth'])->group(function () {
     // Sarpras Routes
     Route::middleware(['authorize:sarpras'])->group(function () {
         Route::prefix('sarpras')->group(function () {
+            Route::prefix('profile')->group(function () {
+                Route::get('/', [SarprasController::class, 'profile'])->name('sarpras.profile');
+                Route::put('/', [SarprasController::class, 'updateProfile'])->name('sarpras.updateProfile');
+                Route::put('/change-password', [SarprasController::class, 'updatePassword'])->name('sarpras.updatePassword');
+                Route::post('/change-foto', [SarprasController::class, 'updateFoto'])->name('sarpras.updateFoto');
+            });
+
             Route::prefix('laporan_masuk')->group(function () {
                 Route::get('/', [SarprasController::class, 'list_laporan'])->name('sarpras.laporan');
                 Route::get('/{id}', [SarprasController::class, 'show_laporan'])->name('sarpras.show_laporan');
