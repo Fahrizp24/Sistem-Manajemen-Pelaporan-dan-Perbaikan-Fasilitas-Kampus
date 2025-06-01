@@ -99,7 +99,7 @@
                     if(res) {
                         $('#modal-pelapor').text(res.pelapor?.nama || '-');
                         $('#modal-fasilitas').text(res.fasilitas?.nama || '-');
-                        $('#modal-gedung').text(res.gedung?.nama || '-');
+                        $('#modal-gedung').text(res.gedung || '-');
                         $('#modal-deskripsi').text(res.deskripsi || '-');
                         $('#modal-status').text(res.status || '-');
                         $('#modal-urgensi').text(res.urgensi || '-');

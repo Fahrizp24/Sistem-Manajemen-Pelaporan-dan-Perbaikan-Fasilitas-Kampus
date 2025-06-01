@@ -155,12 +155,12 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item {{ str_contains($currentUrl, '/admin/sistem_rekomendasi') ? 'active' : '' }}">
+                {{-- <li class="sidebar-item {{ str_contains($currentUrl, '/admin/sistem_rekomendasi') ? 'active' : '' }}">
                     <a href="{{ url('admin/sistem_rekomendasi') }}" class='sidebar-link'>
                         <i class="bi bi-lightbulb"></i>
                         <span>Sistem Rekomendasi</span>
                     </a>
-                </li>
+                </li> --}}
         
                 <li class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
                     <a href="{{ url('admin/laporan_periodik') }}" class='sidebar-link'>

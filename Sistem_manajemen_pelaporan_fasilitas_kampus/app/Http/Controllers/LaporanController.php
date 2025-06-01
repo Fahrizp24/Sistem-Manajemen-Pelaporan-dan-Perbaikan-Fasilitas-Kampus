@@ -73,6 +73,28 @@ class LaporanController extends Controller
                 'nama' => $laporan->fasilitas->nama ?? '-',
             ],
             'deskripsi' => $laporan->deskripsi,
+            'gedung' => $laporan->fasilitas->gedung->nama ?? '-',
+            'status' => $laporan->status,
+            'urgensi' => $laporan->urgensi ?? '-', // Pastikan ini sesuai dengan nama field di database
+        ]);
+        } catch (\Exception $e) {
+        return response()->json(['message' => 'Gagal mengambil data laporan'], 500);
+    }
+    }
+    public function show_laporan2($id)
+    {
+        try{
+        $laporan = LaporanModel::with(['pelapor', 'fasilitas.gedung'])->findOrFail($id);
+
+        return response()->json([
+            'pelapor' => [
+                'nama' => $laporan->pelapor->nama ?? '-',
+            ],
+            'fasilitas' => [
+                'nama' => $laporan->fasilitas->nama ?? '-',
+            ],
+            'deskripsi' => $laporan->deskripsi,
+            'gedung' => $laporan->fasilitas->gedung->nama ?? '-',
             'status' => $laporan->status,
             'urgensi' => $laporan->urgensi ?? '-', // Pastikan ini sesuai dengan nama field di database
         ]);
