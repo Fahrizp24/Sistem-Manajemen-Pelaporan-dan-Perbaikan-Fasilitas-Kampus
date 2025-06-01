@@ -102,8 +102,8 @@
                 </li>
         
                 <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/sistem_rekomendasi') ? 'active' : '' }}">
-                    <a href="{{ url('sarpras/sistem_rekomendasi') }}" class='sidebar-link'>
-                        <i class="bi bi-lightbulb"></i>
+                    <a href="{{ url(path: 'sarpras/sistem_rekomendasi') }}" class='sidebar-link'>
+                        <i class="bi bi-gear"></i>
                         <span>Kelola Sistem Rekomendasi</span>
                     </a>
                 </li>
@@ -158,7 +158,7 @@
 
                 <li class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan_masuk') && !str_contains($currentUrl, '/admin/kelola_laporan') && !str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
                     <a href="{{ url('admin/laporan_masuk') }}" class='sidebar-link'>
-                        <i class="bi bi-file-text"></i>
+                        <i class="bi bi-inbox"></i>
                         <span>Laporan Masuk</span>    
                     </a>
                 </li>
