@@ -39,10 +39,10 @@
             </div>
         </div>
 
-        {{-- Tren Kerusakan --}}
+        {{-- Kerusakan --}}
         <div class="col-12">
             <div class="card mt-3">
-                <div class="card-header"><h5>Tren Kerusakan per Bulan</h5></div>
+                <div class="card-header"><h5>Kerusakan per Bulan</h5></div>
                 <div class="card-body">
                     <table class="table table-bordered">
                         <thead>
