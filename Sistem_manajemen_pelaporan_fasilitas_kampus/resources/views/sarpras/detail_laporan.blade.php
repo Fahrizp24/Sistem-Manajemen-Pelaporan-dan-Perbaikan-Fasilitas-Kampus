@@ -141,6 +141,17 @@
                         </div>
                     </div>
                 </form>
+            @elseif($source == 'ajukan')
+                <form action="{{ url('/sarpras/ajukan_laporan/' . $laporan->laporan_id) }}" method="POST">
+                    @csrf
+                    <div class="row justify-content-right">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success w-100" onclick="return confirmSubmit()">
+                                Ajukan Laporan ke Admin
+                            </button>
+                        </div>
+                    </div>
+                </form>
             @endif
         </div>
     </div>

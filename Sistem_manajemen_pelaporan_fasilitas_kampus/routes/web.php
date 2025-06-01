@@ -145,6 +145,8 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('ajukan_laporan')->group(function () {
                 Route::get('/', [SarprasController::class, 'ajukan_laporan'])->name('sarpras.ajukan_laporan');
+                Route::post('/{id}', [SarprasController::class, 'proses_ajukan_laporan'])->name('sarpras.ajukan');
+                Route::get('/{id}', [SarprasController::class, 'detail_laporan'])->name('sarpras.detail_laporan');
                 Route::post('/data_laporan', [SarprasController::class, 'data_laporan'])->name('sarpras.data_laporan');
                 Route::post('/proses_spk', [SarprasController::class, 'proses_spk'])->name('sarpras.proses_spk');
             });

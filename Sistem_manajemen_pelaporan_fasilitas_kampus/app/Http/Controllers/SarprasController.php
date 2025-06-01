@@ -64,7 +64,7 @@ class SarprasController extends Controller
     public function terima(string $id, Request $request)
     {
         DB::beginTransaction();
-        
+
         try {
             $validated = $request->validate([
                 'kriteria' => 'required|array',
@@ -317,7 +317,7 @@ class SarprasController extends Controller
                 return $columns;
             })
             ->addColumn('aksi', function ($row) {
-                return '<button onclick="modalAction(\'' . url('laporan.edit', $row->id) . '\')" class="btn btn-sm btn-info">Edit</button>';
+                return '<button onclick="modalAction(\'' . url('sarpras/laporan_masuk/' . $row->laporan_id) . '?source=ajukan\')" class="btn btn-sm btn-info">Detail</button>';
             })
             ->rawColumns(['aksi'])
             ->make(true);
@@ -342,11 +342,11 @@ class SarprasController extends Controller
         $normalisasi = [];
         foreach ($data as $i => $alt) {
             $normalisasi[$i]['judul'] = $alt['judul'];
+            $normalisasi[$i]['laporan_id'] = $alt['laporan_id']; // tambahkan laporan_id jika ada
             foreach ($kriteria as $k) {
                 $normalisasi[$i]['kriteria'][$k] = $alt['kriteria'][$k] / ($penyebut[$k] ?: 1);
             }
         }
-
         return $normalisasi;
     }
 
@@ -356,6 +356,7 @@ class SarprasController extends Controller
 
         foreach ($data as $i => $alt) {
             $hasil[$i]['judul'] = $alt['judul'];
+            $hasil[$i]['laporan_id'] = $alt['laporan_id'] ?? null;
             foreach ($alt['kriteria'] as $namaKriteria => $nilaiNormal) {
                 $bobotKriteria = $bobot[$namaKriteria] ?? 0;
                 $hasil[$i]['kriteria'][$namaKriteria] = $nilaiNormal * $bobotKriteria;
@@ -398,6 +399,7 @@ class SarprasController extends Controller
             }
 
             $result[] = [
+                'laporan_id' => $alt['laporan_id'] ?? null,
                 'judul' => $alt['judul'],
                 'D_plus' => round(sqrt($dPlus), 4),
                 'D_minus' => round(sqrt($dMinus), 4),
@@ -419,6 +421,7 @@ class SarprasController extends Controller
             $Vi = ($Dplus + $Dminus) == 0 ? 0 : $Dminus / ($Dplus + $Dminus);
 
             $hasil[] = [
+                'laporan_id' => $item['laporan_id'],
                 'judul' => $item['judul'],
                 'D_plus' => round($Dplus, 4),
                 'D_minus' => round($Dminus, 4),
@@ -453,7 +456,7 @@ class SarprasController extends Controller
 
         foreach ($laporans as $laporan) {
             $judul = ($laporan->fasilitas->nama ?? '-') . ' - ' . ($laporan->fasilitas->gedung->nama ?? '-');
-
+            $laporan_id = $laporan->laporan_id;
             $spk = $laporan->spk; // ambil SPK 
 
             if (!$spk) {
@@ -471,6 +474,7 @@ class SarprasController extends Controller
             }
 
             $data[] = [
+                'laporan_id' => $laporan_id,
                 'judul' => $judul,
                 'kriteria' => $nilaiKriteria
             ];
@@ -485,7 +489,9 @@ class SarprasController extends Controller
         }
         $terbobot = $this->nilaiTerbobot($normalisasi, $bobotKriteria);
 
+
         [$idealPositif, $idealNegatif] = $this->solusiIdeal($terbobot, $jenisKriteria);
+
         $jarak = $this->jarakSolusiIdeal($terbobot, $idealPositif, $idealNegatif);
 
         $hasilAkhir = $this->hitungPreferensi($jarak);
@@ -494,5 +500,31 @@ class SarprasController extends Controller
             'success' => true,
             'data' => $hasilAkhir
         ]);
+    }
+
+    public function proses_ajukan_laporan(string $id, Request $request)
+    {
+        try {
+            $laporan = LaporanModel::findOrFail($id);
+            $laporan->status = 'konfirmasi';
+            $laporan->save();
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Laporan berhasil diajukan ke admin.'
+                ]);
+            }
+            return redirect()->back()->with('success', 'Laporan berhasil diajukan ke admin.');
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengajukan laporan: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Gagal mengajukan laporan: ' . $e->getMessage());
+        }
     }
 }

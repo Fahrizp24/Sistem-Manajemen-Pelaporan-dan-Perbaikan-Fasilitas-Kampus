@@ -43,6 +43,7 @@
                             <th>Nilai D+</th>
                             <th>Nilai D-</th>
                             <th>Nilai V</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="hasilSPKBody">
@@ -157,9 +158,11 @@
                 }
             });
 
+            const baseUrl = "{{ url('sarpras/laporan_masuk') }}";
+
             $('#btnProsesSPK').on('click', function() {
                 $.ajax({
-                    url: "{{ route('sarpras.proses_spk') }}", // Pastikan route ini benar dan mengarah ke fungsi spk di controller
+                    url: "{{ route('sarpras.proses_spk') }}",
                     type: "POST",
                     data: {
                         _token: "{{ csrf_token() }}"
@@ -177,15 +180,18 @@
                         if (response && response.data && response.data.length > 0) {
                             response.data.forEach((item, index) => {
                                 $('#hasilSPKBody').append(`
-                                    <tr>
-                                        <td>${item.ranking}</td>
-                                        <td>${item.judul}</td>
-                                        <td>${item.D_plus}</td>
-                                        <td>${item.D_minus}</td>
-                                        <td>${item.V}</td>
-                                    </tr>
-                                `);
-                            });
+                                <tr>
+                                    <td>${item.ranking}</td>
+                                    <td>${item.judul}</td>
+                                    <td>${item.D_plus}</td>
+                                    <td>${item.D_minus}</td>
+                                    <td>${item.V}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-info" onclick="modalAction('${baseUrl}/${item.laporan_id}?source=ajukan')">Detail</button>
+                                    </td>
+                                </tr>
+                            `);
+                            }); 
 
                             $('#hasilSPKCard').show();
                         } else {
