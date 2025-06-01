@@ -167,6 +167,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', [PelaporController::class, 'profile'])->name('pelapor.profile');
                 Route::put('/', [PelaporController::class, 'updateProfile'])->name('pelapor.updateProfile');
                 Route::put('/change-password', [PelaporController::class, 'updatePassword'])->name('pelapor.updatePassword');
+                Route::post('/change-foto', [PelaporController::class, 'updateFoto'])->name('pelapor.updateFoto');
             });
         
             // Laporan

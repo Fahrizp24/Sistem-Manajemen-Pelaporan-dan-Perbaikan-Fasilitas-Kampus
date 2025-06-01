@@ -16,12 +16,13 @@ return new class extends Migration
             $table->id('pengguna_id');
             $table->string('username')->unique();
             $table->string('nama');
-            $table->string('program_studi')->nullable();
+            $table->string('prodi')->nullable();
             $table->string('jurusan')->nullable();
             $table->string('email')->unique();
+            $table->string('no_telp')->nullable();
             $table->string('password');
             $table->enum('peran', ['admin', 'pelapor', 'sarpras', 'teknisi']);
-            $table->string('foto_profil')->nullable()->default('default');
+            $table->string('foto_profil')->nullable();
             $table->timestamps();
         });
     }

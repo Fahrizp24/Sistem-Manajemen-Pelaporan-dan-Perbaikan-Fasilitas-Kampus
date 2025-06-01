@@ -33,9 +33,9 @@
                         <div class="col-md-4 text-center">
                             <div class="profile-photo-container mb-4">
                                 <div class="profile-photo-wrapper">
-                                    <img src="{{ asset('storage/foto_profil/'.$pelapor->foto_profil.'.jpg') }}" 
-                                         alt="Foto Profil" 
-                                         class="profile-photo img-fluid">
+                                    <img id="foto-profil" class="profile-user-img img-fluid img-circle"
+                                    src="{{ auth()->user()->foto_profil ? asset('storage/foto_profil/' . auth()->user()->foto_profil) : asset('storage/foto_profil/default.jpg') }}"
+                                    alt="User profile picture" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 2px solid #fff;"">
                                 </div>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                     <!-- Tombol-tombol action -->
                     <div class="row border-top pt-4 mt-3">
                         <div class="col-md-4 mb-2">
-                            <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#changePhotoModal">
+                            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#changeFotoModal">
                                 <i class="bi bi-camera-fill me-2"></i> Ganti Foto
                             </button>
                         </div>
@@ -110,7 +110,30 @@
     </div>
 </div>
 
-
+<div class="modal fade" id="changeFotoModal" tabindex="-1" aria-labelledby="changeFotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="changeFotoModalLabel">Ubah Foto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('pelapor.updateFoto') }}" method="POST" id="form-upload" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Foto Profile</label>
+                        <input type="file" name="foto" id="foto" class="form-control" required>
+                        <small id="error-foto" class="error-text form-text text-danger"></small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -146,125 +169,89 @@
 </div>
 @endsection
 
-@push('css')
-<style>
-    /* Profile Photo Styles */
-   
-    .profile-photo-container {
-        position: relative;
-        margin-bottom: 1.5rem;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    }
-
-    .profile-photo-wrapper {
-        width: 180px;       /* Lebar foto */
-        height: 240px;      /* Tinggi foto (rasio 3:4) */
-        border-radius: 10px; /* Sudut agak melengkung */
-        overflow: hidden;
-        border: 4px solid #f8f9fa;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #f8f9fa; /* Warna background jika foto kosong */
-    }
-
-    .profile-photo {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;  /* Memastikan foto mengisi area tanpa distorsi */
-        transition: transform 0.3s ease;
-    }
-    
-    .profile-photo:hover {
-        transform: scale(1.05);
-    }
-    
-    /* Modal Photo Preview */
-    .profile-photo-preview-container {
-    width: 150px;                 /* Lebar tetap */
-    height: 300px;                /* Tinggi diperpanjang */
-    border-radius: 8px;           /* Sudut melengkung */
-    overflow: hidden;
-    border: 3px solid #f8f9fa;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin: 0 auto;
-    background-color: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.profile-photo-preview {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;            /* Pastikan foto mengisi area */
-    object-position: center top;  /* Fokus ke bagian atas foto */
-}
-    
-    /* Card and Form Styles */
-    .card {
-        border-radius: 12px;
-        border: none;
-    }
-    
-    .form-control {
-        border-radius: 8px;
-        padding: 10px 15px;
-        border: 1px solid #ced4da;
-    }
-    
-    .form-label {
-        font-weight: 500;
-        color: #495057;
-        margin-bottom: 8px;
-    }
-    
-    .btn {
-        border-radius: 8px;
-        padding: 10px 20px;
-        font-weight: 500;
-    }
-    
-    .badge {
-        font-weight: 500;
-        padding: 8px 12px;
-        border-radius: 6px;
-    }
-    
-    /* Responsive Adjustments */
-    @media (max-width: 767.98px) {
-        .profile-photo-wrapper {
-            width: 150px;
-            height: 400px;
-        }
-        
-        .col-md-4 {
-            margin-bottom: 2rem;
-            border-right: none !important;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 2rem;
-        }
-    }
-</style>
-@endpush
-
-@push('js')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Photo preview when selecting new photo
-        document.getElementById('photo').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    document.getElementById('photoPreview').src = event.target.result;
-                };
-                reader.readAsDataURL(file);
+    // Menunggu sampai seluruh halaman selesai dimuat (DOM Ready)
+    $(document).ready(function() {
+
+        // Mengaktifkan validasi pada form dengan ID 'form-upload'
+        $("#form-upload").validate({actions
+            // Aturan validasi input
+            rules: {
+                foto: {
+                    required: true, // Wajib diisi
+                    extension: "jpg|jpeg|png", // Hanya file dengan ekstensi ini yang diizinkan
+                    filesize: 2048 // Hanya file dengan ukuran maksimal 2048KB (2MB) yang diizinkan
+                }
+            },
+
+            // Fungsi ini akan dijalankan jika form lolos validasi
+            submitHandler: function(form) {
+                // Mengirim data form menggunakan AJAX
+                $.ajax({
+                    url: form.action, // URL tujuan, diambil dari atribut 'action' pada form
+                    type: form.method, // Metode pengiriman, diambil dari atribut 'method' (biasanya POST)
+                    data: new FormData(form), // Mengambil data form sebagai FormData (agar bisa mengirim file)
+                    cache: false,
+                    contentType: false, // Agar jQuery tidak mengubah tipe konten (wajib untuk upload file)
+                    processData: false, // Jangan proses data (biarkan FormData yang menangani)
+
+                    // Jika request berhasil (HTTP 200)
+                    success: function(response) {
+                        if (response.status) {
+                            // Menutup modal
+                            $('#changeFotoModal').modal('hide');
+
+                            // Menampilkan alert sukses dari SweetAlert
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message
+                            });
+
+                            // Mengganti foto profil dengan foto baru
+                            // `?t=` digunakan untuk menghindari cache (memaksa browser memuat ulang gambar)
+                            $('#foto-profil').attr('src', response.foto_profil + '?t=' + new Date().getTime());
+                        } else {
+                            // Reset semua pesan error
+                            $('.error-text').text('');
+
+                            // Menampilkan pesan error spesifik berdasarkan field
+                            $.each(response.msgField, function(prefix, val) {
+                                $('#error-' + prefix).text(val[0]);
+                            });
+
+                            // Menampilkan alert error
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
+                        }
+                    }
+                });
+
+                // Mencegah form dikirim secara default (karena sudah pakai AJAX)
+                return false;
+            },
+
+            // Customisasi elemen untuk pesan error
+            errorElement: 'span',
+
+            // Menentukan di mana letak pesan error ditampilkan
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback'); // Tambahkan class Bootstrap
+                element.closest('.form-group').append(error); // Tempel error di bawah input
+            },
+
+            // Tambahkan class 'is-invalid' jika input error
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+
+            // Hapus class 'is-invalid' jika input valid
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
             }
         });
     });
 </script>
-@endpush

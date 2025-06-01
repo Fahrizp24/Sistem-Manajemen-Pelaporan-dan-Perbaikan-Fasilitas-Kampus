@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserModel;
 use App\Models\LaporanModel;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class PelaporController extends Controller
 {
@@ -78,6 +81,44 @@ class PelaporController extends Controller
         }
 
         return back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    public function updateFoto(Request $request)
+    {
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        try {
+            $user = UserModel::findOrFail(Auth::id());
+            $file = $request->file('foto');
+
+            // Nama file unik
+            $filename = $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public/foto_profil', $filename);
+
+            // Hapus foto lama kalau ada
+            if ($user->foto_profil && Storage::exists('public/foto_profil/' . $user->foto_profil)) {
+                Storage::delete('public/foto_profil/' . $user->foto_profil);
+            }
+
+            // Simpan nama file ke DB
+            $user->foto_profil = $filename;
+            $user->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Foto berhasil diupload',
+                'foto_profil' => asset('storage/foto_profil/' . $filename),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Upload gagal',
+                'msgField' => [],
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function laporkan_kerusakan()
