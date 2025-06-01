@@ -1,31 +1,27 @@
 @empty($laporan)
-    <div id="modal-master" class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-danger">
-                    <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
-                    Data yang anda cari tidak ditemukan
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Kesalahan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <a href="{{ url('/teknisi/penugasan') }}" class="btn btn-warning">Kembali</a>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
+                        Data yang anda cari tidak ditemukan
+                    </div>
+                    <a href="{{ url('/teknisi/penugasan') }}" class="btn btn-warning">Kembali</a>
+                </div>
             </div>
         </div>
     </div>
 @else
-    <div class="card card-outline card-primary">
-        <div class="card-header">
-            <h3 class="card-title">{{ $page->title }}</h3>
-            <div class="card-tools"></div>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered table-striped table-hover table-sm">
+    <div class="modal-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
                 <tr>
-                    <th>Pelapor</th>
+                    <th width="30%">Pelapor</th>
                     <td>{{ $laporan->pelapor->nama }}</td>
                 </tr>
                 <tr>
@@ -37,12 +33,12 @@
                     <td>{{ $laporan->fasilitas->nama }}</td>
                 </tr>
                 <tr>
-                    <th>Status </th>
+                    <th>Status</th>
                     <td>{{ $laporan->status }}</td>
                 </tr>
                 <tr>
                     <th>Tanggal Laporan</th>
-                    <td>{{ $laporan->created_at }}</td>
+                    <td>{{ $laporan->created_at->format('d M Y H:i') }}</td>
                 </tr>
                 <tr>
                     <th>Urgensi</th>
@@ -55,14 +51,13 @@
                 <tr>
                     <th>Ditugaskan Kepada</th>
                     <td>{{ $laporan->teknisi->nama ?? '-' }}</td>
+                </tr>
                 <tr>
                     <th>Foto</th>
                     <td>
                         @if ($laporan->foto)
-                            <div style="max-width: 200px; max-height: 200px; overflow: ">
-                                <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-fluid"
-                                    style="width: 100%; height: auto; object-fit: cover;">
-                            </div>
+                            <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" 
+                                 class="img-thumbnail" style="max-width: 200px;">
                         @else
                             <span class="text-muted">Tidak ada foto</span>
                         @endif
@@ -73,64 +68,59 @@
                     <td>{{ $laporan->deskripsi }}</td>
                 </tr>
             </table>
-            <div class="mt-3">
-                @if ($source == 'pelapor')
-                    <div class="d-flex justify-content-center gap-2">
-                        <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-danger"
-                                onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
-                                Tolak Laporan
-                            </button>
-                        </form>
+        </div>
 
-                        <form action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-success"
-                                onclick="return confirm('Anda Yakin Untuk Menerima Laporan Ini?')">
-                                Terima Laporan
-                            </button>
-                        </form>
-                    </div>
+        <div class="mt-3 text-center">
+            @if ($source == 'pelapor')
+                <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-danger mx-1"
+                        onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
+                        Tolak Laporan
+                    </button>
+                </form>
 
-                    </form>
-                @elseif($source == 'admin')
-                    <form action="{{ url('/sarpras/laporan_masuk/pilih_teknisi/' . $laporan->laporan_id) }}"
-                        method="POST">
-                        @csrf
-                        <select class="form-select" name="teknisi" id="teknisi" required>
-                            <option value="" disabled selected>Pilih Teknisi</option>
-                            @foreach ($teknisi as $item)
-                                <option value="{{ $item->pengguna_id }}">{{ $item->nama }}</option>
-                            @endforeach
-                        </select>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-success" onclick="return confirmSubmit()">
+                <form action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-success mx-1"
+                        onclick="return confirm('Anda Yakin Untuk Menerima Laporan Ini?')">
+                        Terima Laporan
+                    </button>
+                </form>
+            @elseif($source == 'admin')
+                <form action="{{ url('/sarpras/laporan_masuk/pilih_teknisi/' . $laporan->laporan_id) }}" method="POST">
+                    @csrf
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <select class="form-select mb-2" name="teknisi" required>
+                                <option value="" disabled selected>Pilih Teknisi</option>
+                                @foreach ($teknisi as $item)
+                                    <option value="{{ $item->pengguna_id }}">{{ $item->nama }}</option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="btn btn-success w-100" onclick="return confirmSubmit()">
                                 Submit
                             </button>
                         </div>
-                    </form>
-                @elseif($source == 'teknisi')
-                    <form action="{{ url('/sarpras/laporan_masuk/selesaikan/' . $laporan->laporan_id) }}" method="POST">
-                        @csrf
-                        <div class="row g-3 align-items-center">
-                            <div class="col-auto">
-                                <select class="form-select" name="hasil" id="hasil" required>
-                                    <option value="" disabled selected>Status Penyelesaian</option>
-                                    <option value="selesai">Tutup dan Selesai</option>
-                                    <option value="revisi">Revisi</option>
-                                </select>
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-success" onclick="return confirmSubmit()">
-                                    Submit
-                                </button>
-                            </div>
+                    </div>
+                </form>
+            @elseif($source == 'teknisi')
+                <form action="{{ url('/sarpras/laporan_masuk/selesaikan/' . $laporan->laporan_id) }}" method="POST">
+                    @csrf
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <select class="form-select mb-2" name="hasil" required>
+                                <option value="" disabled selected>Status Penyelesaian</option>
+                                <option value="selesai">Tutup dan Selesai</option>
+                                <option value="revisi">Revisi</option>
+                            </select>
+                            <button type="submit" class="btn btn-success w-100" onclick="return confirmSubmit()">
+                                Submit
+                            </button>
                         </div>
-                    </form>
-                @endif
-            </div>
-
+                    </div>
+                </form>
+            @endif
         </div>
     </div>
 @endempty
