@@ -80,7 +80,7 @@ class PelaporController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Profil berhasil diperbarui!');
+        return back()->with('success', 'password berhasil diubah!');
     }
 
     public function updateFoto(Request $request)

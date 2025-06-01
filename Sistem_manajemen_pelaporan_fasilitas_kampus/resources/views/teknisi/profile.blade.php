@@ -84,11 +84,11 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label for="prodi" class="form-label">Program Studi</label>
-                            <input type="text" class="form-control" id="prodi" name="prodi" value="{{ $teknisi->prodi ?? '' }}">
+                            <input type="text" class="form-control" id="prodi" name="prodi" value="{{ $teknisi->prodi ?? '' }}" disabled>
                         </div>
                         <div class="col-md-6">
                             <label for="jurusan" class="form-label">Jurusan</label>
-                            <input type="text" class="form-control" id="jurusan" name="jurusan" value="{{ $teknisi->jurusan ?? '' }}">
+                            <input type="text" class="form-control" id="jurusan" name="jurusan" value="{{ $teknisi->jurusan ?? '' }}" disabled>
                         </div>
                     </div>
 
