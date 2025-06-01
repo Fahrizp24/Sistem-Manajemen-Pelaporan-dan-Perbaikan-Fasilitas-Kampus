@@ -48,7 +48,7 @@ class AdminController extends Controller
     }
 
 
-    public function laporan()
+    public function laporan_masuk()
     {
         $laporan = LaporanModel::with('fasilitas.gedung')->where('status', 'konfirmasi')->get();
 
@@ -62,8 +62,8 @@ class AdminController extends Controller
             'subtitle' => 'List Laporan Fasilitas'
         ];
 
-        $activeMenu = 'laporan';
-        return view('admin.laporan', ['laporan' => $laporan, 'breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        $activeMenu = 'laporan masuk';
+        return view('admin.laporan_masuk', ['laporan' => $laporan, 'breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
     public function laporan2()
     {

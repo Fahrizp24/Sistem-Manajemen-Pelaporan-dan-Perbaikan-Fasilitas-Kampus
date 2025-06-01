@@ -29,15 +29,15 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['authorize:admin'])->group(function () {
         Route::prefix('admin')->group(function () {
             // Laporan
-            Route::prefix('laporan')->group(function () {
-                Route::get('/', [AdminController::class, 'laporan'])->name('admin.laporan');
+            Route::prefix('laporan_masuk')->group(function () {
+                Route::get('/', [AdminController::class, 'laporan_masuk'])->name('admin.laporan');
                 Route::get('/laporan/{id}', [LaporanController::class, 'show_laporan'])->name('admin.show_laporan');
                 Route::post('/{id}', [AdminController::class, 'update_laporan'])->name('admin.update_laporan');
             });
             // Laporan 2
-            Route::prefix('laporan2')->group(function () {
+            Route::prefix('kelola_laporan')->group(function () {
                 Route::get('/', [AdminController::class, 'laporan2'])->name('admin.laporan2');
-                Route::get('/laporan2/{id}', [LaporanController::class, 'show_laporan2'])->name( 'admin.show_laporan2');
+                Route::get('/{id}', [LaporanController::class, 'show_laporan2'])->name( 'admin.show_laporan2');
                 Route::post('/{id}', [AdminController::class, 'update_laporan2'])->name('admin.update_laporan2');
             });
         

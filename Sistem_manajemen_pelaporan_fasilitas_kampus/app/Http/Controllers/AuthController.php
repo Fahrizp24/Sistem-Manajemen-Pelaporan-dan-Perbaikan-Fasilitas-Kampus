@@ -13,7 +13,7 @@ class AuthController extends Controller
         if (Auth::check()) { // jika sudah login, maka redirect ke halaman home
             $role = Auth::user()->peran;
             $redirectPath = match ($role) {
-                'admin' => '/admin/laporan',
+                'admin' => '/admin/laporan_masuk',
                 'teknisi' => '/teknisi/penugasan',
                 'sarpras' => '/sarpras/laporan_masuk',
                 'pelapor' => '/pelapor/profile'
@@ -30,7 +30,7 @@ class AuthController extends Controller
             if (Auth::attempt($credentials)) {
                 $role = Auth::user()->peran;
                 $redirectPath = match ($role) {
-                    'admin' => '/admin/laporan',
+                    'admin' => '/admin/laporan_masuk',
                     'teknisi' => '/teknisi/penugasan',
                     'sarpras' => '/sarpras/laporan_masuk',
                     'pelapor' => '/pelapor/profile'
