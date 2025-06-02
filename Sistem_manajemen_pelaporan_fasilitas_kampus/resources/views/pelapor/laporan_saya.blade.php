@@ -49,7 +49,7 @@
                                         <button
                                             onclick="showDetailModal('{{ url('pelapor/laporan_saya/' . $item->laporan_id) }}')"
                                             class="btn btn-sm btn-primary">
-                                            <i class="bi bi-eye"></i> Detail
+                                            <i class="bi bi-eye-fill"></i> Detail
                                         </button>
                                     </td>
                                 </tr>
