@@ -58,7 +58,7 @@
         </div>
         <div class="card mb-4">
             <div class="card-header bg-success d-flex justify-content-between align-items-center bg-gradient-indigo py-3">
-                <h5 class="card-title mb-0 text-blue"><i class="bi bi-clipboard-data me-2"></i>Daftar Revisi</h5>
+                <h5 class="card-title mb-0 text-blue"><i class="bi bi-journal-text me-2"></i>Daftar Revisi</h5>
             </div>
                 <div class="card-body pt-3">
                     <table class="table table-bordered table-striped mb-0" id="table-sarpras">
