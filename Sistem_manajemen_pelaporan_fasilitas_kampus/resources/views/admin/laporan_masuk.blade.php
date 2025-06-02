@@ -7,6 +7,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Pelapor</th>
                         <th>Gedung</th>
                         <th>Fasilitas</th>
                         <th>Status</th>
@@ -59,6 +60,10 @@
                     orderable: false,
                     searchable: false,
                     className: 'text-center'
+                },
+                {
+                    data: 'nama',
+                    name: 'nama'
                 },
                 {
                     data: 'gedung',

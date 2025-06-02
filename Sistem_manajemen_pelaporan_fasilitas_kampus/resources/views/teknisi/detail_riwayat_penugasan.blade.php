@@ -40,10 +40,6 @@
                 <td>{{ $laporan->created_at }}</td>
             </tr>
             <tr>
-                <th>Urgensi</th>
-                <td>{{ $laporan->urgensi }}</td>
-            </tr>
-            <tr>
                 <th>Ditugaskan Oleh</th>
                 <td>{{ $laporan->sarpras->nama ?? '-' }}</td>
             </tr>

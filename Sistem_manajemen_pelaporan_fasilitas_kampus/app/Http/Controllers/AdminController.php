@@ -165,13 +165,41 @@ class AdminController extends Controller
         return view('admin.laporan_masuk', ['laporan' => $laporan, 'breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
 
+    public function konfirmasi_laporan(string $id, Request $request)
+    {
+        try {
+
+            // Update status laporan
+            LaporanModel::findOrFail($id)->update(['status' => 'memilih teknisi']);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Laporan berhasil dikonfirmasi.'
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Laporan berhasil dikonfirmasi.');
+        } catch (\Exception $e) {
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengkonfirmasi laporan: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Gagal mengkonfirmasi laporan: ' . $e->getMessage());
+        }
+    }
 
     public function data_laporan(Request $request)
     {
-        $data = LaporanModel::with(['fasilitas.gedung'])->where('status', 'konfirmasi')->get();
+        $data = LaporanModel::with(['fasilitas.gedung', 'pelapor'])->where('status', 'konfirmasi')->get();
 
         return datatables()->of($data)
             ->addIndexColumn()
+            ->addColumn('nama', fn($row) => $row->pelapor->nama ?? '-')
             ->addColumn('gedung', fn($row) => $row->fasilitas->gedung->nama ?? '-')
             ->addColumn('fasilitas', fn($row) => $row->fasilitas->nama ?? '-')
             ->addColumn('status', function ($row) {
