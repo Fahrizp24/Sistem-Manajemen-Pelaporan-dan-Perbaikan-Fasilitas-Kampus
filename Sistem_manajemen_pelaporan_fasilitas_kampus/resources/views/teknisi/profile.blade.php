@@ -76,7 +76,8 @@
                         <div class="col-md-6">
                             <label class="form-label">Peran</label>
                             <div>
-                                <span class="badge bg-primary py-2 px-3 divider">{{ $teknisi->peran }}</span>
+                                <input type="text" class="form-control bg-light-primary" id="username" value="{{  $teknisi->peran }}"
+                                        disabled>
                             </div>
                         </div>
                     </div>
