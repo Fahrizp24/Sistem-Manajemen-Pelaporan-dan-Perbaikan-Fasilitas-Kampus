@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('no_telp')->nullable();
             $table->string('password');
             $table->enum('peran', ['admin', 'pelapor', 'sarpras', 'teknisi']);
-            $table->string('foto_profil')->nullable();
+            $table->string('foto_profil')->nullable()->default('default.jpg');
             $table->timestamps();
         });
     }
