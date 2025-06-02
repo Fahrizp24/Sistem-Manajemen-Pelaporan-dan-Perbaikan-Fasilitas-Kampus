@@ -7,122 +7,113 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Pelapor</th>
-                        <th>Fasilitas</th>
                         <th>Gedung</th>
-                        <th>Deskripsi</th>
+                        <th>Fasilitas</th>
                         <th>Status</th>
-                        <th>Urgensi</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php $no = 1; @endphp
-@forelse ($laporan as $item)
-    <tr>
-        <td>{{ $no++ }}</td>
-        <td>{{ $item->pelapor->nama ?? '-' }}</td>
-        <td>{{ $item->fasilitas->nama ?? '-' }}</td>
-        <td>{{ $item->fasilitas->gedung->nama ?? '-' }}</td>
-        <td>{{ $item->deskripsi }}</td>
-        
-        
-        <td>
-            @switch($item->status)
-                @case('diajukan') <span class="badge bg-secondary">Diajukan</span> @break
-                @case('diproses') <span class="badge bg-warning">Diproses</span> @break
-                @case('selesai') <span class="badge bg-success">Selesai</span> @break
-                @case('ditolak') <span class="badge bg-danger">Ditolak</span> @break
-                @default <span class="badge bg-light">{{ $item->status }}</span>
-            @endswitch
-        </td>
-        <td>
-            {{ $item->urgensi ?? '-' }}
-        </td>
-        <td>
-            <button class="btn btn-info btn-sm btn-detail" data-id="{{ $item->laporan_id }}">Detail</button>
-        </td>
-    </tr>
-@empty
-    <tr><td colspan="8" class="text-center">Tidak ada data laporan.</td></tr>
-@endforelse
                 </tbody>
             </table>
         </div>
     </div>
-    <!-- Modal Detail -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detailModalLabel">Detail Laporan</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Pelapor:</strong> <span id="modal-pelapor"></span></p>
-        <p><strong>Fasilitas:</strong> <span id="modal-fasilitas"></span></p>
-        <p><strong>Gedung:</strong> <span id="modal-gedung"></span></p>
-        <p><strong>Deskripsi:</strong> <span id="modal-deskripsi"></span></p>
-        <p><strong>Status:</strong> <span id="modal-status"></span></p>
-        <p><strong>Urgensi:</strong> <span id="modal-urgensi"></span></p>
-        <div id="modal-actions" class="mt-3 text-end" style="display: none;">
-        <form id="form-terima" method="POST" class="d-inline">
-            @csrf
-            <input type="hidden" name="status" value="diproses">
-            <button type="submit" class="btn btn-success btn-sm">Terima</button>
-        </form>
-        <form id="form-tolak" method="POST" class="d-inline ms-2">
-            @csrf
-            <input type="hidden" name="status" value="ditolak">
-            <button type="submit" class="btn btn-danger btn-sm">Tolak</button>
-        </form>
-</div>
-      </div>
+    <!-- Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-indigo text-blue">
+                    <h4 class="modal-title" id="modalLabel">Detail Laporan</h4>
+                    <button type="button" class="btn-close btn-close-blue" data-bs-dismiss="modal"
+                        aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent">Memuat...</div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-
+    </div>
 @endsection
 @push('scripts')
-<script>
-    $(document).ready(function() {
-        $('#laporanTable').DataTable();
-        
-        $('.btn-detail').click(function() {
-            var id = $(this).data('id');
-            
+    <script>
+        function modalAction(url) {
             $.ajax({
-                url: "{{ route('admin.show_laporan', '') }}/" + id,
-                type: 'GET',
-                dataType: 'json',
-                success: function(res) {
-                    if(res) {
-                        $('#modal-pelapor').text(res.pelapor?.nama || '-');
-                        $('#modal-fasilitas').text(res.fasilitas?.nama || '-');
-                        $('#modal-gedung').text(res.gedung || '-');
-                        $('#modal-deskripsi').text(res.deskripsi || '-');
-                        $('#modal-status').text(res.status || '-');
-                        $('#modal-urgensi').text(res.urgensi || '-');
-                        if (res.status === 'diajukan') {
-                        $('#modal-actions').show();
+                url: url,
+                type: "GET",
+                success: function (res) {
+                    $('#modalContent').html(res);
+                    $('#detailModal').modal('show');
+                },
+                error: function () {
+                    $('#modalContent').html('<p class="text-danger">Gagal memuat data.</p>');
+                }
+            });
+        }
 
-                        // Set action form ke URL update
-                        let actionUrl = "{{ url('laporan') }}/" + res.laporan_id;
-                        $('#form-terima').attr('action', actionUrl);
-                        $('#form-tolak').attr('action', actionUrl);
-                    } else {
-                        $('#modal-actions').hide();
-                    }
+        $(document).ready(function() {
 
-                        $('#detailModal').modal('show');
+            const columns = [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false,
+                    className: 'text-center'
+                },
+                {
+                    data: 'gedung',
+                    name: 'gedung'
+                },
+                {
+                    data: 'fasilitas',
+                    name: 'fasilitas'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'aksi',
+                    name: 'aksi',
+                    orderable: false,
+                    searchable: false,
+                    className: 'text-center'
+                }
+            ];
+
+            if ($.fn.DataTable.isDataTable('#laporanTable')) {
+                $('#laporanTable').DataTable().clear().destroy();
+            }
+
+            $('#laporanTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('admin.data_laporan') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}"
                     }
                 },
-                error: function(xhr) {
-                    console.error(xhr);
-                    alert('Error: ' + xhr.responseJSON?.message || 'Gagal memuat data');
+                columns: columns,
+                language: {
+                    emptyTable: "Tidak ada data laporan yang diterima",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ laporan",
+                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 laporan",
+                    loadingRecords: "Memuat data...",
+                    processing: "Memproses...",
+                    search: "Cari:",
+                    zeroRecords: "Tidak ditemukan data yang sesuai"
+                },
+                drawCallback: function(settings) {
+                    if (settings.json && settings.json.recordsTotal === 0) {
+                        $('#laporanTable tbody').html(
+                            '<tr><td colspan="' + columns.length +
+                            '" class="text-center">Tidak ada data laporan yang diterima</td></tr>'
+                        );
+                    }
                 }
             });
         });
-    });
-</script>
+    </script>
 @endpush
