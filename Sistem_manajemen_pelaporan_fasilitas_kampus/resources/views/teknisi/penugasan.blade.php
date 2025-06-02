@@ -3,7 +3,7 @@
 @section('content')
     <section class="section">
         <div class="card mb-4">
-            <div class="card-header bg-primary d-flex justify-content-between align-items-center bg-gradient-indigo py-3">
+            <div class="card-header d-flex justify-content-between align-items-center bg-gradient-indigo py-3">
                 <h5 class="card-title mb-0 text-blue"><i class="bi bi-clipboard-data me-2"></i>Daftar Penugasan</h5>
             </div>
                 <div class="card-body pt-3">
@@ -35,8 +35,8 @@
                                                 'tidak diterima' => 'bg-danger',
                                                 'konfirmasi' => 'bg-primary',
                                                 'memilih teknisi' => 'bg-info',
-                                                'diperbaiki' => 'bg-warning',
-                                                'telah diperbaiki' => 'bg-warning',
+                                                'diperbaiki' => 'bg-info',
+                                                'telah diperbaiki' => 'bg-Info',
                                                 'revisi' => 'bg-warning',
                                                 'selesai' => 'bg-success',
                                             ][$item->status] ?? 'bg-secondary';
@@ -57,7 +57,7 @@
             </div>
         </div>
         <div class="card mb-4">
-            <div class="card-header bg-success d-flex justify-content-between align-items-center bg-gradient-indigo py-3">
+            <div class="card-header d-flex justify-content-between align-items-center bg-gradient-indigo py-3">
                 <h5 class="card-title mb-0 text-blue"><i class="bi bi-journal-text me-2"></i>Daftar Revisi</h5>
             </div>
                 <div class="card-body pt-3">
@@ -89,8 +89,8 @@
                                                 'tidak diterima' => 'bg-danger',
                                                 'konfirmasi' => 'bg-primary',
                                                 'memilih teknisi' => 'bg-info',
-                                                'diperbaiki' => 'bg-warning',
-                                                'telah diperbaiki' => 'bg-warning',
+                                                'diperbaiki' => 'bg-info',
+                                                'telah diperbaiki' => 'bg-Info',
                                                 'revisi' => 'bg-warning',
                                                 'selesai' => 'bg-success',
                                             ][$item->status] ?? 'bg-secondary';

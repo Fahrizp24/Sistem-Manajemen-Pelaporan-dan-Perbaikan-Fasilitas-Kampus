@@ -3,8 +3,8 @@
 @section('content')
     <section class="section">
         <div class="card mb-4">
-            <div class="card-header bg-primary d-flex justify-content-between align-items-center bg-gradient-indigo py-3">
-                <h5 class="card-title mb-0 text-blue"><i class="bi bi-clock-history me-2"></i>Daftar Riwayat Penugasan</h5>
+            <div class="card-header d-flex justify-content-between align-items-center bg-gradient-indigo py-3">
+                <h5 class="card-title mb-0 "><i class="bi bi-clock-history me-2"></i>Daftar Riwayat Penugasan</h5>
             </div>
             <div class="card-body pt-3">
                 <div class="table-responsive">
