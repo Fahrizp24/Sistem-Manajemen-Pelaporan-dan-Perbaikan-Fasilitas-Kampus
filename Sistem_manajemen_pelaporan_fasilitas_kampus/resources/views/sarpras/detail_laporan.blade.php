@@ -40,10 +40,7 @@
                     <th>Tanggal Laporan</th>
                     <td>{{ $laporan->created_at->format('d M Y H:i') }}</td>
                 </tr>
-                <tr>
-                    <th>Urgensi</th>
-                    <td>{{ $laporan->urgensi }}</td>
-                </tr>
+
                 <tr>
                     <th>Ditugaskan Oleh</th>
                     <td>{{ $laporan->sarpras->nama ?? '-' }}</td>

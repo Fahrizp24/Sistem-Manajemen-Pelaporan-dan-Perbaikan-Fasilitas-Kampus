@@ -84,18 +84,18 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label for="prodi" class="form-label">Program Studi</label>
-                            <input type="text" class="form-control" id="prodi" name="prodi" value="{{ $pelapor->prodi ?? '' }}" disabled>
+                            <input type="text" class="form-control" id="prodi" name="prodi" value="{{ $pelapor->prodi ?? '-' }}" disabled>
                         </div>
                         <div class="col-md-6">
                             <label for="jurusan" class="form-label">Jurusan</label>
-                            <input type="text" class="form-control" id="jurusan" name="jurusan" value="{{ $pelapor->jurusan ?? '' }}" disabled>
+                            <input type="text" class="form-control" id="jurusan" name="jurusan" value="{{ $pelapor->jurusan ?? '-' }}" disabled>
                         </div>
                     </div>
 
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label for="no_telp" class="form-label">Nomor Telepon</label>
-                            <input type="tel" class="form-control" id="no_telp" name="no_telp" value="{{ $pelapor->no_telp ?? '' }}">
+                            <input type="tel" class="form-control" id="no_telp" name="no_telp" value="{{ $pelapor->no_telp ?? '-' }}">
                         </div>
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>

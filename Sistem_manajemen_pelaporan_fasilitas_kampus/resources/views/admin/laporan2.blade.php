@@ -12,7 +12,6 @@
                         <th>Gedung</th>
                         <th>Deskripsi</th>
                         <th>Status</th>
-                        <th>Urgensi</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -50,9 +49,6 @@
                                 @endswitch
                             </td>
                             <td>
-                                {{ $item->urgensi ?? '-' }}
-                            </td>
-                            <td>
                                 <button class="btn btn-info btn-sm btn-detail"
                                     data-id="{{ $item->laporan_id }}">Detail</button>
                             </td>
@@ -80,7 +76,6 @@
                         <p><strong>Gedung:</strong> <span id="modal-gedung"></span></p>
                         <p><strong>Deskripsi:</strong> <span id="modal-deskripsi"></span></p>
                         <p><strong>Status:</strong> <span id="modal-status"></span></p>
-                        <p><strong>Urgensi:</strong> <span id="modal-urgensi"></span></p>
                         <div id="modal-actions" class="mt-3 text-end" style="display: none;">
                             <form id="form-terima" method="POST" class="d-inline">
                                 @csrf
@@ -117,7 +112,6 @@
                                 $('#modal-gedung').text(res.gedung || '-');
                                 $('#modal-deskripsi').text(res.deskripsi || '-');
                                 $('#modal-status').text(res.status || '-');
-                                $('#modal-urgensi').text(res.urgensi || '-');
                                 if (res.status === 'diajukan') {
                                     $('#modal-actions').show();
 
