@@ -34,9 +34,6 @@
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="avatar avatar-sm me-2 bg-indigo-100 text-indigo-600">
-                                                    <span class="avatar-initial rounded-circle">{{ substr($item->pelapor->nama, 0, 1) }}</span>
-                                                </div>
                                                 <div>{{ $item->pelapor->nama }}</div>
                                             </div>
                                         </td>
@@ -87,9 +84,6 @@
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="avatar avatar-sm me-2 bg-teal-100 text-teal-600">
-                                                    <span class="avatar-initial rounded-circle">{{ substr($item->pelapor->nama, 0, 1) }}</span>
-                                                </div>
                                                 <div>{{ $item->pelapor->nama }}</div>
                                             </div>
                                         </td>
@@ -103,7 +97,7 @@
                                             <span class="card-title mb-0 text-yellow">Perlu Penugasan</span>
                                         </td>
                                         <td class="text-center">
-                                            <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=pelapor')"
+                                            <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=admin')"
                                                 class="btn btn-sm btn-primary text-white">
                                                 <i class="bi bi-eye-fill me-1"></i> Detail
                                             </button>
@@ -142,9 +136,6 @@
                                         <td class="fw-bold">{{ $loop->iteration }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="avatar avatar-sm me-2 bg-amber-100 text-amber-600">
-                                                    <span class="avatar-initial rounded-circle">{{ substr($item->pelapor->nama, 0, 1) }}</span>
-                                                </div>
                                                 <div>{{ $item->pelapor->nama }}</div>
                                             </div>
                                         </td>
@@ -158,7 +149,7 @@
                                             <span class="card-title mb-0 text-orange">Perlu Ditelaah</span>
                                         </td>
                                         <td class="text-center">
-                                           <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=pelapor')"
+                                           <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=teknisi')"
                                                 class="btn btn-sm btn-primary text-white">
                                                 <i class="bi bi-eye-fill me-1"></i> Detail
                                             </button>
