@@ -22,13 +22,13 @@ class FasilitasModel extends Model
         'nama',
         'deskripsi',
         'kategori',
-        'gedung_id',
+        'ruangan_id',
         'status'
     ];
 
-    function gedung()
+    function ruangan()
     {
-        return $this->belongsTo(GedungModel::class, 'gedung_id', 'gedung_id');
+        return $this->belongsTo(RuanganModel::class, 'ruangan_id', 'ruangan_id');
     }
     function laporan()
     {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\laporanModel;
+use App\Models\RuanganModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -132,7 +133,8 @@ class TeknisiController extends Controller
         $activeMenu = 'penugasan';
         $penugasan = LaporanModel::where('teknisi_id', $teknisi_id)->where('status', 'diperbaiki')->get();
         $revisi = LaporanModel::where('teknisi_id', $teknisi_id)->where('status', 'revisi')->get();
-
+        // $ruangan = RuanganModel::where('ruangan_id',39)->get();
+        // dd($revisi,$ruangan);
         return view('teknisi.penugasan', compact('penugasan', 'revisi', 'breadcrumb', 'page', 'activeMenu'));
     }
 

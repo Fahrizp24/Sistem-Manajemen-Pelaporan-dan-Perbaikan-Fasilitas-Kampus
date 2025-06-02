@@ -19,14 +19,12 @@ class GedungModel extends Model
 
     // Define the attributes that are mass assignable
     protected $fillable = [
-        'gedung_nama',
-        'gedung_kode',
-        'deskripsi'
+        'nama_gedung'
     ];
 
-    function fasilitas()
+    function lantai()
     {
-        return $this->hasMany(FasilitasModel::class, 'gedung_id', 'gedung_id');
+        return $this->hasMany(LantaiModel::class, 'gedung_id', 'gedung_id');
         
     }
 }

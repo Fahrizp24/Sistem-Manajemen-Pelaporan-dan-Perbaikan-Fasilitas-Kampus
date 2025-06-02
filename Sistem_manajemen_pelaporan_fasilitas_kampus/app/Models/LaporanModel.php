@@ -20,12 +20,12 @@ class LaporanModel extends Model
         'pelapor_id',
         'fasilitas_id',
         'ditugaskan_oleh',
-        'teknisi_id',
+        'teknisi_id', 
         'deskripsi',
         'foto',
         'status',
         'urgensi',
-    ];
+    ]; 
 
     // Jika tabel tidak menggunakan timestamps (created_at, updated_at)
     public $timestamps = true;
@@ -40,6 +40,16 @@ class LaporanModel extends Model
     public function fasilitas()
     {
         return $this->belongsTo(FasilitasModel::class, 'fasilitas_id', 'fasilitas_id');
+    }
+
+    public function ruangan()
+    {
+        return $this->belongsTo(RuanganModel::class);
+    }
+
+    public function lantai()
+    {
+        return $this->belongsTo(LantaiModel::class);
     }
 
     public function gedung()
