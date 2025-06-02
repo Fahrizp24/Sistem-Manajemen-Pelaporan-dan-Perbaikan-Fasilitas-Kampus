@@ -153,7 +153,7 @@ class SarprasController extends Controller
             'list' => ['Data Penugasan']
         ];
 
-        $page = (object)[
+        $page = (object) [
             'title' => 'Detail Penugasan',
             'subtitle' => 'Informasi lengkap mengenai penugasan'
         ];
@@ -273,13 +273,12 @@ class SarprasController extends Controller
         }
     }
 
+
     public function selesaikan(string $id, Request $request)
     {
         try {
-            $laporan = LaporanModel::findOrFail($id);
             if ($request->hasil === 'selesai') {
-                $laporan->status = 'selesai';
-                $laporan->save();
+                LaporanModel::findOrFail($id)->update(['status' => 'selesai']);
 
                 if ($request->ajax()) {
                     return response()->json([
@@ -288,8 +287,7 @@ class SarprasController extends Controller
                     ]);
                 }
             } else if ($request->hasil === 'revisi') {
-                $laporan->status = 'revisi';
-                $laporan->save();
+                LaporanModel::findOrFail($id)->update(['status' => 'revisi']);
 
                 if ($request->ajax()) {
                     return response()->json([

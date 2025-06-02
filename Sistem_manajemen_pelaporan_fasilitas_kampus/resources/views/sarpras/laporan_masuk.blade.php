@@ -194,14 +194,76 @@
         });
 
         function showDetailModal(url) {
-            $('#modalContent').html('Memuat...');
-            $('#detailModal').modal('show');
-            
-            $.get(url, function(data) {
-                $('#modalContent').html(data);
-            }).fail(function() {
-                $('#modalContent').html('Gagal memuat data. Silakan coba lagi.');
-            });
+            // Fetch the content
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    // Insert the content into the modal
+                    document.getElementById('modalContent').innerHTML = html;
+                    
+                    // Initialize the modal
+                    var modal = new bootstrap.Modal(document.getElementById('detailModal'));
+                    modal.show();
+
+                    const form = document.querySelector('#detailModal form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+
+                            // Submit form via AJAX
+                            fetch(form.action, {
+                                    method: form.method,
+                                    body: new FormData(form),
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        // Hide modal
+                                        modal.hide();
+
+                                        // Show success alert
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Sukses',
+                                            text: data.message || 'Aksi berhasil dilakukan',
+                                            timer: 2000,
+                                            showConfirmButton: false
+                                        });
+
+                                        // Optional: refresh page or update table
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 2000);
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Gagal',
+                                            text: data.message || 'Terjadi kesalahan'
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Terjadi kesalahan saat mengirim data'
+                                    });
+                                });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading modal content:', error);
+                    document.getElementById('modalContent').innerHTML = 
+                        '<div class="alert alert-danger">Error loading content</div>';
+                    var modal = new bootstrap.Modal(document.getElementById('detailModal'));
+                    modal.show();
+                });
         }
+ 
     </script>
 @endpush
