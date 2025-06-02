@@ -1,225 +1,362 @@
 @extends('layouts.template')
 
-
-
-@push('scripts')
-    <script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('mazer/dist/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
-    <script src="{{ asset('assets/static/js/pages/parsley.js') }}"></script>
-@endpush
-
 @section('content')
-    <div class="chart-row">
-        <!-- Grafik Line Chart (Jumlah Kerusakan per Bulan) -->
-        <div class="chart-box">
-            <div class="chart-title">Jumlah Kerusakan per Bulan</div>
-            <canvas id="lineChart" class="custom-line-chart"></canvas>
-        </div>
-
-        <!-- Grafik Pie Chart (Status Perbaikan) -->
-        <div class="chart-box">
-            <div class="chart-title">Status Perbaikan Kerusakan</div>
-            <canvas id="pieChart"></canvas>
-        </div>
-    </div>
-
-    <!-- Grafik Bar Chart (Tingkat Kepuasan Pelapor) -->
-    <div class="chart-box full-width">
-        <div class="chart-title">Tingkat Kepuasan Pelapor Berdasarkan Rating</div>
-        <div style="display: flex; gap: 10px; flex-direction: column; max-width: 400px; margin: 0 auto;">
-            @php
-                $ratings = [
-                    ['bintang' => 5, 'jumlah' => 31478],
-                    ['bintang' => 4, 'jumlah' => 4055],
-                    ['bintang' => 3, 'jumlah' => 2873],
-                    ['bintang' => 2, 'jumlah' => 778],
-                    ['bintang' => 1, 'jumlah' => 3666],
-                ];
-                $total = array_sum(array_column($ratings, 'jumlah'));
-                $totalNilaiRating = array_reduce(
-                    $ratings,
-                    fn($carry, $rate) => $carry + $rate['bintang'] * $rate['jumlah'],
-                    0,
-                );
-                $rataRataRating = round($totalNilaiRating / $total, 1);
-                $fullStars = floor($rataRataRating);
-                $halfStar = $rataRataRating - $fullStars >= 0.5;
-                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
-            @endphp
-
-            <div style="text-align: center; margin-bottom: 10px;">
-                <div style="font-size: 36px; font-weight: bold;">
-                    {{ $rataRataRating }}
-                    <span>
-                        @for ($i = 0; $i < $fullStars; $i++)
-                            <span style="color: #fbc02d;">★</span>
-                        @endfor
-                        @if ($halfStar)
-                            <span style="color: #fbc02d;">☆</span>
-                        @endif
-                        @for ($i = 0; $i < $emptyStars; $i++)
-                            <span style="color: #ccc;">★</span>
-                        @endfor
-                    </span>
-                </div>
-                <div style="color: #666;">{{ number_format($total, 0, ',', '.') }} ulasan</div>
+    <div class="page-content">
+        <div class="card">
+            <div class="card-header">
+                <h5>Filter Laporan</h5>
             </div>
+            <div class="card-body">
+                <form method="GET" action="{{ route('admin.laporan_periodik') }}">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="bulan">Bulan</label>
+                            <select name="bulan" id="bulan" class="form-control">
+                                <option value="all" {{ $bulan == 'all' ? 'selected' : '' }}>Semua Bulan</option>
+                                @foreach(range(1, 12) as $m)
+                                    <option value="{{ $m }}" {{ $bulan == $m ? 'selected' : '' }}>
+                                        {{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="tahun">Tahun</label>
+                            <select name="tahun" id="tahun" class="form-control">
+                                @foreach(range(date('Y') - 5, date('Y')) as $y)
+                                    <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>{{ $y }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end justify-content-end">
+                            <button type="button" class="btn btn-danger" id="exportPdf">Export PDF</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-            @foreach ($ratings as $rate)
-                @php $percentage = round(($rate['jumlah'] / $total) * 100, 2); @endphp
-                <div class="rating-bar" role="img"
-                    aria-label="{{ $rate['jumlah'] }} ulasan untuk rating bintang {{ $rate['bintang'] }}">
-                    <div class="rating-star">{{ $rate['bintang'] }}</div>
-                    <div class="rating-track">
-                        <div class="rating-fill" style="width: {{ $percentage }}%;" title="{{ $rate['jumlah'] }} ulasan">
+        <div class="row mt-3">
+            {{-- Status Perbaikan --}}
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Status Perbaikan Fasilitas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="statusChart"></canvas>
                         </div>
                     </div>
                 </div>
-            @endforeach
+            </div>
+
+            {{-- Kepuasan Pengguna --}}
+            <div class="col-12 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Kepuasan Pengguna</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-title">Tingkat Kepuasan Pelapor Berdasarkan Rating</div>
+                        <div style="display: flex; gap: 10px; flex-direction: column; max-width: 400px; margin: 0 auto;">
+                            <div style="text-align: center; margin-bottom: 10px;">
+                                <div style="font-size: 36px; font-weight: bold;">
+                                    {{ number_format($averageRating, 1) }}
+                                    <span>
+                                        @for($i = 1; $i <= 5; $i++)
+                                            @if($i <= floor($averageRating))
+                                                <span style="color: #fbc02d;">★</span>
+                                            @elseif($i - 0.5 <= $averageRating)
+                                                <span style="color: #fbc02d;">½</span>
+                                            @else
+                                                <span style="color: #ccc;">★</span>
+                                            @endif
+                                        @endfor
+                                    </span>
+                                </div>
+                                <div style="color: #666;">{{ $kepuasan->sum('total') }} ulasan</div>
+                            </div>
+
+                            @php
+                                $totalRatings = $kepuasan->sum('total');
+                                $ratings = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
+
+                                foreach ($kepuasan as $item) {
+                                    $ratings[$item->rating] = $item->total;
+                                }
+                            @endphp
+
+                            @foreach($ratings as $star => $count)
+                                <div class="rating-bar" role="img"
+                                    aria-label="{{ $count }} ulasan untuk rating bintang {{ $star }}">
+                                    <div class="rating-star">{{ $star }}</div>
+                                    <div class="rating-track">
+                                        <div class="rating-fill"
+                                            style="width: {{ $totalRatings > 0 ? ($count / $totalRatings * 100) : 0 }}%;"
+                                            title="{{ $count }} ulasan"></div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <!-- Line Chart Tren Kerusakan -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Tren Kerusakan Fasilitas (12 Bulan Terakhir)</h5>
+                        </div>
+                        <div class="card-body p-0"> <!-- Tambahkan p-0 untuk menghilangkan padding -->
+                            <div class="chart-container" style="height: 300px; padding: 15px;">
+                                <!-- Atur height dan padding manual -->
+                                <canvas id="trenChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Kerusakan --}}
+                <div class="col-12">
+                    <div class="card mt-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Kerusakan per Bulan Tahun {{ $tahun }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Bulan</th>
+                                            <th>Total Kerusakan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($kerusakanBulan as $index => $item)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ DateTime::createFromFormat('!m', $item->bulan)->format('F') }}</td>
+                                                <td>{{ $item->total }}</td>
+                                            </tr>
+                                        @endforeach
+                                        <tr>
+                                            <td colspan="2" class="text-end"><strong>Total</strong></td>
+                                            <td><strong>{{ $kerusakanBulan->sum('total') }}</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .chart-row {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .chart-box {
-            flex: 1;
-            min-width: 300px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
-        .chart-title {
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-
-        .full-width {
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        canvas {
-            width: 100% !important;
-        }
-
-        .custom-line-chart {
-            height: 400px !important;
-        }
-
-        .rating-bar {
-            display: flex;
-            align-items: center;
-        }
-
-        .rating-star {
-            width: 20px;
-            text-align: center;
-            font-weight: bold;
-            color: #444;
-        }
-
-        .rating-track {
-            flex: 1;
-            background-color: #eee;
-            height: 12px;
-            border-radius: 6px;
-            overflow: hidden;
-            margin-left: 8px;
-        }
-
-        .rating-fill {
-            height: 100%;
-            background-color: #4CAF50;
-        }
-
-        #pieChart {
-            width: 100% !important;
-            height: auto !important;
-            max-width: 400px;
-            aspect-ratio: 1 / 1;
-            display: block;
-            margin: 0 auto;
-        }
-    </style>
+        <!-- Modal Export PDF -->
+        <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exportModalLabel">Export Laporan Periodik</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('sarpras.export_laporan_periodik') }}" method="GET">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="bulan_awal" class="form-label">Bulan Awal</label>
+                                <select name="bulan_awal" id="bulan_awal" class="form-control">
+                                    @foreach(range(1, 12) as $m)
+                                        <option value="{{ $m }}" {{ $m == 1 ? 'selected' : '' }}>
+                                            {{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="bulan_akhir" class="form-label">Bulan Akhir</label>
+                                <select name="bulan_akhir" id="bulan_akhir" class="form-control">
+                                    @foreach(range(1, 12) as $m)
+                                        <option value="{{ $m }}" {{ $m == 12 ? 'selected' : '' }}>
+                                            {{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tahun" class="form-label">Tahun</label>
+                                <select name="tahun" id="tahun" class="form-control">
+                                    @foreach(range(date('Y') - 5, date('Y')) as $y)
+                                        <option value="{{ $y }}" {{ $y == date('Y') ? 'selected' : '' }}>{{ $y }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Export PDF</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 @endsection
 
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            const damageData = [15, 22, 18, 25, 30, 28, 35, 40, 32, 28, 25, 20];
-
-            const repairStatus = ['Sudah Diperbaiki', 'Belum Diperbaiki'];
-            const repairData = [75, 25];
-
-            new Chart(document.getElementById('lineChart'), {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Jumlah Kerusakan',
-                        data: damageData,
-                        borderColor: '#3498db',
-                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
-                        borderWidth: 2,
-                        tension: 0.3,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false, // agar tinggi bisa diatur via CSS
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Status Perbaikan Chart
+                const statusCtx = document.getElementById('statusChart').getContext('2d');
+                const statusChart = new Chart(statusCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: {!! json_encode($statusPerbaikan->pluck('status')) !!},
+                        datasets: [{
+                            data: {!! json_encode($statusPerbaikan->pluck('total')) !!},
+                            backgroundColor: [
+                                '#4e73df',
+                                '#1cc88a',
+                                '#36b9cc',
+                                '#f6c23e',
+                                '#e74a3b'
+                            ],
+                            borderWidth: 0, // Pastikan ini ada
+                            borderColor: 'transparent', // Tambahkan ini
+                            hoverBackgroundColor: [
+                                '#2e59d9',
+                                '#17a673',
+                                '#2c9faf',
+                                '#dda20a',
+                                '#be2617'
+                            ],
+                            hoverBorderColor: "rgba(234, 236, 244, 1)",
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((value / total) * 100);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-            });
-
-            new Chart(document.getElementById('pieChart'), {
-                type: 'pie',
-                data: {
-                    labels: repairStatus,
-                    datasets: [{
-                        data: repairData,
-                        backgroundColor: ['#2ecc71', '#e74c3c']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
+                });
+                const trenCtx = document.getElementById('trenChart').getContext('2d');
+                const trenChart = new Chart(trenCtx, {
+                    type: 'line',
+                    data: {
+                        labels: {!! json_encode($trenLabels) !!},
+                        datasets: [{
+                            label: 'Jumlah Kerusakan',
+                            data: {!! json_encode($trenData) !!},
+                            backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                            borderColor: 'rgba(78, 115, 223, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: 'rgba(78, 115, 223, 1)',
+                            pointHoverBorderColor: '#fff',
+                            pointHitRadius: 10,
+                            pointBorderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false, // Penting untuk kontrol ukuran manual
+                        responsive: true,
+                        layout: {
+                            padding: {
+                                top: 10,
+                                bottom: 10,
+                                left: 10,
+                                right: 10
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0,
+                                    padding: 10
+                                },
+                                grid: {
+                                    display: true,
+                                    drawBorder: false
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    autoSkip: false,
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
                         }
                     }
-                }
+                });
+
+                // Export PDF Button
+                document.getElementById('exportPdf').addEventListener('click', function () {
+                    $('#exportModal').modal('show');
+                });
             });
-        });
-    </script>
-@endpush
+        </script>
+
+        <style>
+            .chart-container {
+                position: relative;
+                height: 300px;
+            }
+
+            .rating-bar {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .rating-star {
+                font-weight: bold;
+                width: 20px;
+                text-align: center;
+            }
+
+            .rating-track {
+                flex-grow: 1;
+                height: 10px;
+                background-color: #eee;
+                border-radius: 5px;
+                overflow: hidden;
+            }
+
+            .rating-fill {
+                height: 100%;
+                background-color: #fbc02d;
+            }
+        </style>
+    @endpush

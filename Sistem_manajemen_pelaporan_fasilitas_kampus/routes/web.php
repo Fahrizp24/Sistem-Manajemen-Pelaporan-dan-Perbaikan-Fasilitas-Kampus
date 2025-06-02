@@ -176,8 +176,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/data_laporan', [SarprasController::class, 'data_laporan'])->name('sarpras.data_laporan');
                 Route::post('/proses_spk', [SarprasController::class, 'proses_spk'])->name('sarpras.proses_spk');
             });
+
+            Route::prefix('statistik')->group(function () {
+                Route::get('/', [SarprasController::class, 'statistik'])->name('sarpras.statistik');
+                Route::get('/export_laporan_periodik', [SarprasController::class, 'export_laporan_periodik'])->name('sarpras.export_laporan_periodik');
+            });
             
-            Route::get('/statistik', [SarprasController::class, 'statistik'])->name('sarpras.statistik');
         });
     });
 
