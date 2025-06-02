@@ -14,10 +14,7 @@ use App\Http\Controllers\DashboardController;
 Route::pattern('id', '[0-9]+');
 
 // Public Routes
-Route::get('/', function () {
-    return redirect()->route('login');
-});
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');

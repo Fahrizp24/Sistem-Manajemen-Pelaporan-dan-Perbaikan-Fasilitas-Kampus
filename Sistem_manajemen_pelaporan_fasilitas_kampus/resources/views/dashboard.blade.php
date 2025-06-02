@@ -339,7 +339,7 @@
                 <div class="col-md-3 col-6 animate__animated animate__fadeInUp">
                     <div class="card stat-card h-100">
                         <div class="card-body text-center p-3">
-                            <h2 class="text-primary counter" data-target="1254">0</h2>
+                            <h2 class="text-primary counter" data-target="{{$stats['laporan_diterima']}}">0</h2>
                             <p class="mb-0 text-muted">Laporan Diterima</p>
                         </div>
                     </div>
@@ -347,7 +347,7 @@
                 <div class="col-md-3 col-6 animate__animated animate__fadeInUp animate__delay-1s">
                     <div class="card stat-card h-100">
                         <div class="card-body text-center p-3">
-                            <h2 class="text-success counter" data-target="987">0</h2>
+                            <h2 class="text-success counter" data-target="{{$stats['laporan_selesai']}}">0</h2>
                             <p class="mb-0 text-muted">Laporan Selesai</p>
                         </div>
                     </div>
@@ -355,7 +355,7 @@
                 <div class="col-md-3 col-6 animate__animated animate__fadeInUp animate__delay-2s">
                     <div class="card stat-card h-100">
                         <div class="card-body text-center p-3">
-                            <h2 class="text-warning counter" data-target="32">0</h2>
+                            <h2 class="text-warning counter" data-target="{{$stats['teknisi_aktif']}}">0</h2>
                             <p class="mb-0 text-muted">Teknisi Aktif</p>
                         </div>
                     </div>
@@ -363,7 +363,7 @@
                 <div class="col-md-3 col-6 animate__animated animate__fadeInUp animate__delay-3s">
                     <div class="card stat-card h-100">
                         <div class="card-body text-center p-3">
-                            <h2 class="text-info counter" data-target="24">0</h2>
+                            <h2 class="text-info counter" data-target="{{$stats['total_pengguna']}}">0</h2>
                             <p class="mb-0 text-muted">Jumlah Pengguna</p>
                         </div>
                     </div>
