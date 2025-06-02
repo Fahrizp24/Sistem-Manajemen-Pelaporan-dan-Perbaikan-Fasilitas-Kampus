@@ -15,6 +15,9 @@ use App\Models\LaporanModel;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Storage;
+use App\Models\KriteriaModel;
+use App\Models\CrispModel;
+
 
 class AdminController extends Controller
 {
@@ -143,12 +146,6 @@ class AdminController extends Controller
                 ->make(true);
         }
     }
-    public function index()
-    {
-        $admin = UserModel::all();
-        return view('admin.index', compact('admin'));
-    }
-
 
     public function laporan_masuk()
     {
@@ -167,6 +164,53 @@ class AdminController extends Controller
         $activeMenu = 'laporan masuk';
         return view('admin.laporan_masuk', ['laporan' => $laporan, 'breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
+
+
+    public function data_laporan(Request $request)
+    {
+        $data = LaporanModel::with(['fasilitas.gedung'])->where('status', 'konfirmasi')->get();
+
+        return datatables()->of($data)
+            ->addIndexColumn()
+            ->addColumn('gedung', fn($row) => $row->fasilitas->gedung->nama ?? '-')
+            ->addColumn('fasilitas', fn($row) => $row->fasilitas->nama ?? '-')
+            ->addColumn('status', function ($row) {
+                return match ($row->status) {
+                    'konfirmasi' => '<span class="badge bg-secondary">Menunggu Konfirmasi</span>',
+                    'proses' => '<span class="badge bg-info">Dalam Proses</span>',
+                    'selesai' => '<span class="badge bg-success">Selesai</span>',
+                    default => '<span class="badge bg-secondary">Tidak Diketahui</span>'
+                };
+            })
+            ->addColumn('aksi', function ($row) {
+                return '<button onclick="modalAction(\'' . url('admin/laporan_masuk/show_laporan/' . $row->laporan_id) . '\')" class="btn btn-sm btn-info">Detail</button>';
+            })
+            ->rawColumns(['aksi', 'status'])
+            ->make(true);
+    }
+
+    public function show_laporan(string $id)
+    {
+        $laporan = LaporanModel::findOrFail($id);
+
+        $breadcrumb = (object) [
+            'title' => 'Data Penugasan',
+            'list' => ['Data Penugasan']
+        ];
+
+        $page = (object)[
+            'title' => 'Detail Penugasan',
+            'subtitle' => 'Informasi lengkap mengenai penugasan'
+        ];
+
+        $teknisi = UserModel::where('peran', 'teknisi')->get();
+
+        $source = request()->query('source', 'default');
+        $kriteria = KriteriaModel::orderBy('kriteria_id')->get();
+        $crisp = CrispModel::orderBy('kriteria_id')->orderBy('poin')->get();
+        return view('admin.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
+    }
+
     public function laporan2()
     {
         $laporan2 = LaporanModel::with('fasilitas.gedung')->get();
@@ -184,6 +228,7 @@ class AdminController extends Controller
         $activeMenu = 'laporan2';
         return view('admin.laporan2', ['laporan2' => $laporan2, 'breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
+
     function kelola_pengguna()
     {
         $breadcrumb = (object) [
@@ -206,9 +251,7 @@ class AdminController extends Controller
         return view('admin.pengguna.create_ajax');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store_ajax(Request $request)
     {
         $rules = [
@@ -244,27 +287,18 @@ class AdminController extends Controller
     }
 
 
-    /**
-     * Display the specified resource.
-     */
     public function show_pengguna()
     {
         $admin = UserModel::all();
         return view('admin.show_pengguna', compact('admin'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit_pengguna($id)
     {
         $user = UserModel::findOrFail($id);
         return view('admin.pengguna.edit_ajax', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update_pengguna(Request $request, $id)
     {
         $request->validate([
@@ -295,10 +329,6 @@ class AdminController extends Controller
         ]);
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $pengguna = UserModel::find($id);
@@ -556,7 +586,7 @@ class AdminController extends Controller
             ->avg('penilaian');
 
         // Query untuk tren kerusakan per bulan
-        $trenKerusakan = LaporanModel::select(
+        $kerusakanBulan = LaporanModel::select(
             DB::raw('MONTH(created_at) as bulan'),
             DB::raw('COUNT(*) as total')
         )
@@ -565,6 +595,36 @@ class AdminController extends Controller
             ->orderBy('bulan')
             ->get();
 
+        // Data untuk line chart tren kerusakan (12 bulan terakhir)
+        $trenKerusakan = LaporanModel::select(
+            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('YEAR(created_at) as tahun'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereBetween('created_at', [now()->subMonths(11)->startOfMonth(), now()->endOfMonth()])
+            ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+            ->orderBy(DB::raw('YEAR(created_at)'))
+            ->orderBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        // Format data untuk chart
+        $trenLabels = [];
+        $trenData = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $month = $date->month;
+            $year = $date->year;
+            $label = $date->format('M Y');
+
+            $record = $trenKerusakan->first(function ($item) use ($month, $year) {
+                return $item->bulan == $month && $item->tahun == $year;
+            });
+
+            $trenLabels[] = $label;
+            $trenData[] = $record ? $record->total : 0;
+        }
+
         return view('admin.laporan_periodik', compact(
             'breadcrumb',
             'page',
@@ -572,9 +632,11 @@ class AdminController extends Controller
             'statusPerbaikan',
             'kepuasan',
             'averageRating',
-            'trenKerusakan',
+            'kerusakanBulan',
             'bulan',
-            'tahun'
+            'tahun',
+            'trenLabels',
+            'trenData',
         ));
     }
 

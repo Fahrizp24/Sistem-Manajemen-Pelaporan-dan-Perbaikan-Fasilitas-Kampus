@@ -2,13 +2,13 @@
 
 @section('content')
     <section class="section">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="card-title">Daftar Riwayat Penugasan</h5>
+        <div class="card mb-4">
+            <div class="card-header bg-primary d-flex justify-content-between align-items-center bg-gradient-indigo py-3">
+                <h5 class="card-title mb-0 text-blue"><i class="bi bi-clock-history me-2"></i>Daftar Riwayat Penugasan</h5>
             </div>
-            <div class="card-body">
+            <div class="card-body pt-3">
                 <div class="table-responsive">
-                    <table class="table dataTable no-footer" id="table1">
+                    <table class="table table-bordered table-striped mb-0" id="table1">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -32,12 +32,14 @@
                                         @php
                                             $badgeClass = [
                                                 'diajukan' => 'bg-secondary',
-                                                'diterima' => 'bg-primary',
-                                                'ditolak' => 'bg-danger',
-                                                'diajukan sarpras' => 'bg-warning',
-                                                'diterima admin' => 'bg-info',
-                                                'dilaksanakan' => 'bg-success',
-                                                'selesai' => 'bg-dark',
+                                                'diterima' => 'bg-info',
+                                                'tidak diterima' => 'bg-danger',
+                                                'konfirmasi' => 'bg-primary',
+                                                'memilih teknisi' => 'bg-info',
+                                                'diperbaiki' => 'bg-warning',
+                                                'telah diperbaiki' => 'bg-warning',
+                                                'revisi' => 'bg-warning',
+                                                'selesai' => 'bg-success',
                                             ][$item->status] ?? 'bg-secondary';
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
@@ -45,7 +47,7 @@
                                     <td>
                                         <button onclick="showDetailModal('{{ url('teknisi/riwayat_penugasan/'.$item->laporan_id) }}')" 
                                             class="btn btn-sm btn-primary">
-                                            <i class="bi bi-eye"></i> Detail
+                                            <i class="bi bi-eye-fill me-1"></i> Detail
                                         </button>
                                     </td>
                                 </tr>

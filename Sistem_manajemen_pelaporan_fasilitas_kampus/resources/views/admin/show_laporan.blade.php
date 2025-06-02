@@ -10,7 +10,6 @@
         <p><strong>Pelapor:</strong> {{ $laporan->pelapor->nama ?? '-' }}</p>
         <p><strong>Fasilitas:</strong> {{ $laporan->fasilitas->nama ?? '-' }}</p>
         <p><strong>Deskripsi:</strong> {{ $laporan->deskripsi }}</p>
-        <p><strong>Urgensi:</strong> {{ $laporan->urgensi ?? '-' }}</p>
         <p><strong>Status:</strong>
             @switch($laporan->status)
                 @case('diajukan') <span class="badge bg-secondary">Diajukan</span> @break

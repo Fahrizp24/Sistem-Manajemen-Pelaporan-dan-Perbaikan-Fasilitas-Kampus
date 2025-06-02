@@ -9,6 +9,7 @@ use App\Models\TeknisiModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -361,18 +362,132 @@ class SarprasController extends Controller
         }
     }
 
-    public function statistik()
+    public function statistik(Request $request)
     {
         $breadcrumb = (object) [
             'title' => 'Statistik',
             'list' => ['Statistik']
         ];
+
         $page = (object) [
             'title' => 'Statistik',
             'subtitle' => 'Statistik'
         ];
-        return view('sarpras.statistik', compact('breadcrumb', 'page'));
+
+        $activeMenu = 'Statistik';
+
+        // Default values
+        $bulan = $request->input('bulan', date('m'));
+        $tahun = $request->input('tahun', date('Y'));
+
+        // Query untuk status perbaikan
+        $statusPerbaikan = LaporanModel::select('status', DB::raw('COUNT(*) as total'))
+            ->whereYear('created_at', $tahun)
+            ->when($bulan != 'all', function ($query) use ($bulan) {
+                return $query->whereMonth('created_at', $bulan);
+            })
+            ->groupBy('status')
+            ->get();
+
+        // Query untuk kepuasan pengguna
+        $kepuasan = DB::table('umpan_balik')
+            ->select('penilaian as rating', DB::raw('COUNT(*) as total'))
+            ->whereYear('created_at', $tahun)
+            ->when($bulan != 'all', function ($query) use ($bulan) {
+                return $query->whereMonth('created_at', $bulan);
+            })
+            ->groupBy('penilaian')
+            ->get();
+
+        // Hitung rata-rata rating
+        $averageRating = DB::table('umpan_balik')
+            ->whereYear('created_at', $tahun)
+            ->when($bulan != 'all', function ($query) use ($bulan) {
+                return $query->whereMonth('created_at', $bulan);
+            })
+            ->avg('penilaian');
+
+        // Query untuk tren kerusakan per bulan
+        $kerusakanBulan = LaporanModel::select(
+            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereYear('created_at', $tahun)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('bulan')
+            ->get();
+
+        // Data untuk line chart tren kerusakan (12 bulan terakhir)
+        $trenKerusakan = LaporanModel::select(
+            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('YEAR(created_at) as tahun'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereBetween('created_at', [now()->subMonths(11)->startOfMonth(), now()->endOfMonth()])
+            ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+            ->orderBy(DB::raw('YEAR(created_at)'))
+            ->orderBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        // Format data untuk chart
+        $trenLabels = [];
+        $trenData = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $month = $date->month;
+            $year = $date->year;
+            $label = $date->format('M Y');
+
+            $record = $trenKerusakan->first(function ($item) use ($month, $year) {
+                return $item->bulan == $month && $item->tahun == $year;
+            });
+
+            $trenLabels[] = $label;
+            $trenData[] = $record ? $record->total : 0;
+        }
+
+        return view('sarpras.statistik', compact(
+            'breadcrumb',
+            'page',
+            'activeMenu',
+            'statusPerbaikan',
+            'kepuasan',
+            'averageRating',
+            'kerusakanBulan',
+            'bulan',
+            'tahun',
+            'trenLabels',
+            'trenData',
+        ));
     }
+
+    public function export_laporan_periodik(Request $request)
+    {
+        $bulan_awal = $request->input('bulan_awal', 1);
+        $bulan_akhir = $request->input('bulan_akhir', 12);
+        $tahun = $request->input('tahun', date('Y'));
+
+        $data = LaporanModel::select(
+            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereYear('created_at', $tahun)
+            ->whereBetween(DB::raw('MONTH(created_at)'), [$bulan_awal, $bulan_akhir])
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('bulan')
+            ->get();
+
+        $pdf = PDF::loadView('admin.laporan_periodik_pdf', [
+            'data' => $data,
+            'bulan_awal' => $bulan_awal,
+            'bulan_akhir' => $bulan_akhir,
+            'tahun' => $tahun
+        ]);
+
+        return $pdf->download('laporan_periodik_' . $tahun . '.pdf');
+    }
+
 
     public function ajukan_laporan()
     {
