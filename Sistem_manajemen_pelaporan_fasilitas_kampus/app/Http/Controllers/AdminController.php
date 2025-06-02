@@ -556,7 +556,7 @@ class AdminController extends Controller
             ->avg('penilaian');
 
         // Query untuk tren kerusakan per bulan
-        $trenKerusakan = LaporanModel::select(
+        $kerusakanBulan = LaporanModel::select(
             DB::raw('MONTH(created_at) as bulan'),
             DB::raw('COUNT(*) as total')
         )
@@ -565,6 +565,36 @@ class AdminController extends Controller
             ->orderBy('bulan')
             ->get();
 
+        // Data untuk line chart tren kerusakan (12 bulan terakhir)
+        $trenKerusakan = LaporanModel::select(
+            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('YEAR(created_at) as tahun'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereBetween('created_at', [now()->subMonths(11)->startOfMonth(), now()->endOfMonth()])
+            ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+            ->orderBy(DB::raw('YEAR(created_at)'))
+            ->orderBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        // Format data untuk chart
+        $trenLabels = [];
+        $trenData = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $month = $date->month;
+            $year = $date->year;
+            $label = $date->format('M Y');
+
+            $record = $trenKerusakan->first(function ($item) use ($month, $year) {
+                return $item->bulan == $month && $item->tahun == $year;
+            });
+
+            $trenLabels[] = $label;
+            $trenData[] = $record ? $record->total : 0;
+        }
+
         return view('admin.laporan_periodik', compact(
             'breadcrumb',
             'page',
@@ -572,9 +602,11 @@ class AdminController extends Controller
             'statusPerbaikan',
             'kepuasan',
             'averageRating',
-            'trenKerusakan',
+            'kerusakanBulan',
             'bulan',
-            'tahun'
+            'tahun',
+            'trenLabels',
+            'trenData',
         ));
     }
 
