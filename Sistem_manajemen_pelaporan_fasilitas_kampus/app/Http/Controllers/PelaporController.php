@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\FasilitasModel;
 use App\Models\GedungModel;
+use App\Models\LantaiModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\UserModel;
 use App\Models\LaporanModel;
+use App\Models\RuanganModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -139,13 +141,31 @@ class PelaporController extends Controller
         return view('pelapor.laporkan_kerusakan', compact('gedung', 'breadcrumb', 'page', 'activeMenu', 'user'));
     }
 
-    public function get_fasilitas_by_gedung(Request $request)
+    public function get_lantai_by_gedung(Request $request)
     {
         $request->validate([
             'gedung_id' => 'required|exists:gedung,gedung_id',
         ]);
 
-        $fasilitas = FasilitasModel::where('gedung_id', $request->gedung_id)->get();
+        $lantai = LantaiModel::where('gedung_id', $request->gedung_id)->get();
+        return response()->json($lantai);
+    }
+    public function get_ruangan_by_lantai(Request $request)
+    {
+        $request->validate([
+            'lantai_id' => 'required|exists:lantai,lantai_id',
+        ]);
+
+        $ruangan = RuanganModel::where('lantai_id', $request->lantai_id)->get();
+        return response()->json($ruangan);
+    }
+    public function get_fasilitas_by_ruangan(Request $request)
+    {
+        $request->validate([
+            'ruangan_id' => 'required|exists:ruangan,ruangan_id',
+        ]);
+
+        $fasilitas = FasilitasModel::where('ruangan_id', $request->ruangan_id)->get();
         return response()->json($fasilitas);
     }
 
@@ -153,6 +173,8 @@ class PelaporController extends Controller
     {
         $request->validate([
             'gedung_id' => 'required|exists:gedung,gedung_id',
+            'lantai_id' => 'required|exists:lantai,lantai_id',
+            'ruangan_id' => 'required|exists:ruangan,ruangan_id',
             'fasilitas_id' => 'required|exists:fasilitas,fasilitas_id',
             'deskripsi' => 'required|string|max:500',
             'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -199,9 +221,11 @@ class PelaporController extends Controller
 
         $laporan_saya = LaporanModel::with('fasilitas.ruangan.lantai.gedung')
             ->where('pelapor_id', auth()->user()->pengguna_id)
+            ->orderBy('created_at', 'desc') // urutkan berdasarkan waktu terbaru
             ->get();
 
-        $fasilitas = FasilitasModel::with('ruangan.lantai')->where('fasilitas_id',2)->get();
+
+        $fasilitas = FasilitasModel::with('ruangan.lantai')->where('fasilitas_id', 2)->get();
 
         return view('pelapor.laporan_saya', compact('laporan_saya', 'breadcrumb', 'page', 'activeMenu'));
     }
@@ -209,16 +233,15 @@ class PelaporController extends Controller
     public function show_laporan_saya(string $id)
     {
         $laporan = LaporanModel::with([
-            'pelapor',          // Pengguna yang melapor
-            'fasilitas.gedung.lantai', // Fasilitas + gedung terkait
-            'sarpras',    // Admin/SARPRAS yang menugaskan
-            'teknisi',           // Teknisi yang ditugaskan
-        ])->find($id); // Ganti $id dengan ID laporan yang ingin ditampilkan
+            'pelapor',         
+            'fasilitas', 
+            'sarpras',  
+            'teknisi',  
+        ])->find($id); 
 
         return view('pelapor.show_detail_laporan', [
             'laporan' => $laporan,
             'page' => (object) ['title' => 'Detail Laporan']
         ]);
-        
     }
 }
