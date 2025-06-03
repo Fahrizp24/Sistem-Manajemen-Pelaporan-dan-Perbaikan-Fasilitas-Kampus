@@ -23,17 +23,19 @@
                                     <div class="col-12">
                                         <div class="form-group mandatory mt-3">
                                             <label for="gedung_id" class="form-label">Nama</label>
-                                            <input type="text" class="form-control" id="disabledInput" placeholder="{{$user->nama}}" disabled="">
+                                            <input type="text" class="form-control" id="disabledInput"
+                                                placeholder="{{ $user->nama }}" disabled="">
                                         </div>
                                     </div>
 
                                     <div class="col-12">
                                         <div class="form-group mandatory mt-3">
                                             <label for="gedung_id" class="form-label">NIM/NIP/NIPSN</label>
-                                            <input type="text" class="form-control" id="disabledInput" placeholder="{{$user->username}}" disabled="">
+                                            <input type="text" class="form-control" id="disabledInput"
+                                                placeholder="{{ $user->username }}" disabled="">
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-12">
                                         <div class="form-group mandatory mt-3">
                                             <label for="gedung_id" class="form-label">Gedung</label>
@@ -41,23 +43,40 @@
                                                 data-parsley-required="true">
                                                 <option value="">Pilih lokasi gedung</option>
                                                 @foreach ($gedung as $g)
-                                                    <option value="{{ $g->gedung_id }}">{{ $g->nama }}</option>
+                                                    <option value="{{ $g->gedung_id }}">{{ $g->gedung_nama }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
-
                                     <div class="col-md-6 col-12">
                                         <div class="form-group mandatory">
-                                            <label for="fasilitas_id" class="form-label">Fasilitas</label>
-                                            <select id="fasilitas_id" class="form-select" name="fasilitas_id"
+                                            <label for="lantai_id" class="form-label">Lantai</label>
+                                            <select id="lantai_id" class="form-select" name="lantai_id"
                                                 data-parsley-required="true" disabled>
                                                 <option value="">Pilih Gedung terlebih dahulu</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
-                                        <div class="form-group">
+                                        <div class="form-group mandatory">
+                                            <label for="ruangan_id" class="form-label">Ruangan</label>
+                                            <select id="ruangan_id" class="form-select" name="ruangan_id"
+                                                data-parsley-required="true" disabled>
+                                                <option value="">Pilih Lantai terlebih dahulu</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="fasilitas_id" class="form-label">Fasilitas</label>
+                                            <select id="fasilitas_id" class="form-select" name="fasilitas_id"
+                                                data-parsley-required="true" disabled>
+                                                <option value="">Pilih ruangan terlebih dahulu</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
                                             <label for="foto" class="form-label">Foto Kerusakan</label>
                                             <input type="file" id="foto" class="form-control" name="foto"
                                                 accept="image/*">
@@ -94,23 +113,104 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Gedung change handler
             $('#gedung_id').change(function() {
                 var gedungId = $(this).val();
+                var lantaiSelect = $('#lantai_id');
+                var ruanganSelect = $('#ruangan_id');
                 var fasilitasSelect = $('#fasilitas_id');
+
+                // Reset downstream selects
+                ruanganSelect.empty().append('<option value="">Pilih Lantai terlebih dahulu</option>').prop(
+                    'disabled', true);
+                fasilitasSelect.empty().append('<option value="">Pilih Ruangan terlebih dahulu</option>')
+                    .prop('disabled', true);
 
                 if (gedungId) {
                     $.ajax({
-                        url: '/pelapor/laporan/get_fasilitas_by_gedung',
+                        url: '/pelapor/laporan/get_lantai_by_gedung',
                         type: 'GET',
                         data: {
                             gedung_id: gedungId
+                        },
+                        success: function(data) {
+                            lantaiSelect.empty().append(
+                                '<option value="">Pilih Lantai</option>');
+                            $.each(data, function(key, value) {
+                                lantaiSelect.append('<option value="' + value
+                                    .lantai_id + '">' + value.lantai_nama +
+                                    '</option>');
+                            });
+                            lantaiSelect.prop('disabled', false);
+                        },
+                        error: function() {
+                            lantaiSelect.empty().append(
+                                '<option value="">Gagal memuat lantai</option>');
+                        }
+                    });
+                } else {
+                    lantaiSelect.empty().append('<option value="">Pilih Gedung terlebih dahulu</option>')
+                        .prop('disabled', true);
+                }
+            });
+
+            // Lantai change handler
+            $('#lantai_id').change(function() {
+                var lantaiId = $(this).val();
+                var ruanganSelect = $('#ruangan_id');
+                var fasilitasSelect = $('#fasilitas_id');
+
+                // Reset downstream selects
+                fasilitasSelect.empty().append('<option value="">Pilih Ruangan terlebih dahulu</option>')
+                    .prop('disabled', true);
+
+                if (lantaiId) {
+                    $.ajax({
+                        url: '/pelapor/laporan/get_ruangan_by_lantai',
+                        type: 'GET',
+                        data: {
+                            lantai_id: lantaiId
+                        },
+                        success: function(data) {
+                            ruanganSelect.empty().append(
+                                '<option value="">Pilih Ruangan</option>');
+                            $.each(data, function(key, value) {
+                                ruanganSelect.append('<option value="' + value
+                                    .ruangan_id + '">' + value.ruangan_nama +
+                                    '</option>');
+                            });
+                            ruanganSelect.prop('disabled', false);
+                        },
+                        error: function() {
+                            ruanganSelect.empty().append(
+                                '<option value="">Gagal memuat ruangan</option>');
+                        }
+                    });
+                } else {
+                    ruanganSelect.empty().append('<option value="">Pilih Lantai terlebih dahulu</option>')
+                        .prop('disabled', true);
+                }
+            });
+
+            // Ruangan change handler
+            $('#ruangan_id').change(function() {
+                var ruanganId = $(this).val();
+                var fasilitasSelect = $('#fasilitas_id');
+
+                if (ruanganId) {
+                    $.ajax({
+                        url: '/pelapor/laporan/get_fasilitas_by_ruangan',
+                        type: 'GET',
+                        data: {
+                            ruangan_id: ruanganId
                         },
                         success: function(data) {
                             fasilitasSelect.empty().append(
                                 '<option value="">Pilih Fasilitas</option>');
                             $.each(data, function(key, value) {
                                 fasilitasSelect.append('<option value="' + value
-                                    .fasilitas_id + '">' + value.nama + '</option>');
+                                    .fasilitas_id + '">' + value.fasilitas_nama +
+                                    '</option>');
                             });
                             fasilitasSelect.prop('disabled', false);
                         },
@@ -121,12 +221,12 @@
                     });
                 } else {
                     fasilitasSelect.empty().append(
-                    '<option value="">Pilih Gedung terlebih dahulu</option>');
-                    fasilitasSelect.prop('disabled', true);
+                        '<option value="">Pilih Ruangan terlebih dahulu</option>').prop('disabled',
+                        true);
                 }
             });
 
-            // Inisialisasi jQuery Validate
+            // Form validation and submission (existing code)
             $('#form-laporan').validate({
                 ignore: 'input[type="file"]', // Abaikan file untuk validasi jQuery Validate
                 errorClass: 'is-invalid',

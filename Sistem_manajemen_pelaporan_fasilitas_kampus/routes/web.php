@@ -196,7 +196,9 @@ Route::middleware(['auth'])->group(function () {
             // Laporan
             Route::prefix('laporan')->group(function () {
                 Route::get('/', [PelaporController::class, 'laporkan_kerusakan'])->name('pelapor.laporan');
-                Route::get('/get_fasilitas_by_gedung', [PelaporController::class, 'get_fasilitas_by_gedung']);
+                Route::get('/get_lantai_by_gedung', [PelaporController::class, 'get_lantai_by_gedung']);
+                Route::get('/get_ruangan_by_lantai', [PelaporController::class, 'get_ruangan_by_lantai']);
+                Route::get('/get_fasilitas_by_ruangan', [PelaporController::class, 'get_fasilitas_by_ruangan']);
                 Route::post('/', [PelaporController::class, 'store_laporan'])->name('pelapor.store_laporan');
                 Route::get('/{id}', [PelaporController::class, 'show_ajax_laporan'])->name('pelapor.showLaporan');
             });
