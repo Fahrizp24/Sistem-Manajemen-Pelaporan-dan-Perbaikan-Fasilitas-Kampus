@@ -23,7 +23,7 @@ class RuanganSeeder extends Seeder
             for ($i = 0; $i < $totalPerLantai; $i++) {
                 DB::table('ruangan')->insert([
                     'lantai_id' => $lantaiId,
-                    'nama_ruangan' => $i < count($defaultRuangan)
+                    'ruangan_nama' => $i < count($defaultRuangan)
                         ? $defaultRuangan[$i]
                         : 'Ruang ' . ($i - count($defaultRuangan) + 1),
                 ]);

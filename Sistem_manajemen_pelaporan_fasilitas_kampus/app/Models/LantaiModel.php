@@ -17,7 +17,7 @@ class LantaiModel extends Model
 
     // Kolom-kolom yang dapat diisi secara massal
     protected $fillable = [
-        'nama_lantai',
+        'lantai_nama',
         'gedung_id'
     ];
 

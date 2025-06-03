@@ -10,7 +10,7 @@ class GedungSeeder extends Seeder
     public function run(): void
     {
         DB::table('gedung')->insert([
-            ['nama_gedung' => 'Gedung A'],
+            ['gedung_nama' => 'Gedung A'],
         ]);
     }
 }

@@ -12,7 +12,7 @@ class LantaiSeeder extends Seeder
         for ($i = 1; $i <= 8; $i++) {
             DB::table('lantai')->insert([
                 'gedung_id' => 1, // Asumsikan Gedung A ID-nya 1
-                'nama_lantai' => 'Lantai ' . $i,
+                'lantai_nama' => 'Lantai ' . $i,
             ]);
         }
     }

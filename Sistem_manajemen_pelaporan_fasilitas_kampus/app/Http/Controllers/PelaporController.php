@@ -197,9 +197,11 @@ class PelaporController extends Controller
 
         $activeMenu = 'Laporkan Kerusakan';
 
-        $laporan_saya = LaporanModel::with('fasilitas.gedung')
+        $laporan_saya = LaporanModel::with('fasilitas.ruangan.lantai.gedung')
             ->where('pelapor_id', auth()->user()->pengguna_id)
             ->get();
+
+        $fasilitas = FasilitasModel::with('ruangan.lantai')->where('fasilitas_id',2)->get();
 
         return view('pelapor.laporan_saya', compact('laporan_saya', 'breadcrumb', 'page', 'activeMenu'));
     }
@@ -208,14 +210,15 @@ class PelaporController extends Controller
     {
         $laporan = LaporanModel::with([
             'pelapor',          // Pengguna yang melapor
-            'fasilitas.gedung', // Fasilitas + gedung terkait
+            'fasilitas.gedung.lantai', // Fasilitas + gedung terkait
             'sarpras',    // Admin/SARPRAS yang menugaskan
-            'teknisi'           // Teknisi yang ditugaskan
+            'teknisi',           // Teknisi yang ditugaskan
         ])->find($id); // Ganti $id dengan ID laporan yang ingin ditampilkan
 
         return view('pelapor.show_detail_laporan', [
             'laporan' => $laporan,
             'page' => (object) ['title' => 'Detail Laporan']
         ]);
+        
     }
 }

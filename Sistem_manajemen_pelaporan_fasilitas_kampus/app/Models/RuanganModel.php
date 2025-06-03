@@ -16,7 +16,7 @@ class RuanganModel extends Model
 
     // Kolom-kolom yang dapat diisi secara massal
     protected $fillable = [
-        'nama_ruangan',
+        'ruangan_nama',
         'lantai_id'
     ];
 
@@ -30,4 +30,10 @@ class RuanganModel extends Model
         return $this->hasMany(FasilitasModel::class, 'ruangan_id', 'ruangan_id');
         
     }
+
+    
+    function gedung()
+    {
+        return $this->belongsTo(GedungModel::class);
+    }   
 }

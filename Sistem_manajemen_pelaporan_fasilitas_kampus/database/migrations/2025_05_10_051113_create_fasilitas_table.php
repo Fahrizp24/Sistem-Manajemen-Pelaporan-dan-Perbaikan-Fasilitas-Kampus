@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('fasilitas', function (Blueprint $table) {
             $table->id('fasilitas_id');
-            $table->string('nama');
-            $table->text('deskripsi')->nullable();
+            $table->string('fasilitas_nama');
+            $table->text('fasilitas_deskripsi')->nullable();
             $table->string('kategori');
-            $table->foreignId('ruangan')->constrained('ruangan', 'ruangan_id')->onDelete('cascade');
+            $table->foreignId('ruangan_id')->constrained('ruangan', 'ruangan_id')->onDelete('cascade');
             $table->enum('status', ['normal', 'rusak'])->default('normal');
             $table->timestamps();
         });
