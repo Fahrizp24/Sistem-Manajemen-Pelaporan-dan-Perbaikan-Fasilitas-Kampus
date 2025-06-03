@@ -8,7 +8,7 @@
     <div class="card-body">
         <h4>Detail Laporan</h4>
         <p><strong>Pelapor:</strong> {{ $laporan->pelapor->nama ?? '-' }}</p>
-        <p><strong>Fasilitas:</strong> {{ $laporan->fasilitas->nama ?? '-' }}</p>
+        <p><strong>Fasilitas:</strong> {{ $laporan->fasilitas->fasilitas_nama ?? '-' }}</p>
         <p><strong>Deskripsi:</strong> {{ $laporan->deskripsi }}</p>
         <p><strong>Status:</strong>
             @switch($laporan->status)

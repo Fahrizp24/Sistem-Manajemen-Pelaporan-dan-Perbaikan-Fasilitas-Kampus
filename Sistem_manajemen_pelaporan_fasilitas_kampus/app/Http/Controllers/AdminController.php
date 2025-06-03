@@ -149,7 +149,7 @@ class AdminController extends Controller
 
     public function laporan_masuk()
     {
-        $laporan = LaporanModel::with('fasilitas.gedung')->where('status', 'konfirmasi')->get();
+        $laporan = LaporanModel::with('fasilitas.ruangan.lantai.gedung')->where('status', 'konfirmasi')->get();
 
         $breadcrumb = (object) [
             'title' => 'Laporan',
@@ -195,13 +195,13 @@ class AdminController extends Controller
 
     public function data_laporan(Request $request)
     {
-        $data = LaporanModel::with(['fasilitas.gedung', 'pelapor'])->where('status', 'konfirmasi')->get();
+        $data = LaporanModel::with(['fasilitas.ruangan.lantai.gedung', 'pelapor'])->where('status', 'konfirmasi')->get();
 
         return datatables()->of($data)
             ->addIndexColumn()
             ->addColumn('nama', fn($row) => $row->pelapor->nama ?? '-')
-            ->addColumn('gedung', fn($row) => $row->fasilitas->gedung->nama ?? '-')
-            ->addColumn('fasilitas', fn($row) => $row->fasilitas->nama ?? '-')
+            ->addColumn('gedung', fn($row) => $row->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-')
+            ->addColumn('fasilitas', fn($row) => $row->fasilitas->fasilitas_nama ?? '-')
             ->addColumn('status', function ($row) {
                 return match ($row->status) {
                     'konfirmasi' => '<span class="badge bg-secondary">Menunggu Konfirmasi</span>',

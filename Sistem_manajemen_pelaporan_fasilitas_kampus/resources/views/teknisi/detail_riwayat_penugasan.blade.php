@@ -25,11 +25,11 @@
             </tr>
             <tr>
                 <th>Gedung</th>
-                <td>{{ $laporan->fasilitas->gedung->nama }}</td>
+                <td>{{ $laporan->fasilitas->ruagan->lantai->gedung->gedung_nama }}</td>
             </tr>
             <tr>
                 <th>Fasilitas</th>
-                <td>{{ $laporan->fasilitas->nama }}</td>
+                <td>{{ $laporan->fasilitas->fasilitas_nama }}</td>
             </tr>
             <tr>
                 <th>Status </th>

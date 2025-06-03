@@ -24,7 +24,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-                                    <td>{{ $item->fasilitas->nama }}</td>
+                                    <td>{{ $item->fasilitas->fasilitas_nama }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y') }}</td>
                                     <td>{{ Str::limit($item->deskripsi, 50) }}</td>
                                     <td>
@@ -77,9 +77,8 @@
                             @foreach ($revisi as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->fasilitas->ruangan }}</td>
-                                    {{-- // ruangan->lantai->gedung->gedung_nama  --}}
-                                    <td>{{ $item->fasilitas->nama }}</td>
+                                    <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama  }}</td>
+                                    <td>{{ $item->fasilitas->fasilitas_nama }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y') }}</td>
                                     <td>{{ Str::limit($item->deskripsi, 50) }}</td>
                                     <td>

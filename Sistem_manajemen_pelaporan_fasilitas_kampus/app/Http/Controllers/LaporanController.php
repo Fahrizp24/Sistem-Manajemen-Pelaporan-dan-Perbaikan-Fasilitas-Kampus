@@ -70,10 +70,10 @@ class LaporanController extends Controller
                 'nama' => $laporan->pelapor->nama ?? '-',
             ],
             'fasilitas' => [
-                'nama' => $laporan->fasilitas->nama ?? '-',
+                'nama' => $laporan->fasilitas->fasilitas_nama ?? '-',
             ],
             'deskripsi' => $laporan->deskripsi,
-            'gedung' => $laporan->fasilitas->gedung->nama ?? '-',
+            'gedung' => $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-',
             'status' => $laporan->status,
             'urgensi' => $laporan->urgensi ?? '-', // Pastikan ini sesuai dengan nama field di database
         ]);
@@ -84,17 +84,17 @@ class LaporanController extends Controller
     public function show_laporan2($id)
     {
         try{
-        $laporan = LaporanModel::with(['pelapor', 'fasilitas.gedung'])->findOrFail($id);
+        $laporan = LaporanModel::with(['pelapor', 'fasilitas.ruangan.lantai.gedung'])->findOrFail($id);
 
         return response()->json([
             'pelapor' => [
                 'nama' => $laporan->pelapor->nama ?? '-',
             ],
             'fasilitas' => [
-                'nama' => $laporan->fasilitas->nama ?? '-',
+                'nama' => $laporan->fasilitas->fasilitas_nama ?? '-',
             ],
             'deskripsi' => $laporan->deskripsi,
-            'gedung' => $laporan->fasilitas->gedung->nama ?? '-',
+            'gedung' => $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-',
             'status' => $laporan->status,
             'urgensi' => $laporan->urgensi ?? '-', // Pastikan ini sesuai dengan nama field di database
         ]);

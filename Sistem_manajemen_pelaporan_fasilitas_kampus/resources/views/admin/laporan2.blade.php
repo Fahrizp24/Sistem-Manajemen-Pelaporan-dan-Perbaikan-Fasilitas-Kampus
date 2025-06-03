@@ -21,8 +21,8 @@
                         <tr>
                             <td>{{ $no++ }}</td>
                             <td>{{ $item->pelapor->nama ?? '-' }}</td>
-                            <td>{{ $item->fasilitas->nama ?? '-' }}</td>
-                            <td>{{ $item->fasilitas->gedung->nama ?? '-' }}</td>
+                            <td>{{ $item->fasilitas->fasilitas_nama ?? '-' }}</td>
+                            <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-' }}</td>
                             <td>{{ $item->deskripsi }}</td>
 
 

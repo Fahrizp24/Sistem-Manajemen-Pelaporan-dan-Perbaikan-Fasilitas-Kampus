@@ -13,7 +13,7 @@ class FasilitasController extends Controller
     public function data_fasilitas(Request $request)
     {
         if ($request->ajax()) {
-            $data = FasilitasModel::with('gedung')->select(['fasilitas_id', 'nama', 'deskripsi','kategori', 'gedung_id', 'status']);
+            $data = FasilitasModel::with('ruangan.lantai.gedung')->select(['fasilitas_id', 'fasilitas_nama', 'fasilitas_deskripsi','kategori', 'ruangan_id', 'status']);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('aksi', function ($row) {

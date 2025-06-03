@@ -27,7 +27,7 @@
                     <select name="gedung_id" class="form-control" required>
                         <option value="">-- Pilih Gedung --</option>
                         @foreach($gedung as $g)
-                            <option value="{{ $g->gedung_id }}">{{ $g->nama }}</option>
+                            <option value="{{ $g->gedung_id }}">{{ $g->gedung_nama }}</option>
                         @endforeach
                     </select>
                 </div>

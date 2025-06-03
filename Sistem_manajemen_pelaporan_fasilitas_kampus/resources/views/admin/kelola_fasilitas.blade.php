@@ -95,20 +95,20 @@
                         searchable: false
                     },
                     {
-                        data: 'nama',
-                        name: 'nama'
+                        data: 'fasilitas_nama',
+                        name: 'fasilitas_nama'
                     },
                     {
-                        data: 'deskripsi',
-                        name: 'deskripsi'
+                        data: 'fasilitas_deskripsi',
+                        name: 'fasilitas_deskripsi'
                     },
                     {
                         data: 'kategori',
                         name: 'kategori'
                     },
                     {
-                        data: 'gedung.nama',
-                        name: 'gedung.nama'
+                        data: 'ruangan.lantai.gedung.gedung_nama',
+                        name: 'ruangan.lantai.gedung.gedung_nama'
                     },
                     {
                         data: 'status',

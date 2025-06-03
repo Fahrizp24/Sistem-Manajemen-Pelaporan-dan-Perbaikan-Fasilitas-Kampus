@@ -13,7 +13,7 @@ class GedungController extends Controller
     public function data_gedung(Request $request)
     {
         if ($request->ajax()) {
-            $data = GedungModel::select(['gedung_id', 'nama', 'deskripsi']);
+            $data = GedungModel::select(['gedung_id', 'gedung_nama', 'gedung_deskripsi']);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('aksi', function ($row) {

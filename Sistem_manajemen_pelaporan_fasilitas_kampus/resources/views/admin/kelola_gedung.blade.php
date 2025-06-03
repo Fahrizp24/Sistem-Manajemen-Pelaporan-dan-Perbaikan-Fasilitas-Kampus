@@ -77,8 +77,8 @@
                 ajax: { url: "{{ route('admin.data_gedung') }}", type: "POST" },
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'nama', name: 'nama' },
-                    { data: 'deskripsi', name: 'deskripsi' },
+                    { data: 'gedung_nama', name: 'gedung_nama' },
+                    { data: 'gedung_deskripsi', name: 'gedung_deskripsi' },
                     { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
                 ]
             });
