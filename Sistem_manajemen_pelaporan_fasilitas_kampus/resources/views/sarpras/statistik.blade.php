@@ -7,7 +7,7 @@
                 <h5>Filter Laporan</h5>
             </div>
             <div class="card-body">
-                <form method="GET" action="{{ route('admin.laporan_periodik') }}">
+                <form method="GET" action="{{ route('sarpras.statistik') }}">
                     <div class="row">
                         <div class="col-md-3">
                             <label for="bulan">Bulan</label>
@@ -157,6 +157,43 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-12">
+        <div class="col-12">
+    <div class="card mt-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5>Kerusakan per Gedung @if($bulan != 'all') Bulan {{ DateTime::createFromFormat('!m', $bulan)->format('F') }} @endif Tahun {{ $tahun }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered mb-0">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Gedung</th>
+                            <th>Total Kerusakan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($kerusakanPerGedung as $index => $item)
+    <tr>
+        <td>{{ $index + 1 }}</td>
+        <td>{{ $item->nama_gedung }}</td>
+        <td>{{ $item->total }}</td>
+    </tr>
+@endforeach
+
+                        <tr>
+                            <td colspan="2" class="text-end"><strong>Total</strong></td>
+                            <td><strong>{{ $kerusakanPerGedung->sum('total') }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 
         <!-- Modal Export PDF -->
         <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">

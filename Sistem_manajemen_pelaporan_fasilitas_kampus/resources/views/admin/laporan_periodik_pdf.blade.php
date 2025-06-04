@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Laporan Kerusakan</title>
@@ -15,7 +16,8 @@
             margin-bottom: 15px;
         }
 
-        td, th {
+        td,
+        th {
             padding: 8px;
             vertical-align: top;
         }
@@ -61,8 +63,8 @@
         .border-all {
             border: 1px solid #000;
         }
-        
-        .border-all th, 
+
+        .border-all th,
         .border-all td {
             border: 1px solid #000;
         }
@@ -96,17 +98,20 @@
                 <img src="{{ asset('storage/logo-polinema.png') }}" alt="Logo" class="logo">
             </td>
             <td width="85%">
-                <span class="text-center d-block font-11 font-bold mb-1">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI</span>
+                <span class="text-center d-block font-11 font-bold mb-1">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN
+                    TEKNOLOGI</span>
                 <span class="text-center d-block font-13 font-bold mb-1">POLITEKNIK NEGERI MALANG</span>
                 <span class="text-center d-block font-10">Jl. Soekarno-Hatta No. 9 Malang 65141</span>
-                <span class="text-center d-block font-10">Telepon (0341) 404424 Pes. 101-105, 0341-404420, Fax. (0341) 404420</span>
+                <span class="text-center d-block font-10">Telepon (0341) 404424 Pes. 101-105, 0341-404420, Fax. (0341)
+                    404420</span>
                 <span class="text-center d-block font-10">Laman: www.polinema.ac.id</span>
             </td>
         </tr>
     </table>
 
     <h3 class="text-center">LAPORAN KERUSAKAN PER BULAN</h3>
-    <p class="text-center periode">Periode: {{ \Carbon\Carbon::create()->month($bulan_awal)->format('F') }} - {{ \Carbon\Carbon::create()->month($bulan_akhir)->format('F') }} {{ $tahun }}</p>
+    <p class="text-center periode">Periode: {{ \Carbon\Carbon::create()->month($bulan_awal)->format('F') }} -
+        {{ \Carbon\Carbon::create()->month($bulan_akhir)->format('F') }} {{ $tahun }}</p>
 
     <table class="border-all">
         <thead>
@@ -126,5 +131,29 @@
             @endforeach
         </tbody>
     </table>
+
+    <h3 class="text-center">Kerusakan per Gedung</h3>
+    <p class="text-center periode">Periode: {{ \Carbon\Carbon::create()->month($bulan_awal)->format('F') }} -
+        {{ \Carbon\Carbon::create()->month($bulan_akhir)->format('F') }} {{ $tahun }}</p>
+    <table class="border-all">
+        <thead>
+            <tr>
+                <th width="10%" class="text-center">No</th>
+                <th width="60%">Nama Gedung</th>
+                <th width="30%" class="text-center">Total Kerusakan</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($kerusakanPerGedung as $index => $item)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $item->gedung_nama }}</td>
+                    <td>{{ $item->total }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
 </body>
+
 </html>
