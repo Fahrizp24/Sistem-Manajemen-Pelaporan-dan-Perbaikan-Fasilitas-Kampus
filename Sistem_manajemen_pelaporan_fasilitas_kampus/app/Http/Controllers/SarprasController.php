@@ -680,7 +680,7 @@ class SarprasController extends Controller
         }
 
         // Urutkan berdasarkan nilai V dari yang terkecil (semakin kecil V, semakin baik)
-        usort($hasil, fn($a, $b) => $a['V'] <=> $b['V']);
+        usort($hasil, fn($a, $b) => $b['V'] <=> $a['V']);
 
         // Tambahkan peringkat
         foreach ($hasil as $i => &$r) {
