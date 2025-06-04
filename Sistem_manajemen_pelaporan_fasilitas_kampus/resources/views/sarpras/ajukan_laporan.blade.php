@@ -14,7 +14,8 @@
                         <tr>
                             <th>No</th>
                             <th>Gedung</th>
-                            <th>Nama Fasilitas</th>
+                            <th>Ruang</th>
+                            <th>Fasilitas</th>
                             @foreach ($kriteria as $k)
                                 <th>{{ explode(' ', $k->nama)[0] }}</th>
                             @endforeach
@@ -98,6 +99,10 @@
                 {
                     data: 'gedung',
                     name: 'gedung'
+                },
+                {
+                    data: 'ruangan',
+                    name: 'ruangan'
                 },
                 {
                     data: 'fasilitas',

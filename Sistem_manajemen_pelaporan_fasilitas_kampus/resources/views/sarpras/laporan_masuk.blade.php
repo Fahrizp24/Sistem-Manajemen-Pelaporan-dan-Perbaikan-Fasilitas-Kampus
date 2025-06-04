@@ -37,8 +37,8 @@
                                                 <div>{{ $item->pelapor->nama }}</div>
                                             </div>
                                         </td>
-                                        <td>{{ $item->fasilitas->gedung->nama }}</td>
-                                        <td>{{ $item->fasilitas->nama }}</td>
+                                        <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
+                                        <td>{{ $item->fasilitas->fasilitas_nama }}</td>
                                         <td>
                                             <span class="card-title mb-0 text-blue">
                                                 {{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}
@@ -87,7 +87,7 @@
                                                 <div>{{ $item->pelapor->nama }}</div>
                                             </div>
                                         </td>
-                                        <td>{{ $item->fasilitas->nama }}</td>
+                                        <td>{{ $item->fasilitas->fasilitas_nama }}</td>
                                         <td>
                                             <span class="card-title mb-0 text-blue">
                                                 {{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}
@@ -139,7 +139,7 @@
                                                 <div>{{ $item->pelapor->nama }}</div>
                                             </div>
                                         </td>
-                                        <td>{{ $item->fasilitas->nama }}</td>
+                                        <td>{{ $item->fasilitas->fasilitas_nama }}</td>
                                         <td>
                                             <span class="card-title mb-0 text-orange">
                                                 {{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}

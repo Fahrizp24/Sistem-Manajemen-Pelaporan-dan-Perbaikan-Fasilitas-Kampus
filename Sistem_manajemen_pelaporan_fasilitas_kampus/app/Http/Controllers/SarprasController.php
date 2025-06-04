@@ -137,7 +137,7 @@ class SarprasController extends Controller
         ];
 
         $activeMenu = 'penugasan';
-        $laporan_masuk_pelapor = LaporanModel::where('status', 'diajukan')->get();
+        $laporan_masuk_pelapor = LaporanModel::with('fasilitas.ruangan.lantai.gedung')->where('status', 'diajukan')->get();
         $laporan_masuk_admin = LaporanModel::where('status', 'memilih teknisi')->get();
         $laporan_masuk_teknisi = LaporanModel::where('status', 'telah diperbaiki')->get();
 
@@ -161,8 +161,11 @@ class SarprasController extends Controller
         $teknisi = UserModel::where('peran', 'teknisi')->get();
 
         $source = request()->query('source', 'default');
+
         $kriteria = KriteriaModel::orderBy('kriteria_id')->get();
+
         $crisp = CrispModel::orderBy('kriteria_id')->orderBy('poin')->get();
+
         return view('sarpras.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
     }
 
@@ -508,13 +511,15 @@ class SarprasController extends Controller
 
     public function data_laporan(Request $request)
     {
-        $data = LaporanModel::with(['fasilitas.gedung', 'spk.kriteria'])->where('status', 'diterima')->get();
+        $data = LaporanModel::with(['fasilitas.ruangan', 'spk.kriteria'])->where('status', 'diterima')->get();
         $allKriteria = KriteriaModel::all();
 
         return datatables()->of($data)
             ->addIndexColumn()
-            ->addColumn('gedung', fn($row) => $row->fasilitas->gedung->nama ?? '-')
-            ->addColumn('fasilitas', fn($row) => $row->fasilitas->nama ?? '-')
+            ->addColumn('gedung', fn($row) => $row->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-')
+            ->addColumn('lantai', fn($row) => $row->fasilitas->ruangan->lantai->lantai_nama ?? '-')
+            ->addColumn('ruangan', fn($row) => $row->fasilitas->ruangan->ruangan_nama ?? '-')
+            ->addColumn('fasilitas', fn($row) => $row->fasilitas->fasilitas_nama ?? '-')
             ->addColumn('kriteria', function ($row) use ($allKriteria) {
                 $columns = [];
 
@@ -672,7 +677,7 @@ class SarprasController extends Controller
         $kriteria = [];
 
         foreach ($laporans as $laporan) {
-            $judul = ($laporan->fasilitas->nama ?? '-') . ' - ' . ($laporan->fasilitas->gedung->nama ?? '-');
+            $judul = ($laporan->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-') .' '. ($laporan->fasilitas->ruangan->ruangan_nama ?? '-'). ' - ' . ($laporan->fasilitas->fasilitas_nama ?? '-');
             $laporan_id = $laporan->laporan_id;
             $spk = $laporan->spk; // ambil SPK 
 
