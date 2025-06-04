@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('foto');
             $table->enum('status', ['diajukan', 'diterima', 'konfirmasi', 'memilih teknisi', 'diperbaiki','telah diperbaiki','revisi','selesai', 'tidak diterima'])->default('diajukan');
             $table->enum('urgensi', ['rendah', 'sedang', 'tinggi'])->nullable();
+            $table->text('alasan penolakan');
             $table->timestamps();
         });
     }

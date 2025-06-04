@@ -29,9 +29,10 @@ class LaporanSeeder extends Seeder
                 'ditugaskan_oleh' => $sarprasIds[array_rand($sarprasIds)],
                 'teknisi_id' => rand(0, 1) ? $teknisiIds[array_rand($teknisiIds)] : null,
                 'deskripsi' => 'Laporan selesai bulan lalu ke-' . $i,
-                'foto' => 'foto_selesai_' . $i . '.jpg',
+                'foto' => 'default.jpg',
                 'status' => 'selesai',
                 'urgensi' => $urgensiOptions[array_rand($urgensiOptions)],
+                'alasan penolakan' => '-',
                 'created_at' => $lastMonth,
                 'updated_at' => $lastMonth,
             ]);
@@ -45,26 +46,30 @@ class LaporanSeeder extends Seeder
                 'ditugaskan_oleh' => $sarprasIds[array_rand($sarprasIds)],
                 'teknisi_id' => rand(0, 1) ? $teknisiIds[array_rand($teknisiIds)] : null,
                 'deskripsi' => 'Laporan diterima ke-' . $i,
-                'foto' => 'foto_diterima_' . $i . '.jpg',
+                'foto' => 'default.jpg',
                 'status' => 'diterima',
                 'urgensi' => $urgensiOptions[array_rand($urgensiOptions)],
+                'alasan penolakan' => '-',
                 'created_at' => $now,
                 'updated_at' => $now,
             ]);
         }
 
-        // 3. Sisa 20 laporan random status lainnya
+        // 3. Sisa 20 laporan dengan status acak
         for ($i = 31; $i <= 50; $i++) {
             $status = $statusOptions[array_rand($statusOptions)];
+            $alasan = ($status === 'tidak diterima') ? 'tidak terjadi kerusakan' : '-';
+
             DB::table('laporan')->insert([
                 'pelapor_id' => $pelaporIds[array_rand($pelaporIds)],
                 'fasilitas_id' => $fasilitasIds[array_rand($fasilitasIds)],
                 'ditugaskan_oleh' => $sarprasIds[array_rand($sarprasIds)],
                 'teknisi_id' => rand(0, 1) ? $teknisiIds[array_rand($teknisiIds)] : null,
                 'deskripsi' => 'Laporan status acak ke-' . $i,
-                'foto' => 'foto_random_' . $i . '.jpg',
+                'foto' => 'default.jpg',
                 'status' => $status,
                 'urgensi' => $urgensiOptions[array_rand($urgensiOptions)],
+                'alasan penolakan' => $alasan,
                 'created_at' => $now,
                 'updated_at' => $now,
             ]);
