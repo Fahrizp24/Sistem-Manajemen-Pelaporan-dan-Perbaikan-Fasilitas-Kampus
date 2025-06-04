@@ -204,11 +204,16 @@ class TeknisiController extends Controller
     {
         $laporan = LaporanModel::findOrFail($id);
 
-        $page = (object)[
-            'title' => 'Detail Laporan',
-            'subtitle' => 'Informasi lengkap mengenai laporan fasilitas'
+        $breadcrumb = (object) [
+            'title' => 'Data Riwayat Penugasan',
+            'list' => ['Data Riwayat Penugasan']
         ];
 
-        return view('teknisi.detail_riwayat_penugasan', compact('laporan', 'page'));
+        $page = (object)[
+            'title' => 'Detail Laporan',
+            'subtitle' => 'Informasi lengkap mengenai riwayat penugasan'
+        ];
+
+        return view('teknisi.detail_riwayat_penugasan', compact('laporan', 'breadcrumb','page'));
     }
 }

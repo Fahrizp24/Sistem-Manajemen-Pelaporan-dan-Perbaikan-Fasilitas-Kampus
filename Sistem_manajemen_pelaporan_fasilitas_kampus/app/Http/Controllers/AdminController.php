@@ -226,7 +226,7 @@ class AdminController extends Controller
             'list' => ['Data Penugasan']
         ];
 
-        $page = (object)[
+        $page = (object) [
             'title' => 'Detail Penugasan',
             'subtitle' => 'Informasi lengkap mengenai penugasan'
         ];
@@ -653,6 +653,20 @@ class AdminController extends Controller
             $trenData[] = $record ? $record->total : 0;
         }
 
+        $kerusakanPerGedung = DB::table('laporan')
+            ->join('fasilitas', 'laporan.fasilitas_id', '=', 'fasilitas.fasilitas_id')
+            ->join('ruangan', 'fasilitas.ruangan_id', '=', 'ruangan.ruangan_id')
+            ->join('lantai', 'ruangan.lantai_id', '=', 'lantai.lantai_id')
+            ->join('gedung', 'lantai.gedung_id', '=', 'gedung.gedung_id')
+            ->select('gedung_nama as nama_gedung', DB::raw('COUNT(*) as total'))
+            ->whereYear('laporan.created_at', $tahun)
+            ->when($bulan != 'all', function ($query) use ($bulan) {
+                return $query->whereMonth('laporan.created_at', $bulan);
+            })
+            ->groupBy('gedung_nama')
+            ->orderBy('gedung_nama')
+            ->get();
+
         return view('admin.laporan_periodik', compact(
             'breadcrumb',
             'page',
@@ -665,6 +679,7 @@ class AdminController extends Controller
             'tahun',
             'trenLabels',
             'trenData',
+            'kerusakanPerGedung'
         ));
     }
 
@@ -684,8 +699,20 @@ class AdminController extends Controller
             ->orderBy('bulan')
             ->get();
 
+        $kerusakanPerGedung = LaporanModel::select('gedung.gedung_nama', DB::raw('COUNT(*) as total'))
+            ->join('fasilitas', 'laporan.fasilitas_id', '=', 'fasilitas.fasilitas_id')
+            ->join('ruangan', 'fasilitas.ruangan_id', '=', 'ruangan.ruangan_id')
+            ->join('lantai', 'ruangan.lantai_id', '=', 'lantai.lantai_id')
+            ->join('gedung', 'lantai.gedung_id', '=', 'gedung.gedung_id')
+            ->whereYear('laporan.created_at', $tahun)
+            ->whereBetween(DB::raw('MONTH(laporan.created_at)'), [$bulan_awal, $bulan_akhir])
+            ->groupBy('gedung.gedung_nama')
+            ->orderBy('gedung.gedung_nama')
+            ->get();
+
         $pdf = PDF::loadView('admin.laporan_periodik_pdf', [
             'data' => $data,
+            'kerusakanPerGedung' => $kerusakanPerGedung,
             'bulan_awal' => $bulan_awal,
             'bulan_akhir' => $bulan_akhir,
             'tahun' => $tahun

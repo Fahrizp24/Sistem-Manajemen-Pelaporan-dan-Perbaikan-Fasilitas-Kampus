@@ -43,6 +43,7 @@
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
                                     </td>
+                                    <td>{{$item->foto}}</td>
                                     <td>
                                         <button onclick="showDetailModal('{{ url('teknisi/penugasan/'.$item->laporan_id) }}')" 
                                             class="btn btn-sm btn-primary">
@@ -97,6 +98,7 @@
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
                                     </td>
+                                    <td>{{$item->foto}}</td>
                                     <td>
                                         <button onclick="showDetailModal('{{ url('teknisi/penugasan/'.$item->laporan_id) }}')" 
                                             class="btn btn-sm btn-primary">

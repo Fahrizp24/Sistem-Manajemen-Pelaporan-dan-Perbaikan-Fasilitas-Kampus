@@ -76,11 +76,6 @@
 @endsection
 
 @push('scripts')
-    <!-- Ensure jQuery is loaded before Bootstrap -->
-    <script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
-    <!-- Bootstrap Bundle with Popper (includes modal functionality) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
         function showDetailModal(url) {
             // Fetch the content

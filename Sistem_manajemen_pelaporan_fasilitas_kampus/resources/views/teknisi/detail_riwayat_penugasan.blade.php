@@ -25,7 +25,7 @@
             </tr>
             <tr>
                 <th>Gedung</th>
-                <td>{{ $laporan->fasilitas->ruagan->lantai->gedung->gedung_nama }}</td>
+                <td>{{ $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
             </tr>
             <tr>
                 <th>Fasilitas</th>
