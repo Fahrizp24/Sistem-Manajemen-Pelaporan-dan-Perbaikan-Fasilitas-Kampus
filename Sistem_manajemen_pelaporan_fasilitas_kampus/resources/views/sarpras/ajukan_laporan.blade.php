@@ -33,7 +33,7 @@
         {{-- Tabel Hasil SPK (disembunyikan awalnya) --}}
         <div class="card mt-3" id="hasilSPKCard" style="display: none;">
             <div class="card-header">
-                <strong>Hasil Sistem Rekomendasi (Metode VIKOR)</strong>
+                <strong>Hasil Sistem Rekomendasi (Metode TOPSIS)</strong>
             </div>
             <div class="card-body">
                 <table class="table table-striped" id="hasilSPKTable">
