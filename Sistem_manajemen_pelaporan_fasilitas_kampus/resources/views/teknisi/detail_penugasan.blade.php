@@ -67,11 +67,38 @@
             </tr>
         </table>
 
+        <h5>Bukti Perbaikan Fasilitas</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover table-sm">
+                <tbody>
+                    <tr>
+                        <th width="30%">Foto Bukti Perbaikan</th>
+                        <td>
+                            <div class="form-group">
+                                <input type="file" id="foto" class="form-control-file" name="foto"
+                                    accept="image/jpeg, image/png, image/jpg, image/gif" required>
+                                <small class="form-text text-muted">Format: jpeg, png, jpg, gif (max: 2MB)</small>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Deskripsi Singkat</th>
+                        <td>
+                            <div class="form-group">
+                                <textarea id="deskripsi" class="form-control" name="deskripsi" rows="3"
+                                    placeholder="Jelaskan kondisi fasilitas yang telah anda perbaiki" required></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div class="card-footer text-end">
             <form action="{{ url('/teknisi/penugasan/' . $laporan->laporan_id) }}" method="POST">
                 @csrf
-                <button type="submit" class="btn btn-success" 
-                onclick="return confirm('Anda Yakin Untuk Mengkonfirmasi Laporan Ini?')">
+                <button type="submit" class="btn btn-success"
+                    onclick="return confirm('Anda Yakin Untuk Mengkonfirmasi Laporan Ini?')">
                     <i class="fas fa-paper-plane"></i> Ajukan ke Sarpras
                 </button>
             </form>
@@ -79,9 +106,9 @@
     </div>
 @endempty
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('form[action*="/teknisi/penugasan/telah_diperbaiki"]').validate({
-            submitHandler: function(form) {
+            submitHandler: function (form) {
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -89,9 +116,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
-                            $('#detailModal').fadeOut(300, function() {
+                            $('#detailModal').fadeOut(300, function () {
                                 $(this).modal('hide');
                             });
 
@@ -103,7 +130,7 @@
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.msgField, function (prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
                             }
@@ -119,14 +146,14 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight: function(element, errorClass, validClass) {
+            highlight: function (element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight: function(element, errorClass, validClass) {
+            unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             }
         });
