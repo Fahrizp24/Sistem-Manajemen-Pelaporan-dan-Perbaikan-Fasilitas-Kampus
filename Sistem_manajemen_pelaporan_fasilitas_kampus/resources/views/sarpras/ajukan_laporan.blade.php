@@ -26,7 +26,7 @@
                     </tbody>
                 </table>
 
-                <button class="btn btn-primary mt-2" id="btnProsesSPK">Sinkronisasi Laporan</button>
+                <button class="btn btn-primary mt-2" id="btnProsesSPK">Sinkronisasi Sistem Rekomendasi</button>
             </div>
         </div>
 

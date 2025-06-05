@@ -18,61 +18,67 @@
     </div>
 @else
     <div class="card-body">
-        <table class="table table-bordered table-striped table-hover table-sm">
-            <tr>
-                <th>Pelapor</th>
-                <td>{{ $laporan->pelapor->nama }}</td>
-            </tr>
-            <tr>
-                <th>Gedung</th>
-                <td>{{ $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-            </tr>
-            <tr>
-                <th>Lantai</th>
-                <td>{{ $laporan->fasilitas->ruangan->lantai->lantai_nama }}</td>
-            </tr>
-            <tr>
-                <th>Ruangan</th>
-                <td>{{ $laporan->fasilitas->ruangan->ruangan_nama }}</td>
-            </tr>
-            <tr>
-                <th>Fasilitas</th>
-                <td>{{ $laporan->fasilitas->fasilitas_nama }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ $laporan->status }}</td>
-            </tr>
-            <tr>
-                <th>Tanggal Laporan</th>
-                <td>{{ $laporan->created_at }}</td>
-            </tr>
-            <tr>
-                <th>Ditugaskan Oleh</th>
-                <td>{{ $laporan->sarpras->nama ?? '-' }}</td>
-            </tr>
-            <tr>
-                <th>Ditugaskan Kepada</th>
-                <td>{{ $laporan->teknisi->nama ?? '-' }}</td>
-            </tr>
-            <tr>
-                <th>Foto</th>
-                <td>
-                    @if ($laporan->foto)
-                        <div style="max-width: 200px; max-height: 200px; overflow: hidden;">
-                            <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-fluid"
-                                style="width: 100%; height: auto; object-fit: cover;">
-                        </div>
-                    @else
-                        <span class="text-muted">Tidak ada foto</span>
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <th>Deskripsi</th>
-                <td>{{ $laporan->deskripsi }}</td>
-            </tr>
-        </table>
+        <div class="row">
+            <!-- Kolom Kiri untuk Foto -->
+            <div class="col-md-4">
+                @if ($laporan->foto)
+                    <div style="max-width: 100%; max-height: 400px; overflow: hidden; margin-bottom: 20px;">
+                        <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-fluid"
+                            style="width: 100%; height: auto; object-fit: cover;">
+                    </div>
+                @else
+                    <div class="text-center text-muted" style="height: 200px; display: flex; align-items: center; justify-content: center; border: 1px dashed #ccc;">
+                        Tidak ada foto
+                    </div>
+                @endif
+            </div>
+            
+            <!-- Kolom Kanan untuk Informasi Laporan -->
+            <div class="col-md-8">
+                <table class="table table-bordered table-striped table-hover table-sm">
+                    <tr>
+                        <th width="30%">Pelapor</th>
+                        <td>{{ $laporan->pelapor->nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Gedung</th>
+                        <td>{{ $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Lantai</th>
+                        <td>{{ $laporan->fasilitas->ruangan->lantai->lantai_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ruangan</th>
+                        <td>{{ $laporan->fasilitas->ruangan->ruangan_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fasilitas</th>
+                        <td>{{ $laporan->fasilitas->fasilitas_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ $laporan->status }}</td>
+                    </tr>
+                    <tr>
+                        <th>Tanggal Laporan</th>
+                        <td>{{ $laporan->created_at }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ditugaskan Oleh</th>
+                        <td>{{ $laporan->sarpras->nama ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ditugaskan Kepada</th>
+                        <td>{{ $laporan->teknisi->nama ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Deskripsi</th>
+                        <td>{{ $laporan->deskripsi }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
         @if ($laporan->status == 'selesai')
         <div class="mt-4">
@@ -89,7 +95,7 @@
                         data-readonly="false"
                         data-laporan-id="{{ $laporan->laporan_id }}"></div>
                 <form id="ratingForm_{{ $laporan->laporan_id }}" class="rating-form" method="POST" 
-                        action="{{  url('pelapor/laporan_saya/rating/', $laporan->laporan_id) }}">
+                        action="{{ url('pelapor/laporan_saya/rating/', $laporan->laporan_id) }}">
                     @csrf
                     <input type="hidden" name="rating" class="rating-input">
                     <button type="submit" class="btn btn-primary mt-2 submit-rating" disabled>
@@ -98,7 +104,7 @@
                 </form>
             @endif
         </div>
-    @endif
+        @endif
     </div>
 @endif
 
