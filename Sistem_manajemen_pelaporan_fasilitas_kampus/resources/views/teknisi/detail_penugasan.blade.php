@@ -87,10 +87,23 @@
         </div>
 
         <div class="card-footer text-center mt-3">
-            <form action="{{ url('/teknisi/penugasan/' . $laporan->laporan_id) }}" method="POST">
+            @php
+                $bisaAjukan = !empty($laporan->bukti_pengerjaan);
+            @endphp
+
+            <form action="{{ url('/teknisi/penugasan/' . $laporan->laporan_id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <button type="submit" class="btn btn-success px-4" 
-                    onclick="return confirm('Anda Yakin Untuk Mengkonfirmasi Laporan Ini?')">
+                <!-- Upload file -->
+                <div class="form-group">
+                    <label for="bukti_pengerjaan">Upload Foto Bukti Pengerjaan</label>
+                    <input type="file" name="bukti_pengerjaan" id="bukti_pengerjaan" class="form-control">
+                    <span class="text-danger error-text" id="error-bukti_pengerjaan"></span>
+                </div>
+
+                <!-- Tombol ajukan -->
+                <button type="submit" class="btn btn-success px-4"
+                    onclick="return confirm('Anda Yakin Untuk Mengkonfirmasi Laporan Ini?')"
+                    {{ $bisaAjukan ? '' : 'disabled' }}>
                     <i class="fas fa-paper-plane me-2"></i> Ajukan ke Sarpras
                 </button>
             </form>
