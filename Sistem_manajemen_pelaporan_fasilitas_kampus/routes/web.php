@@ -163,6 +163,10 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/data_kriteria', [SarprasController::class, 'data_kriteria'])->name('sarpras.data_kriteria');
                 Route::delete('/{id}', [SarprasController::class, 'destroy'])->name('sarpras.destroy_kriteria');  
                 Route::post('/data_crisp', [SarprasController::class, 'data_crisp'])->name('sarpras.data_crisp');
+                Route::get('/create_crisp', [SarprasController::class, 'create_crisp'])->name('sarpras.create_crisp');
+                Route::post('/store_crisp', [SarprasController::class, 'store_crisp'])->name('sarpras.store_crisp');
+                Route::get('/edit_crisp/{id}', [SarprasController::class, 'edit_crisp'])->name('sarpras.edit_crisp');
+                Route::put('/update_crisp', [SarprasController::class, 'update_crisp'])->name('sarpras.update_crisp');
                 Route::delete('/{id}', [SarprasController::class, 'destroy'])->name('sarpras.destroy_crisp');    
             });
 

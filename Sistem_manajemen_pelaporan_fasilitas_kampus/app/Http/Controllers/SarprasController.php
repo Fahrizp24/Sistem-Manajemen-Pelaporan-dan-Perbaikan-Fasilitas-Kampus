@@ -121,9 +121,6 @@ class SarprasController extends Controller
         }
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function list_laporan()
     {
         $breadcrumb = (object) [
@@ -351,7 +348,7 @@ class SarprasController extends Controller
                 ->addIndexColumn()
                 ->addColumn('aksi', function ($row) {
                     $btn = '
-                    <button type="button" class="btn btn-sm btn-primary btnEditKriteria" data-id="' . $row->crisp_id . '">Edit</button>
+                    <button type="button" class="btn btn-sm btn-primary btnEditCrisp" data-id="' . $row->crisp_id . '">Edit</button>
                     <form action="' . route('sarpras.destroy_crisp', $row->crisp_id) . '" id="formDeleteKriteria" method="POST" style="display:inline;">
                         ' . csrf_field() . method_field('DELETE') . '
                         <button class="btn btn-sm btn-danger">Hapus</button>
@@ -360,6 +357,117 @@ class SarprasController extends Controller
                 })
                 ->rawColumns(['aksi'])
                 ->make(true);
+        }
+    }
+
+    public function create_crisp()
+    {
+        $breadcrumb = (object) [
+            'title' => 'Tambah Crisp',
+            'list' => ['Tambah Crisp']
+        ];
+        $page = (object) [
+            'title' => 'Tambah Crisp',
+            'subtitle' => 'Tambah Data Crisp'
+        ];
+
+        $kriteria = KriteriaModel::all();
+
+        return view('sarpras.create_crisp', compact('kriteria', 'breadcrumb', 'page'));
+    }
+
+    public function store_crisp(Request $request)
+    {
+        $rules = [
+            'kriteria_id' => 'required|exists:kriteria,kriteria_id',
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string|max:500',
+            'poin' => 'required|numeric|min:0'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors()
+            ], 422); // Tambahkan status code 422 untuk validation error
+        }
+        try {
+            CrispModel::create([
+                'kriteria_id' => $request->kriteria_id,
+                'judul' => $request->judul,
+                'deskripsi' => $request->deskripsi,
+                'poin' => $request->poin
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Crisp berhasil ditambahkan.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan data: ' . $e->getMessage(),
+                'msgField' => []
+            ], 500);
+        }
+    }
+
+    public function edit_crisp($id)
+    {
+        $breadcrumb = (object) [
+            'title' => 'edit Crisp',
+            'list' => ['edit Crisp']
+        ];
+        $page = (object) [
+            'title' => 'edit Crisp',
+            'subtitle' => 'edit Data Crisp'
+        ];
+
+        $crisp = CrispModel::with('kriteria')->findOrFail($id);
+        return view('sarpras.edit_crisp', compact('crisp', 'breadcrumb', 'page'));
+    }
+
+    public function update_crisp(Request $request,$id)
+    {
+        $rules = [
+            'kriteria_id' => 'required|exists:kriteria,kriteria_id',
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string|max:500',
+            'poin' => 'required|numeric|min:0'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors()
+            ], 422); // Tambahkan status code 422 untuk validation error
+        }
+       
+        try {
+            $check = CrispModel::find($id);
+            if ($check) {
+                $check->update($request->all());
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data berhasil diupdate'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan data: ' . $e->getMessage(),
+                'msgField' => []
+            ], 500);
         }
     }
 
@@ -461,8 +569,6 @@ class SarprasController extends Controller
             ->orderBy('gedung_nama')
             ->get();
 
-
-
         return view('sarpras.statistik', compact(
             'breadcrumb',
             'page',
@@ -494,17 +600,17 @@ class SarprasController extends Controller
             ->groupBy(DB::raw('MONTH(created_at)'))
             ->orderBy('bulan')
             ->get();
-        
+
         $kerusakanPerGedung = LaporanModel::select('gedung.gedung_nama', DB::raw('COUNT(*) as total'))
-        ->join('fasilitas', 'laporan.fasilitas_id', '=', 'fasilitas.fasilitas_id')
-        ->join('ruangan', 'fasilitas.ruangan_id', '=', 'ruangan.ruangan_id')
-        ->join('lantai', 'ruangan.lantai_id', '=', 'lantai.lantai_id')
-        ->join('gedung', 'lantai.gedung_id', '=', 'gedung.gedung_id')
-        ->whereYear('laporan.created_at', $tahun)
-        ->whereBetween(DB::raw('MONTH(laporan.created_at)'), [$bulan_awal, $bulan_akhir])
-        ->groupBy('gedung.gedung_nama')
-        ->orderBy('gedung.gedung_nama')
-        ->get();
+            ->join('fasilitas', 'laporan.fasilitas_id', '=', 'fasilitas.fasilitas_id')
+            ->join('ruangan', 'fasilitas.ruangan_id', '=', 'ruangan.ruangan_id')
+            ->join('lantai', 'ruangan.lantai_id', '=', 'lantai.lantai_id')
+            ->join('gedung', 'lantai.gedung_id', '=', 'gedung.gedung_id')
+            ->whereYear('laporan.created_at', $tahun)
+            ->whereBetween(DB::raw('MONTH(laporan.created_at)'), [$bulan_awal, $bulan_akhir])
+            ->groupBy('gedung.gedung_nama')
+            ->orderBy('gedung.gedung_nama')
+            ->get();
 
         $pdf = PDF::loadView('admin.laporan_periodik_pdf', [
             'data' => $data,
@@ -516,7 +622,6 @@ class SarprasController extends Controller
 
         return $pdf->download('laporan_periodik_' . $tahun . '.pdf');
     }
-
 
     public function ajukan_laporan()
     {
@@ -572,8 +677,6 @@ class SarprasController extends Controller
             ->rawColumns(['aksi'])
             ->make(true);
     }
-
-
 
     private function normalisasiVektor(array $data): array
     {
