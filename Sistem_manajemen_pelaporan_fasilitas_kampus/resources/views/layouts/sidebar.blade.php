@@ -49,6 +49,29 @@
                     $currentUrl = url()->current();
                 @endphp
 
+                <li class="sidebar-item">
+                    <div class="text-center w-100">
+                        <span>
+                            {{ Auth::user()->nama }} - 
+                            @php
+                                $peranMap = [
+                                    'admin' => 'Admin',
+                                    'sarpras' => 'Sarana Prasarana',
+                                    'teknisi' => 'Teknisi',
+                                    'pelapor' => match(Auth::user()->tipe_user) {
+                                        'mahasiswa' => 'Mahasiswa',
+                                        'dosen' => 'Dosen',
+                                        'tendik' => 'Tendik',
+                                        default => 'Pelapor'
+                                    }
+                                ];
+                            @endphp
+                            {{ $peranMap[Auth::user()->peran] ?? 'Pengguna' }}
+                        </span>
+                    </div>
+                </li>
+
+
                 {{-- Dosen, Mahasiswa, Tendik --}}
                 @if(in_array($peran, ['pelapor']))
                     <li class="sidebar-title">Menu</li>

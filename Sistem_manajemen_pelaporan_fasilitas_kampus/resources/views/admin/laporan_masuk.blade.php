@@ -8,6 +8,7 @@
                     <tr>
                         <th>No</th>
                         <th>Pelapor</th>
+                        <th>Peran</th>
                         <th>Gedung</th>
                         <th>Fasilitas</th>
                         <th>Status</th>
@@ -64,6 +65,10 @@
                 {
                     data: 'nama',
                     name: 'nama'
+                },
+                {
+                    data: 'peran', 
+                    name: 'peran'
                 },
                 {
                     data: 'gedung',

@@ -40,11 +40,18 @@
                                     class="profile-user-img img-fluid img-circle"
                                     src="{{ auth()->user()->foto_profil ? asset('storage/foto_profil/' . auth()->user()->foto_profil) : asset('storage/foto_profil/default.jpg') }}"
                                     alt="User profile picture" 
-                                    style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 2px solid #fff;"
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; border: 2px solid #fff;"
+                                    onerror="this.style.display='none'; document.getElementById('foto-fallback').style.display='flex';"
                                 >
                                 <div 
+                                    id="foto-fallback"
+                                    style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #b4b4b4; color: #fff; font-weight: bold; border-radius: 50%; justify-content: center; align-items: center; text-align: center; border: 2px solid #fff;"
+                                >
+                                    Foto<br>Tidak Ada
+                                </div>
+                                <div 
                                     class="hover-overlay"
-                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 0, 0, 0.5); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; opacity: 0; transition: opacity 0.3s;"
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 0, 0, 0.5); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;"
                                 >
                                     <i class="bi bi-camera-fill"></i>
                                 </div>
@@ -63,45 +70,24 @@
                     <!-- Informasi Profil -->
                     <h4 class="mb-4 border-bottom pb-3 text-center">Informasi Profil</h4>
                     
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="nama" class="form-label">Nama Lengkap</label>
                         <input type="text" class="form-control" id="nama" name="nama" value="{{ $sarpras->nama }}" required>
                     </div>
 
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" value="{{ $sarpras->username }}" disabled>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Peran</label>
-                            <div>
-                                <input type="text" class="form-control bg-light-primary" id="username" value="{{ $sarpras->peran }}"
-                                        disabled>
-                            </div>
-                        </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" value="{{ $sarpras->username }}" disabled>
                     </div>
 
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label for="prodi" class="form-label">Program Studi</label>
-                            <input type="text" class="form-control" id="prodi" name="prodi" value="{{ $sarpras->prodi ?? '' }}" disabled>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="jurusan" class="form-label">Jurusan</label>
-                            <input type="text" class="form-control" id="jurusan" name="jurusan" value="{{ $sarpras->jurusan ?? '' }}" disabled>
-                        </div>
+                    <div class="mb-3">
+                        <label for="no_telp" class="form-label">Nomor Telepon</label>
+                        <input type="tel" class="form-control" id="no_telp" name="no_telp" value="{{ $sarpras->no_telp ?? '' }}">
                     </div>
 
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label for="no_telp" class="form-label">Nomor Telepon</label>
-                            <input type="tel" class="form-control" id="no_telp" name="no_telp" value="{{ $sarpras->no_telp ?? '' }}">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ $sarpras->email }}" required>
-                        </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ $sarpras->email }}" required>
                     </div>
 
                     <!-- Tombol Simpan -->

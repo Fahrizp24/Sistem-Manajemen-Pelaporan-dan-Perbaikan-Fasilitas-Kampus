@@ -95,7 +95,7 @@
     <table class="border-bottom-header">
         <tr>
             <td width="15%" class="text-center">
-                <img src="{{ asset('storage/logo-polinema.png') }}" alt="Logo" class="logo">
+                <img src="{{ public_path('storage/logo-polinema.png') }}" alt="Logo" class="logo">
             </td>
             <td width="85%">
                 <span class="text-center d-block font-11 font-bold mb-1">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN
@@ -146,9 +146,9 @@
         <tbody>
             @foreach($kerusakanPerGedung as $index => $item)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
+                    <td class="text-center">{{ $index + 1 }}</td>
                     <td>{{ $item->gedung_nama }}</td>
-                    <td>{{ $item->total }}</td>
+                    <td class="text-center">{{ $item->total }}</td>
                 </tr>
             @endforeach
         </tbody>
