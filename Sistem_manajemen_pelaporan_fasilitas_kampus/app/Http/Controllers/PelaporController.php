@@ -244,4 +244,6 @@ class PelaporController extends Controller
             'page' => (object) ['title' => 'Detail Laporan']
         ]);
     }
+
+    
 }

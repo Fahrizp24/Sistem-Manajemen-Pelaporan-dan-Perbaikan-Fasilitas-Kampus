@@ -8,6 +8,7 @@
                     <tr>
                         <th>No</th>
                         <th>Pelapor</th>
+                        <th>Peran</th>
                         <th>Fasiljhitas</th>
                         <th>Gedung</th>
                         <th>Deskripsi</th>
@@ -21,6 +22,7 @@
                         <tr>
                             <td>{{ $no++ }}</td>
                             <td>{{ $item->pelapor->nama ?? '-' }}</td>
+                            <td>{{ ucfirst($item->pelapor->peran ?? '-') }}</td>
                             <td>{{ $item->fasilitas->fasilitas_nama ?? '-' }}</td>
                             <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-' }}</td>
                             <td>{{ $item->deskripsi }}</td>
