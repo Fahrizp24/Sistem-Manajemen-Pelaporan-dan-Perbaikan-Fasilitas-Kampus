@@ -19,20 +19,9 @@
 @else
     <div class="modal-body">
         <div class="row">
-            <!-- Kolom Foto (Kiri) -->
-            <div class="col-md-4">
-                @if ($laporan->foto)
-                    <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" 
-                         class="img-thumbnail w-100 mb-3" style="max-height: 300px; object-fit: contain;">
-                @else
-                    <div class="alert alert-info text-center">
-                        <i class="fas fa-image"></i> Tidak ada foto
-                    </div>
-                @endif
-            </div>
             
             <!-- Kolom Informasi (Kanan) -->
-            <div class="col-md-8">
+            <div class="col-12">
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <tr>
@@ -79,7 +68,19 @@
                 </div>
             </div>
         </div>
-
+<div class="row mt-4">
+        <div class="col-12">
+            @if ($laporan->foto)
+                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
+                     class="img-thumbnail w-150% mx-auto d-block"
+                     style="max-width: 100%; height: 100%; max-height: 400px;">
+            @else
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-image"></i> Tidak ada foto
+                </div>
+            @endif
+        </div>
+    </div>
         <div class="mt-3 text-center">
             @if ($source == 'pelapor')
                     <form class="form" method="POST"

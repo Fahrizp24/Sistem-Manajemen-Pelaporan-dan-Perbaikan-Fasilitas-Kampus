@@ -19,24 +19,8 @@
 @else
     <div class="card-body">
         <div class="row">
-            <!-- Kolom Foto (Sepertiga Lebar) -->
-            <div class="col-md-4">
-                @if ($laporan->foto)
-                    <div class="mb-3" style="max-width: 100%; max-height: 300px; overflow: hidden;">
-                        <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" 
-                             class="img-fluid rounded shadow-sm"
-                             style="width: 100%; height: auto; object-fit: cover;">
-                    </div>
-                @else
-                    <div class="alert alert-secondary text-center py-5">
-                        <i class="fas fa-image fa-3x mb-3"></i><br>
-                        Tidak ada foto laporan
-                    </div>
-                @endif
-            </div>
-            
             <!-- Kolom Informasi (Dua Pertiga Lebar) -->
-            <div class="col-md-8">
+            <div class="col-12">
                 <table class="table table-bordered table-striped table-hover table-sm">
                     <tr>
                         <th width="30%">Pelapor</th>
@@ -85,7 +69,19 @@
                 </table>
             </div>
         </div>
-
+<div class="row mt-4">
+        <div class="col-12">
+            @if ($laporan->foto)
+                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
+                     class="img-thumbnail w-150% mx-auto d-block"
+                     style="max-width: 100%; height: 100%; max-height: 400px;">
+            @else
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-image"></i> Tidak ada foto
+                </div>
+            @endif
+        </div>
+    </div>
         <div class="card-footer text-center mt-3">
             @php
                 $bisaAjukan = !empty($laporan->bukti_pengerjaan);
