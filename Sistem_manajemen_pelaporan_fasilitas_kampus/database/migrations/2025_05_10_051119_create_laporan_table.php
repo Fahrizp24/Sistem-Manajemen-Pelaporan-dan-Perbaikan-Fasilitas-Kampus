@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', ['diajukan', 'diterima', 'konfirmasi', 'memilih teknisi', 'diperbaiki','telah diperbaiki','revisi','selesai', 'tidak diterima'])->default('diajukan');
             $table->enum('urgensi', ['rendah', 'sedang', 'tinggi'])->nullable();
             $table->string('bukti_pengerjaan')->nullable();
-            $table->text('alasan penolakan');
+            $table->text('alasan_penolakan');
             $table->timestamps();
         });
     }
