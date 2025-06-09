@@ -18,88 +18,89 @@
     </div>
 @else
     <div class="card-body">
-        {{-- Tampilkan detail laporan --}}
-        <table class="table table-bordered table-striped table-hover table-sm">
-            <tr>
-                <th>Pelapor</th>
-                <td>{{ $laporan->pelapor->nama }}</td>
-            </tr>
-            <tr>
-                <th>Gedung</th>
-                <td>{{ $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-            </tr>
-            <tr>
-                <th>Fasilitas</th>
-                <td>{{ $laporan->fasilitas->fasilitas_nama }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ $laporan->status }}</td>
-            </tr>
-            <tr>
-                <th>Tanggal Laporan</th>
-                <td>{{ $laporan->created_at }}</td>
-            </tr>
-            <tr>
-                <th>Ditugaskan Oleh</th>
-                <td>{{ $laporan->sarpras->nama ?? '-' }}</td>
-            </tr>
-            <tr>
-                <th>Ditugaskan Kepada</th>
-                <td>{{ $laporan->teknisi->nama ?? '-' }}</td>
-            </tr>
-            <tr>
-                <th>Foto</th>
-                <td>
-                    @if ($laporan->foto)
-                        <div style="max-width: 200px; max-height: 200px; overflow: hidden;">
-                            <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-fluid"
-                                style="width: 100%; height: auto; object-fit: cover;">
-                        </div>
-                    @else
-                        <span class="text-muted">Tidak ada foto</span>
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <th>Deskripsi</th>
-                <td>{{ $laporan->deskripsi }}</td>
-            </tr>
-        </table>
-
-        <h5>Bukti Perbaikan Fasilitas</h5>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover table-sm">
-                <tbody>
+        <div class="row">
+            <!-- Kolom Informasi (Dua Pertiga Lebar) -->
+            <div class="col-12">
+                <table class="table table-bordered table-striped table-hover table-sm">
                     <tr>
-                        <th width="30%">Foto Bukti Perbaikan</th>
+                        <th width="30%">Pelapor</th>
+                        <td>{{ $laporan->pelapor->nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Gedung</th>
+                        <td>{{ $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Lantai</th>
+                        <td>{{ $laporan->fasilitas->ruangan->lantai->lantai_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ruangan</th>
+                        <td>{{ $laporan->fasilitas->ruangan->ruangan_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fasilitas</th>
+                        <td>{{ $laporan->fasilitas->fasilitas_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
                         <td>
-                            <div class="form-group">
-                                <input type="file" id="foto" class="form-control-file" name="foto"
-                                    accept="image/jpeg, image/png, image/jpg, image/gif" required>
-                                <small class="form-text text-muted">Format: jpeg, png, jpg, gif (max: 2MB)</small>
-                            </div>
+                            <span class="badge bg-{{ $laporan->status == 'diterima' ? 'success' : 'warning' }}">
+                                {{ $laporan->status }}
+                            </span>
                         </td>
                     </tr>
                     <tr>
-                        <th>Deskripsi Singkat</th>
-                        <td>
-                            <div class="form-group">
-                                <textarea id="deskripsi" class="form-control" name="deskripsi" rows="3"
-                                    placeholder="Jelaskan kondisi fasilitas yang telah anda perbaiki" required></textarea>
-                            </div>
-                        </td>
+                        <th>Tanggal Laporan</th>
+                        <td>{{ $laporan->created_at->format('d F Y H:i') }}</td>
                     </tr>
-                </tbody>
-            </table>
+                    <tr>
+                        <th>Ditugaskan Oleh</th>
+                        <td>{{ $laporan->sarpras->nama ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ditugaskan Kepada</th>
+                        <td>{{ $laporan->teknisi->nama ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Deskripsi</th>
+                        <td>{{ $laporan->deskripsi }}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
+<div class="row mt-4">
+        <div class="col-12">
+            @if ($laporan->foto)
+                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
+                     class="img-thumbnail w-150% mx-auto d-block"
+                     style="max-width: 100%; height: 100%; max-height: 400px;">
+            @else
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-image"></i> Tidak ada foto
+                </div>
+            @endif
+        </div>
+    </div>
+        <div class="card-footer text-center mt-3">
+            @php
+                $bisaAjukan = !empty($laporan->bukti_pengerjaan);
+            @endphp
 
-        <div class="card-footer text-end">
-            <form action="{{ url('/teknisi/penugasan/' . $laporan->laporan_id) }}" method="POST">
+            <form action="{{ url('/teknisi/penugasan/' . $laporan->laporan_id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <button type="submit" class="btn btn-success"
-                    onclick="return confirm('Anda Yakin Untuk Mengkonfirmasi Laporan Ini?')">
-                    <i class="fas fa-paper-plane"></i> Ajukan ke Sarpras
+                <!-- Upload file -->
+                <div class="form-group">
+                    <label for="bukti_pengerjaan">Upload Foto Bukti Pengerjaan</label>
+                    <input type="file" name="bukti_pengerjaan" id="bukti_pengerjaan" class="form-control">
+                    <span class="text-danger error-text" id="error-bukti_pengerjaan"></span>
+                </div>
+
+                <!-- Tombol ajukan -->
+                <button type="submit" class="btn btn-success px-4"
+                    onclick="return confirm('Anda Yakin Untuk Mengkonfirmasi Laporan Ini?')"
+                    {{ $bisaAjukan ? '' : 'disabled' }}>
+                    <i class="fas fa-paper-plane me-2"></i> Ajukan ke Sarpras
                 </button>
             </form>
         </div>

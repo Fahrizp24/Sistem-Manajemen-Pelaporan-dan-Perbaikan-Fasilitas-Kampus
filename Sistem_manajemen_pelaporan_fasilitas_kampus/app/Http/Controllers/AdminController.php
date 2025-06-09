@@ -196,10 +196,11 @@ class AdminController extends Controller
     public function data_laporan(Request $request)
     {
         $data = LaporanModel::with(['fasilitas.ruangan.lantai.gedung', 'pelapor'])->where('status', 'konfirmasi')->get();
-
+        
         return datatables()->of($data)
             ->addIndexColumn()
             ->addColumn('nama', fn($row) => $row->pelapor->nama ?? '-')
+            ->addColumn('peran', fn($row) => ucfirst($row->pelapor->peran ?? '-'))
             ->addColumn('gedung', fn($row) => $row->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-')
             ->addColumn('fasilitas', fn($row) => $row->fasilitas->fasilitas_nama ?? '-')
             ->addColumn('status', function ($row) {

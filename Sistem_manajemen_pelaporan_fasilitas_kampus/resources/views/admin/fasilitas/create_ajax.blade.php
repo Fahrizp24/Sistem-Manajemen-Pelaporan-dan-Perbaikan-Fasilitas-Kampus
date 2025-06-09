@@ -1,8 +1,12 @@
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
 <form action="{{ route('admin.store_fasilitas') }}" method="POST" id="form-tambah">
     @csrf
-    <div class="card-header">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tambah Data Fasilitas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
     </div>
-    <div class="card-body">
+    <div class="modal-body">
         <div class="form-body">
             <div class="row">
                 <div class="col-md-6 mb-3">
@@ -46,6 +50,8 @@
         </div>
     </div>
 </form>
+ </div>
+    </div>
 <script>
     $(document).ready(function () {
         $("#form-tambah").validate({

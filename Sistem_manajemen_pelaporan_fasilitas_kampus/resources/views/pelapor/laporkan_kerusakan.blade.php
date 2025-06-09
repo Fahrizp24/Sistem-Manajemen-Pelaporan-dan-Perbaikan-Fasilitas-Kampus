@@ -5,11 +5,11 @@
         <div class="row match-height">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Formulir Laporan</h4>
+                    <div class="card-header pb-1">
+                        <h4 class="card-title mb-0">Formulir Laporan</h4>
                     </div>
                     <div class="card-content">
-                        <div class="card-body">
+                        <div class="card-body p-4 pt-1">
                             @if (session('success'))
                                 <div class="alert alert-success">
                                     {{ session('success') }}

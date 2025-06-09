@@ -158,6 +158,18 @@ class TeknisiController extends Controller
     {
         try {
             $laporan = LaporanModel::findOrFail($id);
+
+            if (!$laporan->bukti_pengerjaan) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Tidak bisa diajukan. Silakan unggah foto bukti pengerjaan terlebih dahulu.'
+                    ]);
+                }
+
+                return redirect()->back()->with('error', 'Silakan unggah foto bukti pengerjaan terlebih dahulu.');
+            }
+
             $laporan->status = 'telah diperbaiki';
             $laporan->save();
 
@@ -180,6 +192,7 @@ class TeknisiController extends Controller
             return redirect()->back()->with('error', 'Gagal mengkonfirmasi laporan: ' . $e->getMessage());
         }
     }
+
     
     public function riwayat_penugasan()
     {

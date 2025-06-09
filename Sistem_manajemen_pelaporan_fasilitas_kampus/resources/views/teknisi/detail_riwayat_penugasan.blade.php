@@ -18,52 +18,65 @@
     </div>
 @else
     <div class="card-body">
-        <table class="table table-bordered table-striped table-hover table-sm">
-            <tr>
-                <th>Pelapor</th>
-                <td>{{ $laporan->pelapor->nama }}</td>
-            </tr>
-            <tr>
-                <th>Gedung</th>
-                <td>{{ $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-            </tr>
-            <tr>
-                <th>Fasilitas</th>
-                <td>{{ $laporan->fasilitas->fasilitas_nama }}</td>
-            </tr>
-            <tr>
-                <th>Status </th>
-                <td>{{ $laporan->status }}</td>
-            </tr>
-            <tr>
-                <th>Tanggal Laporan</th>
-                <td>{{ $laporan->created_at }}</td>
-            </tr>
-            <tr>
-                <th>Ditugaskan Oleh</th>
-                <td>{{ $laporan->sarpras->nama ?? '-' }}</td>
-            </tr>
-            <tr>
-                <th>Ditugaskan Kepada</th>
-                <td>{{ $laporan->teknisi->nama ?? '-' }}</td>
-            <tr>
-                <th>Foto</th>
-                <td>
-                    @if($laporan->foto)
-                        <div style="max-width: 200px; max-height: 200px; overflow: hidden;">
-                            <img src="{{ Storage::url('foto_laporan/'.$laporan->foto) }}" 
-                                    class="img-fluid"
-                                    style="width: 100%; height: auto; object-fit: cover;">
-                        </div>
-                    @else
-                        <span class="text-muted">Tidak ada foto</span>
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <th>Deskripsi</th>
-                <td>{{ $laporan->deskripsi }}</td>
-            </tr>
-        </table>
+        <div class="row">
+            <!-- Kolom Informasi (Kanan) -->
+            <div class="col-12">
+                <table class="table table-bordered table-striped table-hover table-sm">
+                    <tr>
+                        <th width="30%">Pelapor</th>
+                        <td>{{ $laporan->pelapor->nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Gedung</th>
+                        <td>{{ $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Lantai</th>
+                        <td>{{ $laporan->fasilitas->ruangan->lantai->lantai_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ruangan</th>
+                        <td>{{ $laporan->fasilitas->ruangan->ruangan_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fasilitas</th>
+                        <td>{{ $laporan->fasilitas->fasilitas_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ $laporan->status }}</td>
+                    </tr>
+                    <tr>
+                        <th>Tanggal Laporan</th>
+                        <td>{{ $laporan->created_at }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ditugaskan Oleh</th>
+                        <td>{{ $laporan->sarpras->nama ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ditugaskan Kepada</th>
+                        <td>{{ $laporan->teknisi->nama ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Deskripsi</th>
+                        <td>{{ $laporan->deskripsi }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="row mt-4">
+        <div class="col-12">
+            @if ($laporan->foto)
+                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
+                     class="img-thumbnail w-150% mx-auto d-block"
+                     style="max-width: 100%; height: 100%; max-height: 400px;">
+            @else
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-image"></i> Tidak ada foto
+                </div>
+            @endif
+        </div>
+    </div>
+        </div>
     </div>
 @endempty

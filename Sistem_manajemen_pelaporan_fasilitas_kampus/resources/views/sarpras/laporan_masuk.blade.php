@@ -11,157 +11,147 @@
     <div class="page-content">
         <div class="row">
             <div class="col-12">
-                <!-- Reports from Reporters -->
-                <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center bg-gradient-indigo">
-                        <h5 class="card-title mb-0 text-blue"><i class="bi bi-megaphone me-2"></i>Daftar Laporan dari Pelapor</h5>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered table-striped mb-0" id="table-sarpras">
-                            <thead class="table-white">
-                                <tr>
-                                    <th width="5%">No</th>
-                                    <th>Pelapor</th>
-                                    <th>Gedung</th>
-                                    <th>Fasilitas</th>
-                                    <th>Tanggal</th>
-                                    <th class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($laporan_masuk_pelapor as $item)
-                                    <tr>
-                                        <td class="fw-bold">{{ $loop->iteration }}</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div>{{ $item->pelapor->nama }}</div>
-                                            </div>
-                                        </td>
-                                        <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-                                        <td>{{ $item->fasilitas->fasilitas_nama }}</td>
-                                        <td>
-                                            <span class="card-title mb-0 text-blue">
-                                                {{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}
-                                            </span>
-                                        </td>
-                                        <td class="text-center">
-                                            <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=pelapor')"
-                                                class="btn btn-sm btn-primary text-white">
-                                                <i class="bi bi-eye-fill me-1"></i> Detail
-                                            </button>
+                <!-- Accordion -->
+                <div class="accordion" id="laporanAccordion">
 
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <!-- Reports from Reporters -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPelapor">
+                            <button class="accordion-button bg-gradient-indigo text-blue" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapsePelapor" aria-expanded="true" aria-controls="collapsePelapor">
+                                <i class="bi bi-megaphone me-2"></i>Daftar Laporan dari Pelapor
+                            </button>
+                        </h2>
+                        <div id="collapsePelapor" class="accordion-collapse collapse show" aria-labelledby="headingPelapor"
+                            data-bs-parent="#laporanAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered table-striped mb-0" id="table-sarpras">
+                                    <thead class="table-white">
+                                        <tr>
+                                            <th width="5%">No</th>
+                                            <th>Pelapor</th>
+                                            <th>Gedung</th>
+                                            <th>Fasilitas</th>
+                                            <th>Tanggal</th>
+                                            <th class="text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($laporan_masuk_pelapor as $item)
+                                            <tr>
+                                                <td class="fw-bold">{{ $loop->iteration }}</td>
+                                                <td><div class="d-flex align-items-center">{{ $item->pelapor->nama }}</div></td>
+                                                <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
+                                                <td>{{ $item->fasilitas->fasilitas_nama }}</td>
+                                                <td><span class="card-title mb-0 text-blue">{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}</span></td>
+                                                <td class="text-center">
+                                                    <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=pelapor')" class="btn btn-sm btn-primary text-white">
+                                                        <i class="bi bi-eye-fill me-1"></i> Detail
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="mt-2">
+                                    <small class="text-indigo-600">{{ count($laporan_masuk_pelapor) }} laporan perlu diterima/ditolak</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-footer bg-indigo-50">
-                        <small class="text-indigo-600">{{ count($laporan_masuk_pelapor) }} laporan perlu diterima/ditolak</small>
-                    </div>
-                </div>
 
-                <!-- Reports from Admin -->
-                <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center bg-gradient-teal">
-                        <h5 class="card-title mb-0 text-blue"><i class="bi bi-clipboard-check me-2"></i>Daftar Laporan dari Admin</h5>
+                    <!-- Reports from Admin -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingAdmin">
+                            <button class="accordion-button collapsed bg-gradient-teal text-blue" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseAdmin" aria-expanded="false"
+                                aria-controls="collapseAdmin">
+                                <i class="bi bi-clipboard-check me-2"></i>Daftar Laporan dari Admin
+                            </button>
+                        </h2>
+                        <div id="collapseAdmin" class="accordion-collapse collapse" aria-labelledby="headingAdmin"
+                            data-bs-parent="#laporanAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered table-striped mb-0" id="table-admin">
+                                    <thead class="table-white">
+                                        <tr>
+                                            <th width="5%">No</th>
+                                            <th>Pelapor</th>
+                                            <th>Fasilitas</th>
+                                            <th>Tanggal</th>
+                                            <th>Status</th>
+                                            <th class="text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($laporan_masuk_admin as $item)
+                                            <tr>
+                                                <td class="fw-bold">{{ $loop->iteration }}</td>
+                                                <td><div class="d-flex align-items-center">{{ $item->pelapor->nama }}</div></td>
+                                                <td>{{ $item->fasilitas->fasilitas_nama }}</td>
+                                                <td><span class="card-title mb-0 text-blue">{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}</span></td>
+                                                <td><span class="card-title mb-0 text-yellow">Perlu Penugasan</span></td>
+                                                <td class="text-center">
+                                                    <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=admin')" class="btn btn-sm btn-primary text-white">
+                                                        <i class="bi bi-eye-fill me-1"></i> Detail
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="mt-2">
+                                    <small class="text-teal-600">{{ count($laporan_masuk_admin) }} laporan perlu penugasan teknisi</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <table class="table table-bordered table-striped mb-0" id="table-admin">
-                            <thead class="table-white">
-                                <tr>
-                                    <th width="5%">No</th>
-                                    <th>Pelapor</th>
-                                    <th>Fasilitas</th>
-                                    <th>Tanggal</th>
-                                    <th>Status</th>
-                                    <th class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($laporan_masuk_admin as $item)
-                                    <tr>
-                                        <td class="fw-bold">{{ $loop->iteration }}</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div>{{ $item->pelapor->nama }}</div>
-                                            </div>
-                                        </td>
-                                        <td>{{ $item->fasilitas->fasilitas_nama }}</td>
-                                        <td>
-                                            <span class="card-title mb-0 text-blue">
-                                                {{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="card-title mb-0 text-yellow">Perlu Penugasan</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=admin')"
-                                                class="btn btn-sm btn-primary text-white">
-                                                <i class="bi bi-eye-fill me-1"></i> Detail
-                                            </button>
 
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer bg-teal-50">
-                        <small class="text-teal-600">{{ count($laporan_masuk_admin) }} laporan perlu penugasan teknisi</small>
-                    </div>
-                </div>
-
-                <!-- Reports from Technicians -->
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center bg-gradient-amber">
-                        <h5 class="card-title mb-0 text-blue"><i class="bi bi-tools me-2"></i>Daftar Laporan dari Teknisi</h5>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered table-striped mb-0" id="table-teknisi">
-                            <thead class="table-white">
-                                <tr>
-                                    <th width="5%">No</th>
-                                    <th>Pelapor</th>
-                                    <th>Fasilitas</th>
-                                    <th>Tanggal</th>
-                                    <th>Status</th>
-                                    <th class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($laporan_masuk_teknisi as $item)
-                                    <tr>
-                                        <td class="fw-bold">{{ $loop->iteration }}</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div>{{ $item->pelapor->nama }}</div>
-                                            </div>
-                                        </td>
-                                        <td>{{ $item->fasilitas->fasilitas_nama }}</td>
-                                        <td>
-                                            <span class="card-title mb-0 text-orange">
-                                                {{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="card-title mb-0 text-orange">Perlu Ditelaah</span>
-                                        </td>
-                                        <td class="text-center">
-                                           <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=teknisi')"
-                                                class="btn btn-sm btn-primary text-white">
-                                                <i class="bi bi-eye-fill me-1"></i> Detail
-                                            </button>
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer bg-amber-50">
-                        <small class="text-amber-600">{{ count($laporan_masuk_teknisi) }} laporan perlu ditelaah</small>
+                    <!-- Reports from Technicians -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTeknisi">
+                            <button class="accordion-button collapsed bg-gradient-amber text-blue" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseTeknisi" aria-expanded="false"
+                                aria-controls="collapseTeknisi">
+                                <i class="bi bi-tools me-2"></i>Daftar Laporan dari Teknisi
+                            </button>
+                        </h2>
+                        <div id="collapseTeknisi" class="accordion-collapse collapse" aria-labelledby="headingTeknisi"
+                            data-bs-parent="#laporanAccordion">
+                            <div class="accordion-body">
+                                <table class="table table-bordered table-striped mb-0" id="table-teknisi">
+                                    <thead class="table-white">
+                                        <tr>
+                                            <th width="5%">No</th>
+                                            <th>Pelapor</th>
+                                            <th>Fasilitas</th>
+                                            <th>Tanggal</th>
+                                            <th>Status</th>
+                                            <th class="text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($laporan_masuk_teknisi as $item)
+                                            <tr>
+                                                <td class="fw-bold">{{ $loop->iteration }}</td>
+                                                <td><div class="d-flex align-items-center">{{ $item->pelapor->nama }}</div></td>
+                                                <td>{{ $item->fasilitas->fasilitas_nama }}</td>
+                                                <td><span class="card-title mb-0 text-orange">{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}</span></td>
+                                                <td><span class="card-title mb-0 text-orange">Perlu Ditelaah</span></td>
+                                                <td class="text-center">
+                                                    <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=teknisi')" class="btn btn-sm btn-primary text-white">
+                                                        <i class="bi bi-eye-fill me-1"></i> Detail
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="mt-2">
+                                    <small class="text-amber-600">{{ count($laporan_masuk_teknisi) }} laporan perlu ditelaah</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

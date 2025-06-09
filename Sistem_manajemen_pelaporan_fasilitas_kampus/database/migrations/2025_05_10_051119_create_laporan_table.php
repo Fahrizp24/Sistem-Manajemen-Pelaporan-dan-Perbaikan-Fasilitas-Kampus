@@ -18,9 +18,10 @@ return new class extends Migration
             $table->foreignId('ditugaskan_oleh')->nullable()->constrained('pengguna', 'pengguna_id')->onDelete('cascade');
             $table->foreignId('teknisi_id')->nullable()->constrained('pengguna', 'pengguna_id')->onDelete('cascade');
             $table->text('deskripsi');
-            $table->string('foto');
+            $table->string('foto')->nullable()->default('default.jpg');
             $table->enum('status', ['diajukan', 'diterima', 'konfirmasi', 'memilih teknisi', 'diperbaiki','telah diperbaiki','revisi','selesai', 'tidak diterima'])->default('diajukan');
             $table->enum('urgensi', ['rendah', 'sedang', 'tinggi'])->nullable();
+            $table->string('bukti_pengerjaan')->nullable();
             $table->text('alasan penolakan');
             $table->timestamps();
         });

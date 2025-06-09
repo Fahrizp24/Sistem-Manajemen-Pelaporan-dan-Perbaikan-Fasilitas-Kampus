@@ -20,7 +20,7 @@ class CrispModel extends Model
     // Define the attributes that are mass assignable
     protected $fillable = [
         'kriteria_id',
-        'nama',
+        'judul',
         'deskripsi',
         'poin'
     ];

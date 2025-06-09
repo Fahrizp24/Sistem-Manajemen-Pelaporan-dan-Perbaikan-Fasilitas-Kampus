@@ -15,8 +15,8 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Daftar Kriteria</h5>
-                        <button type="button" class="btn btn-success mb-3"
-                            onclick="modalAction('{{url('sarpras/kriteria/create_ajax')}}')">+ Tambah kriteria</button>
+                        {{-- <button type="button" class="btn btn-success mb-3"
+                            onclick="modalAction('{{url('sarpras/kriteria/create_ajax')}}')">+ Tambah kriteria</button> --}}
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered table-striped mb-0" id="kriteriaTable">
@@ -41,7 +41,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Daftar Crisp</h5>
                         <button type="button" class="btn btn-success mb-3"
-                            onclick="modalAction('{{url('sarpras/crisp/create_ajax')}}')">+ Tambah crisp</button>
+                            onclick="modalAction('{{url('sarpras/sistem_rekomendasi/create_crisp')}}')">+ Tambah crisp</button>
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered table-striped mb-0" id="crispTable">
@@ -139,7 +139,7 @@
         //crisp
         $(document).on('click', '.btnEditCrisp', function () {
             var id = $(this).data('id');
-            modalAction('/sarpras/crisp/edit_ajax/' + id);
+            modalAction('/sarpras/sistem_rekomendasi/edit_crisp/' + id);
         });
 
         var dataCrisp;
