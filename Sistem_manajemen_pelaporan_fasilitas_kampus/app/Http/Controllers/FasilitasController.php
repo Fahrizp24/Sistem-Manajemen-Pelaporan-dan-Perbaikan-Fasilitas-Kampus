@@ -13,7 +13,7 @@ class FasilitasController extends Controller
     public function data_fasilitas(Request $request)
     {
         if ($request->ajax()) {
-            $data = FasilitasModel::with('ruangan.lantai.gedung')->select(['fasilitas_id', 'fasilitas_nama', 'fasilitas_deskripsi','kategori', 'ruangan_id', 'status']);
+            $data = FasilitasModel::with('ruangan.lantai.gedung')->select(['fasilitas_id', 'fasilitas_nama', 'fasilitas_deskripsi', 'kategori', 'ruangan_id', 'status']);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('aksi', function ($row) {
@@ -94,9 +94,10 @@ class FasilitasController extends Controller
      */
     public function edit_ajax($fasilitas_id)
     {
-        $fasilitas = FasilitasModel::findOrFail($fasilitas_id);
-        $gedung = GedungModel::all();
-        return view('admin.fasilitas.edit_ajax', compact('fasilitas', 'gedung'));
+        $fasilitas = FasilitasModel::with('ruangan.lantai.gedung')->find($fasilitas_id);
+        $gedung_id = $fasilitas->ruangan->lantai->gedung->gedung_id; 
+        $gedung = GedungModel::all(); 
+        return view('admin.fasilitas.edit_ajax', compact('fasilitas', 'gedung', 'gedung_id'));
 
     }
 

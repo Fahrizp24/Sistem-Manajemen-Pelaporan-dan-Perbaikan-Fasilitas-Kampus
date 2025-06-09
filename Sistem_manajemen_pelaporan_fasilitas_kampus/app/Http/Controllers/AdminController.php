@@ -129,7 +129,7 @@ class AdminController extends Controller
     public function data_pengguna(Request $request)
     {
         if ($request->ajax()) {
-            $data = UserModel::select(['pengguna_id', 'username', 'nama', 'email', 'peran']);
+            $data = UserModel::select(['pengguna_id', 'username', 'nama', 'email', 'no_telp', 'peran']);
             // dd($data);
             return DataTables::of($data)
                 ->addIndexColumn() // untuk DT_RowIndex
@@ -287,6 +287,7 @@ class AdminController extends Controller
             'username' => 'required|string',
             'nama' => 'required|string',
             'email' => 'required|email|unique:users,email',
+            'no_telp' => 'required|digits_between:10,15',
             'password' => 'required|min:6',
             'peran' => 'required|in:admin,sarpras,pelapor,teknisi',
         ];

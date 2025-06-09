@@ -33,6 +33,13 @@
                     </div>
                 </div>
 
+                <div class="row mb-3">
+                    <div class="col-md-4"><label>No Telp</label></div>
+                    <div class="col-md-8">
+                        <input type="text" name="no_telp" class="form-control" placeholder="Nomor Telepon">
+                    </div>
+                </div>
+
                 <!-- Peran -->
                 <div class="row mb-3">
                     <div class="col-md-4"><label>Peran</label></div>
@@ -65,67 +72,73 @@
 </div>
 
 <script>
-$(document).ready(function() {
-    $("#form-tambah").validate({
-        rules: {
-            username: { required: true, minlength: 3 },
-            nama: { required: true, minlength: 3 },
-            email: { required: true, email: true },
-            peran: { required: true },
-            password: { required: true, minlength: 6 }
-        },
-        messages: {
-            username: {
-                required: "Username wajib diisi",
-                minlength: "Minimal 3 karakter"
-            },
-            password: {
-                required: "Password wajib diisi",
-                minlength: "Minimal 6 karakter"
-            }
-        },
-        errorElement: 'div',
-        errorPlacement: function(error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.mb-3').append(error);
-        },
-        highlight: function(element) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function(element) {
-            $(element).removeClass('is-invalid');
-        },
-        submitHandler: function(form) {
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: $(form).serialize(),
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status) {
-                        $('#myModal').modal('hide');
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message,
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                        dataUser.ajax.reload(null, false);
-                    }
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        const errors = xhr.responseJSON.errors;
-                        $.each(errors, function(key, value) {
-                            $(`#error-${key}`).text(value[0]);
-                            $(`[name="${key}"]`).addClass('is-invalid');
-                        });
-                    }
+    $(document).ready(function () {
+        $("#form-tambah").validate({
+            rules: {
+                username: { required: true, minlength: 3 },
+                nama: { required: true, minlength: 3 },
+                email: { required: true, email: true },
+                no_telp: {
+                    required: true,
+                    digits: true,
+                    minlength: 10,
+                    maxlength: 15
                 }
-            });
-            return false;
-        }
+                peran: { required: true },
+                password: { required: true, minlength: 6 }
+            },
+            messages: {
+                username: {
+                    required: "Username wajib diisi",
+                    minlength: "Minimal 3 karakter"
+                },
+                password: {
+                    required: "Password wajib diisi",
+                    minlength: "Minimal 6 karakter"
+                }
+            },
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.mb-3').append(error);
+            },
+            highlight: function (element) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element) {
+                $(element).removeClass('is-invalid');
+            },
+            submitHandler: function (form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: $(form).serialize(),
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status) {
+                            $('#myModal').modal('hide');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                            dataUser.ajax.reload(null, false);
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 422) {
+                            const errors = xhr.responseJSON.errors;
+                            $.each(errors, function (key, value) {
+                                $(`#error-${key}`).text(value[0]);
+                                $(`[name="${key}"]`).addClass('is-invalid');
+                            });
+                        }
+                    }
+                });
+                return false;
+            }
+        });
     });
-});
 </script>

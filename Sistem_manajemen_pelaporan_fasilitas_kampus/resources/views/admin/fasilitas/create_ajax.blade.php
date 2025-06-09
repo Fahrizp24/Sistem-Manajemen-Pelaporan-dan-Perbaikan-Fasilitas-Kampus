@@ -1,57 +1,58 @@
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-<form action="{{ route('admin.store_fasilitas') }}" method="POST" id="form-tambah">
-    @csrf
-    <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Tambah Data Fasilitas</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-    </div>
-    <div class="modal-body">
-        <div class="form-body">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="nama">Nama Fasilitas</label>
-                    <input type="text" name="nama" class="form-control" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="status">Kategori</label>
-                    <select name="kategori" class="form-control" required>
-                        <option value="Elektronik">Elektronik</option>
-                        <option value="Furniture">Furniture</option>
-                        <option value="Pendingin">Pendingin</option>
-                        <option value="Alat Tulis">Alat Tulis</option>
-                    </select>
-                </div>
-                <div class="col-md-12 mb-3">
-                    <label for="deskripsi">Deskripsi</label>
-                    <textarea name="deskripsi" class="form-control" rows="3" required></textarea>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="gedung_id">Gedung</label>
-                    <select name="gedung_id" class="form-control" required>
-                        <option value="">-- Pilih Gedung --</option>
-                        @foreach($gedung as $g)
-                            <option value="{{ $g->gedung_id }}">{{ $g->gedung_nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="status">Status</label>
-                    <select name="status" class="form-control" required>
-                        <option value="normal">Normal</option>
-                        <option value="rusak">Rusak</option>
-                    </select>
-                </div>
+        <form action="{{ route('admin.store_fasilitas') }}" method="POST" id="form-tambah">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Fasilitas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nama">Nama Fasilitas</label>
+                            <input type="text" name="nama" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="status">Kategori</label>
+                            <select name="kategori" class="form-control" required>
+                                <option value="Elektronik">Elektronik</option>
+                                <option value="Jaringan">Jaringan</option>
+                                <option value="Furniture">Furniture</option>
+                                <option value="Perlengkapan Kelas">Perlengkapan kelas</option>
+                                <option value="Listrik">Listrik</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="deskripsi">Deskripsi</label>
+                            <textarea name="deskripsi" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="gedung_id">Gedung</label>
+                            <select name="gedung_id" class="form-control" required>
+                                <option value="">-- Pilih Gedung --</option>
+                                @foreach($gedung as $g)
+                                    <option value="{{ $g->gedung_id }}">{{ $g->gedung_nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="status">Status</label>
+                            <select name="status" class="form-control" required>
+                                <option value="normal">Normal</option>
+                                <option value="rusak">Rusak</option>
+                            </select>
+                        </div>
 
-                <div class="col-12 d-flex justify-content-end mt-3">
-                    <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
+                        <div class="col-12 d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-</form>
- </div>
-    </div>
+</div>
 <script>
     $(document).ready(function () {
         $("#form-tambah").validate({
@@ -59,7 +60,7 @@
                 nama: { required: true, minlength: 3 },
                 kategori: { required: true },
                 deskripsi: { required: true, minlength: 10 },
-                gedung: { required: true },
+                gedung_id: { required: true },
                 status: { required: true }
             },
             messages: {

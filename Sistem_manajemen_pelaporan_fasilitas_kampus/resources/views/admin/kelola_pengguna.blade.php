@@ -31,6 +31,7 @@
                                     <th>Username</th>
                                     <th>Nama</th>
                                     <th>Email</th>
+                                    <th>No Telp</th>
                                     <th>Peran</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -87,6 +88,7 @@
                     { data: 'username', name: 'username' },
                     { data: 'nama', name: 'nama' },
                     { data: 'email', name: 'email' },
+                    { data: 'no_telp', name: 'no_telp' },
                     { data: 'peran', name: 'peran' },
                     { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
                 ]
