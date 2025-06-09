@@ -147,27 +147,26 @@ class TeknisiController extends Controller
             'list' => ['Data Penugasan']
         ];
 
-        $page = (object)[
+        $page = (object) [
             'title' => 'Detail Penugasan',
             'subtitle' => 'Informasi lengkap mengenai penugasan'
         ];
         return view('teknisi.detail_penugasan', compact('laporan', 'breadcrumb', 'page'));
     }
-    
+
     public function ajukanKeSarpras(string $id, Request $request)
     {
+        $request->validate([
+            'bukti_pengerjaan' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
         try {
             $laporan = LaporanModel::findOrFail($id);
 
-            if (!$laporan->bukti_pengerjaan) {
-                if ($request->ajax()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Tidak bisa diajukan. Silakan unggah foto bukti pengerjaan terlebih dahulu.'
-                    ]);
-                }
-
-                return redirect()->back()->with('error', 'Silakan unggah foto bukti pengerjaan terlebih dahulu.');
+            // Upload file
+            if ($request->hasFile('bukti_pengerjaan')) {
+                $path = $request->file('bukti_pengerjaan')->store('bukti_pengerjaan', 'public');
+                $laporan->bukti_pengerjaan = $path;
             }
 
             $laporan->status = 'telah diperbaiki';
@@ -181,19 +180,14 @@ class TeknisiController extends Controller
             }
 
             return redirect()->back()->with('success', 'Laporan berhasil diajukan ke sarpras.');
-        } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal mengkonfirmasi laporan: ' . $e->getMessage()
-                ], 500);
-            }
 
-            return redirect()->back()->with('error', 'Gagal mengkonfirmasi laporan: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal mengajukan laporan: ' . $e->getMessage());
         }
     }
 
-    
+
     public function riwayat_penugasan()
     {
         $breadcrumb = (object) [
@@ -207,7 +201,7 @@ class TeknisiController extends Controller
         $activeMenu = 'riwayat_penugasan';
         $teknisi_id = Auth::id();
 
-        $laporan = LaporanModel::whereIn('status', ['selesai','telah diperbaiki'])
+        $laporan = LaporanModel::whereIn('status', ['selesai', 'telah diperbaiki'])
             ->where('teknisi_id', $teknisi_id)
             ->get();
         return view('teknisi.riwayat_penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
@@ -222,11 +216,11 @@ class TeknisiController extends Controller
             'list' => ['Data Riwayat Penugasan']
         ];
 
-        $page = (object)[
+        $page = (object) [
             'title' => 'Detail Laporan',
             'subtitle' => 'Informasi lengkap mengenai riwayat penugasan'
         ];
 
-        return view('teknisi.detail_riwayat_penugasan', compact('laporan', 'breadcrumb','page'));
+        return view('teknisi.detail_riwayat_penugasan', compact('laporan', 'breadcrumb', 'page'));
     }
 }

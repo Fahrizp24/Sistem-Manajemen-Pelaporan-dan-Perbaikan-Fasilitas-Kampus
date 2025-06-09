@@ -69,37 +69,31 @@
                 </table>
             </div>
         </div>
-<div class="row mt-4">
-        <div class="col-12">
-            @if ($laporan->foto)
-                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
-                     class="img-thumbnail w-150% mx-auto d-block"
-                     style="max-width: 100%; height: 100%; max-height: 400px;">
-            @else
-                <div class="alert alert-info text-center">
-                    <i class="fas fa-image"></i> Tidak ada foto
-                </div>
-            @endif
+        <div class="row mt-4">
+            <div class="col-12">
+                @if ($laporan->foto)
+                    <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg') }}"
+                        class="img-thumbnail w-150% mx-auto d-block" style="max-width: 100%; height: 100%; max-height: 400px;">
+                @else
+                    <div class="alert alert-info text-center">
+                        <i class="fas   fa-image"></i> Tidak ada foto
+                    </div>
+                @endif
+            </div>
         </div>
-    </div>
         <div class="card-footer text-center mt-3">
-            @php
-                $bisaAjukan = !empty($laporan->bukti_pengerjaan);
-            @endphp
-
-            <form action="{{ url('/teknisi/penugasan/' . $laporan->laporan_id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ url('/teknisi/penugasan/' .
+            $laporan->laporan_id) }}" method="POST" enctype="multipart/form-data" id="formBukti">
                 @csrf
                 <!-- Upload file -->
                 <div class="form-group">
                     <label for="bukti_pengerjaan">Upload Foto Bukti Pengerjaan</label>
-                    <input type="file" name="bukti_pengerjaan" id="bukti_pengerjaan" class="form-control">
+                    <input type="file" name="bukti_pengerjaan" id="bukti_pengerjaan" class="form-control" required>
                     <span class="text-danger error-text" id="error-bukti_pengerjaan"></span>
                 </div>
 
                 <!-- Tombol ajukan -->
-                <button type="submit" class="btn btn-success px-4"
-                    onclick="return confirm('Anda Yakin Untuk Mengkonfirmasi Laporan Ini?')"
-                    {{ $bisaAjukan ? '' : 'disabled' }}>
+                <button type="submit" class="btn btn-success px-4" id="btnAjukan">
                     <i class="fas fa-paper-plane me-2"></i> Ajukan ke Sarpras
                 </button>
             </form>
