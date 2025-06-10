@@ -52,24 +52,24 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', [FasilitasController::class, 'index'])->name('admin.fasilitas');
                 Route::get('/import_fasilitas', [AdminController::class, 'import_fasilitas'])->name('admin.pengguna.import_fasilitas');
                 Route::post('/import_fasilitas_store', [AdminController::class, 'import_fasilitas_store'])->name('admin.pengguna.import_fasilitas_store');
-                Route::get('/create_ajax', [FasilitasController::class, 'create_ajax'])->name('admin.create_fasilitas');
-                Route::post('/store_ajax', [FasilitasController::class, 'store_ajax'])->name('admin.store_fasilitas');
+                Route::get('/create_ajax', [FasilitasController::class, 'create_fasilitas'])->name('admin.create_fasilitas');
+                Route::post('/store_ajax', [FasilitasController::class, 'store_fasilitas'])->name('admin.store_fasilitas');
                 Route::get('/{id}', [FasilitasController::class, 'show_fasilitas'])->name('admin.show_fasilitas');
-                Route::get('/edit_ajax/{id}', [FasilitasController::class, 'edit_ajax'])->name('admin.edit_fasilitas');
+                Route::get('/edit_ajax/{id}', [FasilitasController::class, 'edit_fasilitas'])->name('admin.edit_fasilitas');
                 Route::put('/update/{id}', [FasilitasController::class, 'update_fasilitas'])->name('admin.update_fasilitas');
-                Route::delete('/{id}', [FasilitasController::class, 'destroy'])->name('admin.destroy_fasilitas');
+                Route::delete('/{id}', [FasilitasController::class, 'destroy__fasilitas'])->name('admin.destroy_fasilitas');
             });
 
             // Gedung
             Route::prefix('gedung')->group(function () {
                 Route::post('/data', [GedungController::class, 'data_gedung'])->name('admin.data_gedung');
                 Route::get('/', [GedungController::class, 'index'])->name('admin.gedung');
-                Route::get('/create_gedung', [GedungController::class, 'create'])->name('admin.gedung.create_gedung');
-                Route::post('/store', [GedungController::class, 'store'])->name('admin.store_gedung');
+                Route::get('/create_gedung', [GedungController::class, 'create_gedung'])->name('admin.gedung.create_gedung');
+                Route::post('/store', [GedungController::class, 'store_gedung'])->name('admin.store_gedung');
                 Route::get('/{id}', [GedungController::class, 'show_gedung'])->name('admin.show_gedung');
-                Route::get('/edit/{id}', [GedungController::class, 'edit'])->name('admin.edit_gedung');
-                Route::put('/update/{id}', [GedungController::class, 'update'])->name('admin.update_gedung');
-                Route::delete('/{id}', [GedungController::class, 'destroy'])->name('admin.destroy_gedung');
+                Route::get('/edit/{id}', [GedungController::class, 'edit_gedung'])->name('admin.edit_gedung');
+                Route::put('/update/{id}', [GedungController::class, 'update_gedung'])->name('admin.update_gedung');
+                Route::delete('/{id}', [GedungController::class, 'destroy_gedung'])->name('admin.destroy_gedung');
             });
 
             // Pengguna
@@ -78,14 +78,14 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', [AdminController::class, 'kelola_pengguna'])->name('admin.pengguna');
                 Route::get('/import_pengguna', [AdminController::class, 'import_pengguna'])->name('admin.pengguna.import_pengguna');
                 Route::post('/import_pengguna_store', [AdminController::class, 'import_pengguna_store'])->name('admin.pengguna.import_pengguna_store');
-                Route::get('/create_ajax', [AdminController::class, 'create_ajax'])->name('admin.pengguna.create_pengguna');
-                Route::post('/ajax', [AdminController::class, 'store_ajax'])->name('admin.pengguna.ajax');
+                Route::get('/create_ajax', [AdminController::class, 'create_pengguna'])->name('admin.pengguna.create_pengguna');
+                Route::post('/ajax', [AdminController::class, 'store_pengguna'])->name('admin.pengguna.ajax');
                 Route::post('/store', [AdminController::class, 'store_pengguna'])->name('admin.store_pengguna');
                 Route::get('/{id}', [AdminController::class, 'show_pengguna'])->name('admin.show_pengguna');
                 Route::get('/edit_ajax/{id}', [AdminController::class, 'edit_pengguna'])->name('admin.pengguna.edit_pengguna');
                 Route::put('/update/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
-                Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
-                Route::post('/reset_password/{id}', [AdminController::class, 'resetPassword'])->name('admin.pengguna.reset_password');
+                Route::delete('/{id}', [AdminController::class, 'destroy_pengguna'])->name('admin.destroy');
+                Route::post('/reset_password/{id}', [AdminController::class, 'reset_password_pengguna'])->name('admin.pengguna.reset_password');
             });
 
             // Statistik

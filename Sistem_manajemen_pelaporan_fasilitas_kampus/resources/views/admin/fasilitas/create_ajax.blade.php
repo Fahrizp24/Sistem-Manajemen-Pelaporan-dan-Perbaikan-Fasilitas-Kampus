@@ -10,11 +10,11 @@
                 <div class="form-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="nama">Nama Fasilitas</label>
-                            <input type="text" name="nama" class="form-control" required>
+                            <label for="fasilitas_nama">Nama Fasilitas</label>
+                            <input type="text" name="fasilitas_nama" class="form-control" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="status">Kategori</label>
+                            <label for="kategori">Kategori</label>
                             <select name="kategori" class="form-control" required>
                                 <option value="Elektronik">Elektronik</option>
                                 <option value="Jaringan">Jaringan</option>
@@ -24,15 +24,15 @@
                             </select>
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="deskripsi">Deskripsi</label>
-                            <textarea name="deskripsi" class="form-control" rows="3" required></textarea>
+                            <label for="fasilitas_deskripsi">Deskripsi</label>
+                            <textarea name="fasilitas_deskripsi" class="form-control" rows="3" required></textarea>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="gedung_id">Gedung</label>
-                            <select name="gedung_id" class="form-control" required>
-                                <option value="">-- Pilih Gedung --</option>
-                                @foreach($gedung as $g)
-                                    <option value="{{ $g->gedung_id }}">{{ $g->gedung_nama }}</option>
+                            <label for="ruangan_id">Ruangan</label>
+                            <select name="ruangan_id" class="form-control" required>
+                                <option value="">-- Pilih Ruangan --</option>
+                                @foreach($ruangan as $r)
+                                    <option value="{{ $r->ruangan_id }}">{{ $r->ruangan_nama }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -57,18 +57,18 @@
     $(document).ready(function () {
         $("#form-tambah").validate({
             rules: {
-                nama: { required: true, minlength: 3 },
+                fasilitas_nama: { required: true, minlength: 3 },
                 kategori: { required: true },
-                deskripsi: { required: true, minlength: 10 },
-                gedung_id: { required: true },
+                fasilitas_deskripsi: { required: true, minlength: 10 },
+                ruangan_id: { required: true },
                 status: { required: true }
             },
             messages: {
-                nama: {
+                fasilitas_nama: {
                     required: "nama wajib diisi",
                     minlength: "Minimal 3 karakter"
                 },
-                deskripsi: {
+                fasilitas_deskripsi: {
                     required: "kategori wajib diisi",
                     minlength: "Minimal 10 karakter"
                 }

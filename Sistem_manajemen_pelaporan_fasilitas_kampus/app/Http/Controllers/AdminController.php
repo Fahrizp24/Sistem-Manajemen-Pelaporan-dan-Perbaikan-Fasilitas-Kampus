@@ -122,9 +122,7 @@ class AdminController extends Controller
             ], 500);
         }
     }
-    /**
-     * Display a listing of the resource.
-     */
+ 
 
     public function data_pengguna(Request $request)
     {
@@ -275,13 +273,13 @@ class AdminController extends Controller
     }
 
 
-    public function create_ajax()
+    public function create_pengguna()
     {
         return view('admin.pengguna.create_ajax');
     }
 
 
-    public function store_ajax(Request $request)
+    public function store_pengguna(Request $request)
     {
         $rules = [
             'username' => 'required|string',
@@ -359,7 +357,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy_pengguna($id)
     {
         $pengguna = UserModel::find($id);
 
@@ -372,7 +370,7 @@ class AdminController extends Controller
         return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil dihapus.');
     }
 
-    public function resetPassword($id)
+    public function reset_password_pengguna($id)
     {
         $pengguna = UserModel::findOrFail($id);
 

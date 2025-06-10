@@ -38,7 +38,7 @@ class GedungController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create_gedung()
     {
         return view('admin.gedung.create_ajax');
     }
@@ -46,7 +46,7 @@ class GedungController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store_gedung(Request $request)
     {
         $rules = [
             'nama' => 'required|string',
@@ -74,18 +74,7 @@ class GedungController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(GedungModel $gedungModel)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($gedung_id)
+    public function edit_gedung($gedung_id)
     {
         $gedung = GedungModel::findOrFail($gedung_id);
         return view('admin.gedung.edit_ajax', compact('gedung'));
@@ -94,7 +83,7 @@ class GedungController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $gedung_id)
+    public function update_gedung(Request $request, $gedung_id)
     {
         $request->validate([
             'nama' => 'required|string|max:255',
@@ -116,7 +105,7 @@ class GedungController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($gedung_id)
+    public function destroy_gedung($gedung_id)
     {
         $gedung = GedungModel::find($gedung_id);
 
