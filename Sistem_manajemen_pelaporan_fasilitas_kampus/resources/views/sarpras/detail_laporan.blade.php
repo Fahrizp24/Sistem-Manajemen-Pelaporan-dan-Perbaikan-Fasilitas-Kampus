@@ -19,9 +19,20 @@
 @else
     <div class="modal-body">
         <div class="row">
+            <!-- Kolom Foto (Kiri) -->
+            <div class="col-md-4">
+                @if ($laporan->foto)
+                    <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" 
+                         class="img-thumbnail w-100 mb-3" style="max-height: 300px; object-fit: contain;">
+                @else
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-image"></i> Tidak ada foto
+                    </div>
+                @endif
+            </div>
             
             <!-- Kolom Informasi (Kanan) -->
-            <div class="col-12">
+            <div class="col-md-8">
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <tr>
@@ -68,19 +79,7 @@
                 </div>
             </div>
         </div>
-<div class="row mt-4">
-        <div class="col-12">
-            @if ($laporan->foto)
-                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
-                     class="img-thumbnail w-150% mx-auto d-block"
-                     style="max-width: 100%; height: 100%; max-height: 400px;">
-            @else
-                <div class="alert alert-info text-center">
-                    <i class="fas fa-image"></i> Tidak ada foto
-                </div>
-            @endif
-        </div>
-    </div>
+
         <div class="mt-3 text-center">
             @if ($source == 'pelapor')
                     <form class="form" method="POST"
@@ -114,6 +113,15 @@
                         </form>
                         <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
                             @csrf
+                            <div class="col-12">
+                                <div class="form-group mandatory mt-3 divider divider-left">
+                                    <label for="alasan_ditolak" class="form-label divider-text" style="padding:0">Alasan Penolakan</label>
+                                    <input type="text" id="alasan_ditolak" name="alasan_ditolak" class="form-control" 
+                                        placeholder="Masukkan alasan penolakan" required>
+                                    <span class="error-text" id="error-alasan_tolak"></span>
+                                    <span class="text-muted">*Wajib diisi jika menolak laporan</span>
+                                </div>
+                            </div>
                             <button type="submit" class="btn btn-danger mt-3" 
                                 onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
                                 Tolak Laporan
@@ -153,6 +161,23 @@
                         </div>
                     </div>
                 </form>
+                <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
+                    @csrf
+                    <div class="col-12">
+                        <div class="form-group mandatory mt-3 divider divider-left">
+                            <label for="alasan_ditolak" class="form-label divider-text" style="padding:0">Alasan Penolakan</label>
+                            <input type="text" id="alasan_ditolak" name="alasan_ditolak" class="form-control" 
+                                placeholder="Masukkan alasan penolakan" required>
+                            <span class="error-text" id="error-alasan_tolak"></span>
+                            <span class="text-muted">*Wajib diisi jika menolak laporan</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-danger mt-3" 
+                        onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
+                        Tolak Laporan
+                    </button>
+                </form>
+
             @elseif($source == 'ajukan')
                 <form action="{{ url('/sarpras/ajukan_laporan/' . $laporan->laporan_id) }}" method="POST">
                     @csrf

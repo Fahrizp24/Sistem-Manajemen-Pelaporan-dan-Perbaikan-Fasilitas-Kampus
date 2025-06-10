@@ -157,16 +157,16 @@ class TeknisiController extends Controller
     public function ajukanKeSarpras(string $id, Request $request)
     {
         $request->validate([
-            'bukti_pengerjaan' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'foto_pengerjaan' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         try {
             $laporan = LaporanModel::findOrFail($id);
 
             // Upload file
-            if ($request->hasFile('bukti_pengerjaan')) {
-                $path = $request->file('bukti_pengerjaan')->store('bukti_pengerjaan', 'public');
-                $laporan->bukti_pengerjaan = $path;
+            if ($request->hasFile('foto_pengerjaan')) {
+                $path = $request->file('foto_pengerjaan')->store('foto_pengerjaan', 'public');
+                $laporan->foto_pengerjaan = $path;
             }
 
             $laporan->status = 'telah diperbaiki';

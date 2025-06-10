@@ -223,8 +223,9 @@ class SarprasController extends Controller
         try {
             $laporan = LaporanModel::findOrFail($id);
             $laporan->status = 'tidak diterima';
+            $laporan->alasan_penolakan = $request->alasan_ditolak ?? 'Tidak ada alasan yang diberikan';
+            $laporan->ditolak_oleh = Auth::user()->pengguna_id;
             $laporan->save();
-
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
@@ -241,7 +242,7 @@ class SarprasController extends Controller
                 ], 500);
             }
 
-            return redirect()->back()->with('error', 'Gagal menolak laporan: ' . $e->getMessage());
+            return dd('error', 'Gagal menolak laporan: ' . $e->getMessage());
         }
     }
 
@@ -329,7 +330,7 @@ class SarprasController extends Controller
                 ->addColumn('aksi', function ($row) {
                     $btn = '
                     <button type="button" class="btn btn-sm btn-primary btnEditKriteria" data-id="' . $row->kriteria_id . '">Edit</button>
-                    <form action="' . url('sarpras.destroy_kriteria', $row->kriteria_id) . '" id="formDeleteKriteria" method="POST" style="display:inline;">
+                    <form action="' . route('sarpras.destroy_kriteria', $row->kriteria_id) . '" id="formDeleteKriteria" method="POST" style="display:inline;">
                         ' . csrf_field() . method_field('DELETE') . '
                         <button class="btn btn-sm btn-danger">Hapus</button>
                     </form>';
@@ -338,6 +339,19 @@ class SarprasController extends Controller
                 ->rawColumns(['aksi'])
                 ->make(true);
         }
+    }
+
+    public function destroy_kriteria($id)
+    {
+        $kriteria = KriteriaModel::find($id);
+
+        if (!$kriteria) {
+            return redirect()->route('sarpras.sistem_pendukung_keputusan')->with('error', 'Kategori tidak ditemukan.');
+        }
+
+        $kriteria->delete();
+
+        return redirect()->route('sarpras.sistem_pendukung_keputusan')->with('success', 'Kategori berhasil dihapus.');
     }
 
     public function data_crisp(Request $request)
@@ -349,7 +363,7 @@ class SarprasController extends Controller
                 ->addColumn('aksi', function ($row) {
                     $btn = '
                     <button type="button" class="btn btn-sm btn-primary btnEditCrisp" data-id="' . $row->crisp_id . '">Edit</button>
-                    <form action="' . route('sarpras.destroy_crisp', $row->crisp_id) . '" id="formDeleteKriteria" method="POST" style="display:inline;">
+                    <form action="' . route('sarpras.destroy_crisp', $row->crisp_id) . '" id="formDeleteCrisp" method="POST" style="display:inline;">
                         ' . csrf_field() . method_field('DELETE') . '
                         <button class="btn btn-sm btn-danger">Hapus</button>
                     </form>';
@@ -469,6 +483,19 @@ class SarprasController extends Controller
                 'msgField' => []
             ], 500);
         }
+    }
+
+    public function destroy_crisp($id)
+    {
+        $crisp = CrispModel::find($id);
+
+        if (!$crisp) {
+            return redirect()->route('sarpras.sistem_pendukung_keputusan')->with('error', 'Crisp tidak ditemukan.');
+        }
+
+        $crisp->delete();
+
+        return redirect()->route('sarpras.sistem_pendukung_keputusan')->with('success', 'Crisp berhasil dihapus.');
     }
 
     public function statistik(Request $request)

@@ -25,6 +25,9 @@ class LaporanModel extends Model
         'foto',
         'status',
         'urgensi',
+        'foto_pengerjaan',
+        'ditolak_oleh',
+        'alasan_penolakan'
     ]; 
 
     // Jika tabel tidak menggunakan timestamps (created_at, updated_at)

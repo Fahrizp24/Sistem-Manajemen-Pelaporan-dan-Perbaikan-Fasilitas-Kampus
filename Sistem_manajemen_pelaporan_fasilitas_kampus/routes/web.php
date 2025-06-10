@@ -21,7 +21,7 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 
 // Authenticated Routes
 Route::middleware(['auth'])->group(function () {
-    
+
     // Admin Routes
     Route::middleware(['authorize:admin'])->group(function () {
         Route::prefix('admin')->group(function () {
@@ -42,10 +42,10 @@ Route::middleware(['auth'])->group(function () {
             // Laporan 2
             Route::prefix('kelola_laporan')->group(function () {
                 Route::get('/', [AdminController::class, 'laporan2'])->name('admin.laporan2');
-                Route::get('/{id}', [LaporanController::class, 'show_laporan2'])->name( 'admin.show_laporan2');
+                Route::get('/{id}', [LaporanController::class, 'show_laporan2'])->name('admin.show_laporan2');
                 Route::post('/{id}', [AdminController::class, 'update_laporan2'])->name('admin.update_laporan2');
             });
-        
+
             // Fasilitas
             Route::prefix('fasilitas')->group(function () {
                 Route::post('/data', [FasilitasController::class, 'data_fasilitas'])->name('admin.data_fasilitas');
@@ -59,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/update/{id}', [FasilitasController::class, 'update_fasilitas'])->name('admin.update_fasilitas');
                 Route::delete('/{id}', [FasilitasController::class, 'destroy'])->name('admin.destroy_fasilitas');
             });
-        
+
             // Gedung
             Route::prefix('gedung')->group(function () {
                 Route::post('/data', [GedungController::class, 'data_gedung'])->name('admin.data_gedung');
@@ -71,7 +71,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/update/{id}', [GedungController::class, 'update'])->name('admin.update_gedung');
                 Route::delete('/{id}', [GedungController::class, 'destroy'])->name('admin.destroy_gedung');
             });
-        
+
             // Pengguna
             Route::prefix('pengguna')->group(function () {
                 Route::post('/data', [AdminController::class, 'data_pengguna'])->name('admin.data_pengguna');
@@ -86,9 +86,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/update/{id}', [AdminController::class, 'update_pengguna'])->name('admin.update_pengguna');
                 Route::delete('/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
                 Route::post('/reset_password/{id}', [AdminController::class, 'resetPassword'])->name('admin.pengguna.reset_password');
-
             });
-        
+
             // Statistik
             Route::get('/statistik', [AdminController::class, 'statistik'])->name('admin.statistik');
 
@@ -98,15 +97,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}', [AdminController::class, 'show_laporan_periodik'])->name('admin.show_laporan_periodik');
                 Route::post('/{id}', [AdminController::class, 'update_laporan_periodik'])->name('admin.update_laporan_periodik');
                 Route::get('/export_laporan_periodik', [AdminController::class, 'export_laporan_periodik'])->name('admin.export_laporan_periodik');
-
             });
 
             //sistem rekomendasi
             Route::prefix('sistem_rekomendasi')->group(function () {
                 Route::get('/', [AdminController::class, 'sistem_rekomendasi'])->name('admin.sistem_rekomendasi');
             });
-
-
         });
     });
 
@@ -131,7 +127,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}', [TeknisiController::class, 'detail_penugasan'])->name('teknisi.detail_penugasan');
                 Route::post('/{id}', [TeknisiController::class, 'ajukanKeSarpras'])->name('teknisi.ajukan');
             });
-        
+
             Route::prefix('riwayat_penugasan')->group(function () {
                 Route::get('/', [TeknisiController::class, 'riwayat_penugasan'])->name('teknisi.riwayat_penugasan');
                 Route::get('/{id}', [TeknisiController::class, 'detail_riwayat_penugasan'])->name('teknisi.detail_riwayat_penugasan');
@@ -157,17 +153,22 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/pilih_teknisi/{id}', [SarprasController::class, 'pilih_teknisi'])->name('sarpras.update_laporan');
                 Route::post('/selesaikan/{id}', [SarprasController::class, 'selesaikan'])->name('sarpras.update_laporan');
             });
-        
+
             Route::prefix('sistem_rekomendasi')->group(function () {
                 Route::get('/', [SarprasController::class, 'sistem_pendukung_keputusan'])->name('sarpras.sistem_pendukung_keputusan');
                 Route::post('/data_kriteria', [SarprasController::class, 'data_kriteria'])->name('sarpras.data_kriteria');
-                Route::delete('/{id}', [SarprasController::class, 'destroy'])->name('sarpras.destroy_kriteria');  
+                Route::get('/create_kriteria', [SarprasController::class, 'create_kriteria'])->name('sarpras.create_kriteria');
+                Route::post('/store_kriteria', [SarprasController::class, 'store_kriteria'])->name('sarpras.store_kriteria');
+                Route::get('/edit_kriteria/{id}', [SarprasController::class, 'edit_kriteria'])->name('sarpras.edit_kriteria');
+                Route::post('/update_kriteria', [SarprasController::class, 'update_kriteria'])->name('sarpras.update_kriteria');
+                Route::delete('/kriteria/{id}', [SarprasController::class, 'destroy_kriteria'])->name('sarpras.destroy_kriteria');
+
                 Route::post('/data_crisp', [SarprasController::class, 'data_crisp'])->name('sarpras.data_crisp');
                 Route::get('/create_crisp', [SarprasController::class, 'create_crisp'])->name('sarpras.create_crisp');
                 Route::post('/store_crisp', [SarprasController::class, 'store_crisp'])->name('sarpras.store_crisp');
                 Route::get('/edit_crisp/{id}', [SarprasController::class, 'edit_crisp'])->name('sarpras.edit_crisp');
-                Route::put('/update_crisp', [SarprasController::class, 'update_crisp'])->name('sarpras.update_crisp');
-                Route::delete('/{id}', [SarprasController::class, 'destroy'])->name('sarpras.destroy_crisp');    
+                Route::post('/update_crisp', [SarprasController::class, 'update_crisp'])->name('sarpras.update_crisp');
+                Route::delete('/crisp/{id}', [SarprasController::class, 'destroy_crisp'])->name('sarpras.destroy_crisp');
             });
 
             Route::prefix('ajukan_laporan')->group(function () {
@@ -182,7 +183,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', [SarprasController::class, 'statistik'])->name('sarpras.statistik');
                 Route::get('/export_laporan_periodik', [SarprasController::class, 'export_laporan_periodik'])->name('sarpras.export_laporan_periodik');
             });
-            
         });
     });
 
@@ -196,7 +196,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/change-password', [PelaporController::class, 'updatePassword'])->name('pelapor.updatePassword');
                 Route::post('/change-foto', [PelaporController::class, 'updateFoto'])->name('pelapor.updateFoto');
             });
-        
+
             // Laporan
             Route::prefix('laporan')->group(function () {
                 Route::get('/', [PelaporController::class, 'laporkan_kerusakan'])->name('pelapor.laporan');
@@ -206,7 +206,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/', [PelaporController::class, 'store_laporan'])->name('pelapor.store_laporan');
                 Route::get('/{id}', [PelaporController::class, 'show_ajax_laporan'])->name('pelapor.showLaporan');
             });
-        
+
             // Laporan Saya
             Route::prefix('laporan_saya')->group(function () {
                 Route::get('/', [PelaporController::class, 'laporan_saya'])->name('pelapor.laporan_saya');

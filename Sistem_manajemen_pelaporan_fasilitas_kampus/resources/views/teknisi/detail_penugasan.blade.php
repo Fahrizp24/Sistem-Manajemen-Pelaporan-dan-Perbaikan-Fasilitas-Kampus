@@ -87,9 +87,9 @@
                 @csrf
                 <!-- Upload file -->
                 <div class="form-group">
-                    <label for="bukti_pengerjaan">Upload Foto Bukti Pengerjaan</label>
-                    <input type="file" name="bukti_pengerjaan" id="bukti_pengerjaan" class="form-control" required>
-                    <span class="text-danger error-text" id="error-bukti_pengerjaan"></span>
+                    <label for="foto_pengerjaan">Upload Foto Bukti Pengerjaan</label>
+                    <input type="file" name="foto_pengerjaan" id="foto_pengerjaan" class="form-control" required>
+                    <span class="text-danger error-text" id="error-foto_pengerjaan"></span>
                 </div>
 
                 <!-- Tombol ajukan -->

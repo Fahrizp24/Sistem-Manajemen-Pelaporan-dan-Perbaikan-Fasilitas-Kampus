@@ -76,6 +76,12 @@
                         <th>Deskripsi</th>
                         <td>{{ $laporan->deskripsi }}</td>
                     </tr>
+                    @if ($laporan->status == 'tidak diterima')
+                        <tr>
+                            <th>Alasan Penolakan</th>
+                            <td>{{ $laporan->alasan_penolakan }}</td>
+                        </tr>
+                    @endif
                 </table>
             </div>
         </div>
