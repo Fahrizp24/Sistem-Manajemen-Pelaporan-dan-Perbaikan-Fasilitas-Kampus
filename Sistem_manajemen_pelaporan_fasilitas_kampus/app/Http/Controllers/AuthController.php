@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -27,25 +29,44 @@ class AuthController extends Controller
     {
         if ($request->ajax() || $request->wantsJson()) {
             $credentials = $request->only('username', 'password');
-            if (Auth::attempt($credentials)) {
-                $role = Auth::user()->peran;
-                $redirectPath = match ($role) {
-                    'admin' => '/admin/laporan_periodik',
-                    'teknisi' => '/teknisi/penugasan',
-                    'sarpras' => '/sarpras/laporan_masuk',
-                    'pelapor' => '/pelapor/profile'
-                };
+
+            // Cek apakah username ada
+            $user = UserModel::where('username', $credentials['username'])->first();
+
+            if (!$user) {
                 return response()->json([
-                    'status' => true,
-                    'message' => 'Login Berhasil',
-                    'redirect' => url($redirectPath)
+                    'status' => false,
+                    'message' => 'Username tidak ditemukan.'
                 ]);
             }
+
+            // Cek apakah password cocok
+            if (!Hash::check($credentials['password'], $user->password)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Password salah.'
+                ]);
+            }
+
+            // Login user jika username dan password cocok
+            Auth::login($user, $request->remember);
+
+            $role = $user->peran;
+            $redirectPath = match ($role) {
+                'admin' => '/admin/laporan_periodik',
+                'teknisi' => '/teknisi/penugasan',
+                'sarpras' => '/sarpras/laporan_masuk',
+                'pelapor' => '/pelapor/profile',
+                default => '/'
+            };
+
             return response()->json([
-                'status' => false,
-                'message' => 'Login Gagal'
+                'status' => true,
+                'message' => 'Login berhasil.',
+                'redirect' => url($redirectPath)
             ]);
         }
+
         return redirect('login');
     }
     public function logout(Request $request)
