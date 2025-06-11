@@ -144,7 +144,6 @@
             <form id="form-check-username" method="POST">
                 @csrf
                 <div class="form-group position-relative has-icon-left mb-4">
-                    <label for="username">Username</label>
                     <input type="text" class="form-control form-control-xl" name="username" id="username"
                         placeholder="Username" required>
                     <div class="form-control-icon">
@@ -177,7 +176,25 @@
                     <button type="submit" class="btn btn-success w-100">Submit Jawaban</button>
                 </form>
             </div>
-            
+
+            <div id="reset-password-section" style="display: none;">
+                <form id="form-reset-password" method="POST" action="{{ url('forgot_password/reset_password') }}">
+                    @csrf
+                    <div class="form-group mb-3">
+                        <label>Password Baru</label>
+                        <input type="password" class="form-control" name="password_baru" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Konfirmasi Password Baru</label>
+                        <input type="password" class="form-control" name="konfirmasi_password_baru" required>
+                    </div>
+                    <input type="hidden" name="username" id="reset_username">
+
+                    <button type="submit" class="btn btn-primary w-100">Ubah Password</button>
+                </form>
+            </div>
+
+
         </div>
     </div>
 
@@ -233,12 +250,13 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Validasi Berhasil',
-                                text: 'Silakan lanjutkan untuk reset password.'
-                            }).then(() => {
-                                // Misalnya redirect ke halaman reset password
-                                window.location.href = response.redirect ??
-                                    '/reset-password';
+                                text: 'Silakan ubah password Anda.'
                             });
+
+                            $('#form-pertanyaan').hide();
+                            $('#reset-password-section').show();
+                            $('#reset_username').val($('#hidden_username').val());
+
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -256,6 +274,38 @@
                     }
                 });
             });
+
+            $('#form-reset-password').submit(function(e) {
+                e.preventDefault();
+
+                const data = $(this).serializeArray();
+                const passBaru = data.find(d => d.name === 'password_baru').value;
+                const passKonfirm = data.find(d => d.name === 'konfirmasi_password_baru').value;
+
+                if (passBaru !== passKonfirm) {
+                    Swal.fire('Error', 'Password dan konfirmasi tidak sama', 'error');
+                    return;
+                }
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.status) {
+                            Swal.fire('Berhasil', 'Password berhasil diubah. Silakan login.',
+                                    'success')
+                                .then(() => window.location.href = '/login');
+                        } else {
+                            Swal.fire('Gagal', response.message, 'error');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error', 'Terjadi kesalahan pada server', 'error');
+                    }
+                });
+            });
+
         });
     </script>
 
