@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,7 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <!-- Animate CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
         :root {
             --primary: #435ebe;
@@ -17,24 +18,24 @@
             --light: #f8f9fa;
             --dark: #212529;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
             background-color: #f5f7fb;
         }
-        
+
         /* Navbar */
         .navbar {
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
             background-color: white;
         }
-        
+
         .navbar-brand {
             font-weight: 700;
             color: var(--primary);
         }
-        
+
         /* Hero Section */
         .hero-section {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -43,7 +44,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .hero-section::before {
             content: '';
             position: absolute;
@@ -55,33 +56,33 @@
             background-size: cover;
             opacity: 0.1;
         }
-        
+
         .hero-title {
             font-size: 3.5rem;
             font-weight: 800;
             margin-bottom: 1.5rem;
         }
-        
+
         .hero-subtitle {
             font-size: 1.5rem;
             margin-bottom: 2rem;
             opacity: 0.9;
         }
-        
+
         /* Features */
         .feature-card {
             transition: all 0.3s ease;
             border: none;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             height: 100%;
         }
-        
+
         .feature-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
-        
+
         .feature-icon {
             width: 70px;
             height: 70px;
@@ -92,22 +93,22 @@
             border-radius: 50%;
             font-size: 2rem;
         }
-        
+
         /* How It Works */
         .step-container {
             position: relative;
             padding-left: 60px;
         }
-        
+
         .step-item {
             position: relative;
             padding-bottom: 30px;
         }
-        
+
         .step-item:last-child {
             padding-bottom: 0;
         }
-        
+
         .step-number {
             position: absolute;
             left: -60px;
@@ -123,7 +124,7 @@
             font-weight: bold;
             font-size: 1.2rem;
         }
-        
+
         .step-item:not(:last-child)::after {
             content: '';
             position: absolute;
@@ -133,46 +134,61 @@
             height: calc(100% - 40px);
             background: #dee2e6;
         }
-        
+
         /* Stats */
         .stat-card {
             border: none;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
-        
+
         .stat-card:hover {
             transform: translateY(-5px);
         }
-        
+
         /* Animations */
         .floating-animation {
             animation: floating 3s ease-in-out infinite;
         }
-        
+
         .bounce-animation {
             animation: bounce 2s ease infinite;
         }
-        
+
         @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
         }
-        
+
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
         }
-        
+
         /* Section Title */
         .section-title {
             position: relative;
             padding-bottom: 15px;
             margin-bottom: 2rem;
         }
-        
+
         .section-title::after {
             content: '';
             position: absolute;
@@ -182,38 +198,38 @@
             height: 3px;
             background: linear-gradient(to right, var(--primary), var(--secondary));
         }
-        
+
         /* Footer */
         .footer {
             background-color: var(--dark);
             color: white;
             padding: 3rem 0;
         }
-        
+
         .footer-links a {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: color 0.3s ease;
         }
-        
+
         .footer-links a:hover {
             color: white;
         }
-        
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 2.5rem;
             }
-            
+
             .hero-subtitle {
                 font-size: 1.2rem;
             }
-            
+
             .step-container {
                 padding-left: 40px;
             }
-            
+
             .step-number {
                 left: -40px;
                 width: 30px;
@@ -223,14 +239,14 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container">
-             <a href="logo">
-                        <img src="{{ asset('mazer/dist/asset/logoSistem.png')}}" alt="Logo"
-                            style="width: 90px; height: auto;">
-                    </a>
+            <a href="logo">
+                <img src="{{ asset('mazer/dist/asset/logoSistem.png')}}" alt="Logo" style="width: 90px; height: auto;">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -254,33 +270,36 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section"> 
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="hero-title animate__animated animate__fadeInDown">FIXIT</h1>
-                <h2 class="hero-subtitle animate__animated animate__fadeInDown animate__delay-1s">
-                    Sistem Pelaporan dan Perbaikan Fasilitas Kampus
-                </h2>
-                <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-2s">
-                    Platform terintegrasi untuk melaporkan kerusakan fasilitas kampus 
-                    dan memantau proses perbaikannya secara real-time.
-                </p>
-                <div class="d-flex gap-3 animate__animated animate__fadeInUp animate__delay-3s">
-                    <a href="{{ url('/pelapor/laporan') }}" class="btn btn-light btn-lg shadow-sm animate__animated animate__pulse animate__infinite animate__slower">
-                        <i class="bi bi-plus-circle me-2"></i>Buat Laporan Baru
-                    </a>
-                    
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title animate__animated animate__fadeInDown">FIXIT</h1>
+                    <h2 class="hero-subtitle animate__animated animate__fadeInDown animate__delay-1s">
+                        Sistem Pelaporan dan Perbaikan Fasilitas Kampus
+                    </h2>
+                    <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-2s">
+                        Platform terintegrasi untuk melaporkan kerusakan fasilitas kampus
+                        dan memantau proses perbaikannya secara real-time.
+                    </p>
+                    <div class="d-flex gap-3 animate__animated animate__fadeInUp animate__delay-3s">
+                        <a href="{{ url('/pelapor/laporan') }}"
+                            class="btn btn-light btn-lg shadow-sm animate__animated animate__pulse animate__infinite animate__slower">
+                            <i class="bi bi-plus-circle me-2"></i>Buat Laporan Baru
+                        </a>
+
+                    </div>
+                </div>
+
+                <!-- Kolom logo -->
+                <div
+                    class="col-lg-6 d-none d-lg-flex justify-content-center animate__animated animate__fadeInRight animate__delay-1s">
+                    <img src="{{ asset('storage/dashboard/polinema_logo.png') }}" alt="Campus Repair"
+                        class="img-fluid floating-animation" style="width: 400px; height: auto;">
                 </div>
             </div>
-            
-            <!-- Kolom logo -->
-            <div class="col-lg-6 d-none d-lg-flex justify-content-center animate__animated animate__fadeInRight animate__delay-1s">
-                <img src="{{ asset('storage/dashboard/polinema_logo.png') }}" alt="Campus Repair" class="img-fluid floating-animation" style="width: 400px; height: auto;">
-            </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
     <!-- How It Works -->
@@ -320,11 +339,9 @@
                         </div>
                     </div>
                 </div>
-                 <!-- Gambar di sebelah kanan -->
-                <div class="col-lg-6 d-none d-lg-block text-right">  <!-- Gunakan text-right atau text-end -->
-                    <img src="{{ asset('storage/dashboard/workflow.jpg') }}" 
-                        alt="workflow" 
-                        class="img-fluid float-end"     
+                <!-- Gambar di sebelah kanan -->
+                <div class="col-lg-6 d-none d-lg-block text-right"> <!-- Gunakan text-right atau text-end -->
+                    <img src="{{ asset('storage/dashboard/workflow.jpg') }}" alt="workflow" class="img-fluid float-end"
                         style="max-width: 600px; height: auto;">
                 </div>
             </div>
@@ -376,8 +393,10 @@
     <section class="py-5 bg-primary text-white">
         <div class="container text-center">
             <h2 class="mb-4 animate__animated animate__fadeInUp">Siap Melaporkan Kerusakan Fasilitas?</h2>
-            <p class="lead mb-4 animate__animated animate__fadeInUp animate__delay-1s">Bergabung dengan ratusan pengguna yang telah memperbaiki fasilitas kampus bersama kami</p>
-            <a href="{{ url('/pelapor/laporan') }}" class="btn btn-light btn-lg animate__animated animate__fadeInUp animate__delay-2s">
+            <p class="lead mb-4 animate__animated animate__fadeInUp animate__delay-1s">Bergabung dengan ratusan pengguna
+                yang telah memperbaiki fasilitas kampus bersama kami</p>
+            <a href="{{ url('/pelapor/laporan') }}"
+                class="btn btn-light btn-lg animate__animated animate__fadeInUp animate__delay-2s">
                 <i class="bi bi-plus-circle me-2"></i>Buat Laporan Sekarang
             </a>
         </div>
@@ -389,7 +408,8 @@
             <div class="row">
                 <div class="col-lg-4 mb-4 mb-lg-0">
                     <h5 class="mb-3"><i class="bi bi-tools me-2"></i>FIXIT</h5>
-                    <p>Sistem pelaporan dan perbaikan fasilitas kampus terintegrasi untuk menciptakan lingkungan kampus yang lebih baik.</p>
+                    <p>Sistem pelaporan dan perbaikan fasilitas kampus terintegrasi untuk menciptakan lingkungan kampus
+                        yang lebih baik.</p>
                 </div>
                 <div class="col-lg-2 col-6 mb-4 mb-lg-0">
                     <h5 class="mb-3">Tautan</h5>
@@ -438,28 +458,39 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             // Counter animation
             $('.counter').counterUp({
                 delay: 10,
                 time: 1000
             });
-            
+
+            document.querySelectorAll('.counter').forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                let count = 0;
+                const interval = setInterval(() => {
+                    if (count >= target) {
+                        clearInterval(interval);
+                    }
+                    counter.textContent = count++;
+                }, 30);
+            });
+
             // Smooth scrolling for anchor links
-            $('a[href^="#"]').on('click', function(event) {
+            $('a[href^="#"]').on('click', function (event) {
                 event.preventDefault();
                 $('html, body').animate({
                     scrollTop: $($(this).attr('href')).offset().top - 70
                 }, 800);
             });
-            
+
             // Add animation class on scroll
-            $(window).scroll(function() {
-                $('.animate-on-scroll').each(function(){
+            $(window).scroll(function () {
+                $('.animate-on-scroll').each(function () {
                     var position = $(this).offset().top;
                     var scroll = $(window).scrollTop();
                     var windowHeight = $(window).height();
-                    
+
                     if (scroll > position - windowHeight + 200) {
                         $(this).addClass('animate__fadeInUp');
                     }
@@ -468,4 +499,5 @@
         });
     </script>
 </body>
+
 </html>
