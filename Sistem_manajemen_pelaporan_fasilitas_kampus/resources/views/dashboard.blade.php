@@ -441,7 +441,7 @@
             <hr class="mt-4 mb-3" style="border-color: rgba(255,255,255,0.1);">
             <div class="row">
                 <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-0">© 2023 FIXIT. All rights reserved.</p>
+                    <p class="mb-0">© 2025 FIXIT. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <p class="mb-0">Made with <i class="bi bi-heart-fill text-danger"></i> for better campus</p>

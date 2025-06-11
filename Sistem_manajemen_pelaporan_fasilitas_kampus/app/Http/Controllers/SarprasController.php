@@ -329,11 +329,7 @@ class SarprasController extends Controller
                 ->addIndexColumn()
                 ->addColumn('aksi', function ($row) {
                     $btn = '
-                    <button type="button" class="btn btn-sm btn-primary btnEditKriteria" data-id="' . $row->kriteria_id . '">Edit</button>
-                    <form action="' . route('sarpras.destroy_kriteria', $row->kriteria_id) . '" id="formDeleteKriteria" method="POST" style="display:inline;">
-                        ' . csrf_field() . method_field('DELETE') . '
-                        <button class="btn btn-sm btn-danger">Hapus</button>
-                    </form>';
+                    <button type="button" class="btn btn-sm btn-primary btnEditKriteria" data-id="' . $row->kriteria_id . '">Edit</button>';
                     return $btn;
                 })
                 ->rawColumns(['aksi'])
