@@ -140,23 +140,31 @@ class AuthController extends Controller
     }
 
 
-    public function reset_password(Request $request, $username)
+    public function reset_password(Request $request)
     {
-        $user = UserModel::where('username', $username)->first();
+        $request->validate([
+            'password_baru' => 'required|min:6',
+            'konfirmasi_password_baru' => 'required|same:password_baru'
+        ]);
 
+        $username = $request->input('username');
+        $user = UserModel::where('username', $username)->first();
         if (!$user) {
             return redirect()->back()->withErrors(['Username tidak ditemukan']);
         }
 
-        // Validasi input
-        $request->validate([
-            'password' => 'required|min:6|confirmed',
-        ]);
-
         // Update password
-        $user->password = Hash::make($request->input('password'));
-        $user->save();
-
-        return redirect('/login')->with('status', 'Password berhasil direset. Silakan login dengan password baru.');
+        $user->password = Hash::make($request->password_baru);
+        if ($user->save()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Password berhasil direset. Silakan login dengan password baru.'
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan password baru.'
+            ]);
+        }
     }
 }

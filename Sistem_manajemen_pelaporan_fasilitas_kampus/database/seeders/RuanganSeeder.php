@@ -15,14 +15,14 @@ class RuanganSeeder extends Seeder
             'Lorong Timur',
             'Kamar Mandi Laki-laki',
             'Kamar Mandi Perempuan',
-            'Laboratorium Arsitektur Komputer',
-            'Laboratorium Basisdata',
-            'Laboratorium Internet dan Web',
-            'Laboratorium Jaringan Komputer',
-            'Laboratorium Multimedia',
-            'Laboratorium Pemrograman Komputer',
-            'Laboratorium Project',
-            'Laboratorium Sistem Informasi',
+            'Lab. Arsitektur Komputer',
+            'Lab. Basisdata',
+            'Lab. Internet dan Web',
+            'Lab. Jaringan Komputer',
+            'Lab. Multimedia',
+            'Lab. Pemrograman Komputer',
+            'Lab. Project',
+            'Lab. Sistem Informasi',
         ];
 
         for ($lantaiId = 1; $lantaiId <= 8; $lantaiId++) {

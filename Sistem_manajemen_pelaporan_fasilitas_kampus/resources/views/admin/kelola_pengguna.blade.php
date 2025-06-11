@@ -23,7 +23,7 @@
                                 onclick="modalAction('{{url('admin/pengguna/import_pengguna')}}')">+ Import Pengguna</button>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body table-responsive">
                         <table class="table table-bordered table-striped mb-0" id="penggunaTable">
                             <thead class="table-white">
                                 <tr>
@@ -80,8 +80,10 @@
         var dataUser;
         $(document).ready(function () {
             dataUser = $('#penggunaTable').DataTable({
+                responsive: true,
+                autoWidth: false,
                 processing: true,
-                serverSide: false,
+                serverSide: true,
                 ajax: { url: "{{ route('admin.data_pengguna') }}", type: "POST" },
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },

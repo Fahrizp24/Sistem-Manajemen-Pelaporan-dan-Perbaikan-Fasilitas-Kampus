@@ -96,6 +96,8 @@
             }
 
             $('#laporanTable').DataTable({
+                responsive: true,
+                autoWidth: false,
                 processing: true,
                 serverSide: true,
                 ajax: {

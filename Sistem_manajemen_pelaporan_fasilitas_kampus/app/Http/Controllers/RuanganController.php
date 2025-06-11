@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GedungModel;
 use App\Models\RuanganModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\LantaiModel;
 
 class RuanganController extends Controller
 {
@@ -19,7 +21,7 @@ class RuanganController extends Controller
                 ->addColumn('aksi', function ($row) {
                     $btn = '
                     <button type="button" class="btn btn-sm btn-primary btnEditruangan" data-id="' . $row->ruangan_id . '">Edit</button>
-                    <form action="' . route('admin.destroy_ruangan', $row->ruangan_id) . '" id="formDeleteruangan" method="POST" style="display:inline;">
+                    <form action="' . route('admin.destroy_ruangan', $row->ruangan_id) . '" id="formDeleteRuangan" method="POST" style="display:inline;">
                         ' . csrf_field() . method_field('DELETE') . '
                         <button class="btn btn-sm btn-danger">Hapus</button>
                     </form>';
@@ -37,15 +39,18 @@ class RuanganController extends Controller
 
     public function create_ruangan()
     {
-        return view('admin.ruangan.create_ajax');
+        $lantai = LantaiModel::all();
+        $gedung = GedungModel::all();
+        return view('admin.ruangan.create_ajax', compact('lantai', 'gedung'));
     }
 
     public function store_ruangan(Request $request)
     {
         $rules = [
-            'lantai_nama' => 'required|string',
-            'lantai_deskripsi' => 'required|string|min:10',
             'gedung_id' => 'required|exists:gedung,gedung_id',
+            'lantai_id' => 'required|exists:lantai,lantai_id',
+            'ruangan_nama' => 'required|string',
+            'ruangan_deskripsi' => 'required|string|min:10',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -59,9 +64,10 @@ class RuanganController extends Controller
         }
 
         $ruangan = new RuanganModel();
+        $ruangan->gedung_id = $request->gedung_id;
+        $ruangan->lantai_id = $request->lantai_id;
         $ruangan->ruangan_nama = $request->ruangan_nama;
         $ruangan->ruangan_deskripsi = $request->ruangan_deskripsi;
-        $ruangan->gedung_id = $request->gedung_id;
         
         $ruangan->save();
 
@@ -74,7 +80,7 @@ class RuanganController extends Controller
     public function edit_ruangan($ruangan_id)
     {
         $ruangan = RuanganModel::findOrFail($ruangan_id);
-        return view('admin.ruangan.edit_ajax', compact('ruangan'));
+        return view('admin.ruangan.edit_ajax', compact('ruangan', 'ruangan_id'));
     }
 
     /**
