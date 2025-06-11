@@ -18,23 +18,8 @@
     </div>
 @else
     <div class="card-body">
-        <div class="row">
-            <!-- Kolom Kiri untuk Foto -->
-            <div class="col-md-4">
-                @if ($laporan->foto)
-                    <div style="max-width: 100%; max-height: 400px; overflow: hidden; margin-bottom: 20px;">
-                        <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-fluid"
-                            style="width: 100%; height: auto; object-fit: cover;">
-                    </div>
-                @else
-                    <div class="text-center text-muted" style="height: 200px; display: flex; align-items: center; justify-content: center; border: 1px dashed #ccc;">
-                        Tidak ada foto
-                    </div>
-                @endif
-            </div>
-            
             <!-- Kolom Kanan untuk Informasi Laporan -->
-            <div class="col-md-8">
+            <div class="col-12">
                 <table class="table table-bordered table-striped table-hover table-sm">
                     <tr>
                         <th width="30%">Pelapor</th>
@@ -79,7 +64,19 @@
                 </table>
             </div>
         </div>
-
+<div class="row mt-4">
+        <div class="col-12">
+            @if ($laporan->foto)
+                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
+                     class="img-thumbnail w-150% mx-auto d-block"
+                     style="max-width: 100%; height: 100%; max-height: 400px;">
+            @else
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-image"></i> Tidak ada foto
+                </div>
+            @endif
+        </div>
+    </div>
         @if ($laporan->status == 'selesai')
         <div class="mt-4">
             <h5>Rating Layanan</h5>
