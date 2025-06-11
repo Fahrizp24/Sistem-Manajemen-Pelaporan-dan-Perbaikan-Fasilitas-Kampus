@@ -2,19 +2,27 @@
 
 @section('content')
 <section class="section">
-    <div class="accordion" id="penugasanAccordion">
+    <h4 class="mb-3">Penugasan</h4>
 
-        {{-- Accordion Item: Daftar Penugasan --}}
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingPenugasan">
-                <button class="accordion-button bg-gradient-indigo text-blue" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapsePenugasan" aria-expanded="true" aria-controls="collapsePenugasan">
-                    <i class="bi bi-clipboard-data me-2"></i> Daftar Penugasan
-                </button>
-            </h2>
-            <div id="collapsePenugasan" class="accordion-collapse collapse show" aria-labelledby="headingPenugasan"
-                data-bs-parent="#penugasanAccordion">
-                <div class="accordion-body">
+    {{-- Horizontal Nav Tabs --}}
+    <ul class="nav nav-tabs" id="penugasanTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="penugasan-tab" data-bs-toggle="tab" data-bs-target="#penugasan" type="button" role="tab" aria-controls="penugasan" aria-selected="true">
+                Daftar Penugasan
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="revisi-tab" data-bs-toggle="tab" data-bs-target="#revisi" type="button" role="tab" aria-controls="revisi" aria-selected="false">
+                Daftar Revisi
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content pt-3" id="penugasanTabContent">
+        {{-- Tab: Penugasan --}}
+        <div class="tab-pane fade show active" id="penugasan" role="tabpanel" aria-labelledby="penugasan-tab">
+            <div class="card">
+                <div class="card-body">
                     <table class="table table-bordered table-striped mb-0" id="table-teknisi">
                         <thead>
                             <tr>
@@ -67,18 +75,11 @@
             </div>
         </div>
 
-        {{-- Accordion Item: Daftar Revisi --}}
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingRevisi">
-                <button class="accordion-button collapsed bg-gradient-indigo text-blue" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseRevisi" aria-expanded="false" aria-controls="collapseRevisi">
-                    <i class="bi bi-journal-text me-2"></i> Daftar Revisi
-                </button>
-            </h2>
-            <div id="collapseRevisi" class="accordion-collapse collapse" aria-labelledby="headingRevisi"
-                data-bs-parent="#penugasanAccordion">
-                <div class="accordion-body">
-                    <table class="table table-bordered table-striped mb-0" id="table-sarpras">
+        {{-- Tab: Revisi --}}
+        <div class="tab-pane fade" id="revisi" role="tabpanel" aria-labelledby="revisi-tab">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-bordered table-striped mb-0" id="table-teknisi">
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
@@ -129,7 +130,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     {{-- Modal --}}
@@ -148,78 +148,66 @@
 @endsection
 
 @push('scripts')
-    <script>
-        function showDetailModal(url) {
-            // Fetch the content
-            fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    // Insert the content into the modal
-                    document.getElementById('modalContent').innerHTML = html;
-                    
-                    // Initialize the modal
-                    var modal = new bootstrap.Modal(document.getElementById('detailModal'));
-                    modal.show();
+<script>
+    function showDetailModal(url) {
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('modalContent').innerHTML = html;
+                var modal = new bootstrap.Modal(document.getElementById('detailModal'));
+                modal.show();
 
-                    const form = document.querySelector('#detailModal form');
-                    if (form) {
-                        form.addEventListener('submit', function(e) {
-                            e.preventDefault();
-
-                            // Submit form via AJAX
-                            fetch(form.action, {
-                                    method: form.method,
-                                    body: new FormData(form),
-                                    headers: {
-                                        'X-Requested-With': 'XMLHttpRequest',
-                                        'Accept': 'application/json'
-                                    }
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        // Hide modal
-                                        modal.hide();
-
-                                        // Show success alert
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Sukses',
-                                            text: data.message || 'Aksi berhasil dilakukan',
-                                            timer: 2000,
-                                            showConfirmButton: false
-                                        });
-
-                                        // Optional: refresh page or update table
-                                        setTimeout(() => {
-                                            location.reload();
-                                        }, 2000);
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Gagal',
-                                            text: data.message || 'Terjadi kesalahan'
-                                        });
-                                    }
-                                })
-                                .catch(error => {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: 'Terjadi kesalahan saat mengirim data'
-                                    });
+                const form = document.querySelector('#detailModal form');
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        fetch(form.action, {
+                            method: form.method,
+                            body: new FormData(form),
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                modal.hide();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sukses',
+                                    text: data.message || 'Aksi berhasil dilakukan',
+                                    timer: 2000,
+                                    showConfirmButton: false
                                 });
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 2000);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: data.message || 'Terjadi kesalahan'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Terjadi kesalahan saat mengirim data'
+                            });
                         });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading modal content:', error);
-                    document.getElementById('modalContent').innerHTML = 
-                        '<div class="alert alert-danger">Error loading content</div>';
-                    var modal = new bootstrap.Modal(document.getElementById('detailModal'));
-                    modal.show();
-                });
-        }
-    </script>
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading modal content:', error);
+                document.getElementById('modalContent').innerHTML =
+                    '<div class="alert alert-danger">Error loading content</div>';
+                var modal = new bootstrap.Modal(document.getElementById('detailModal'));
+                modal.show();
+            });
+    }
+</script>
 @endpush
-

@@ -11,55 +11,76 @@
     <div class="page-content">
         <div class="row">
             <div class="col-12">
-                {{-- kriteria --}}
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Daftar Kriteria</h5>
-                        {{-- <button type="button" class="btn btn-success mb-3"
-                            onclick="modalAction('{{url('sarpras/kriteria/create_ajax')}}')">+ Tambah kriteria</button> --}}
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered table-striped mb-0" id="kriteriaTable">
-                            <thead class="table-white">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kode</th>
-                                    <th>Nama</th>
-                                    <th>Jenis</th>
-                                    <th>Bobot</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                {{-- Tab Navigasi --}}
+                <ul class="nav nav-tabs" id="kriteriaTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="kriteria-tab" data-bs-toggle="tab" data-bs-target="#kriteria" type="button" role="tab" aria-controls="kriteria" aria-selected="true">
+                            Daftar Kriteria
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="crisp-tab" data-bs-toggle="tab" data-bs-target="#crisp" type="button" role="tab" aria-controls="crisp" aria-selected="false">
+                            Daftar Crisp
+                        </button>
+                    </li>
+                </ul>
 
-                            </tbody>
-                        </table>
+                {{-- Tab Konten --}}
+                <div class="tab-content pt-3" id="kriteriaTabContent">
+                    {{-- Tab: Kriteria --}}
+                    <div class="tab-pane fade show active" id="kriteria" role="tabpanel" aria-labelledby="kriteria-tab">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-end">
+                                <button type="button" class="btn btn-success mb-3"
+                                    onclick="modalAction('{{url('sarpras/kriteria/create_ajax')}}')">+ Tambah kriteria</button>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered table-striped mb-0" id="kriteriaTable">
+                                    <thead class="table-white">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Kode</th>
+                                            <th>Nama</th>
+                                            <th>Jenis</th>
+                                            <th>Bobot</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{-- Data diisi oleh script --}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                {{-- crisp --}}
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Daftar Crisp</h5>
-                        <button type="button" class="btn btn-success mb-3"
-                            onclick="modalAction('{{url('sarpras/sistem_rekomendasi/create_crisp')}}')">+ Tambah crisp</button>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered table-striped mb-0" id="crispTable">
-                            <thead class="table-white">
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kriteria</th>
-                                    <th>Judul</th>
-                                    <th>Poin</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
 
-                            </tbody>
-                        </table>
+                    {{-- Tab: Crisp --}}
+                    <div class="tab-pane fade" id="crisp" role="tabpanel" aria-labelledby="crisp-tab">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-end">
+                                <button type="button" class="btn btn-success mb-3"
+                                    onclick="modalAction('{{ url('sarpras/sistem_rekomendasi/create_crisp') }}')">
+                                    + Tambah crisp
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered table-striped w-100 mb-0" id="crispTable">
+                                    <thead class="table-white">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Kriteria</th>
+                                            <th>Judul</th>
+                                            <th>Poin</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </div> 
             </div>
         </div>
     </div>
