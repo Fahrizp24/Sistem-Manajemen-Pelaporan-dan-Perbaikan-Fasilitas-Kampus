@@ -39,9 +39,8 @@ class RuanganController extends Controller
 
     public function create_ruangan()
     {
-        $lantai = LantaiModel::all();
         $gedung = GedungModel::all();
-        return view('admin.ruangan.create_ajax', compact('lantai', 'gedung'));
+        return view('admin.ruangan.create_ajax', compact( 'gedung'));
     }
 
     public function store_ruangan(Request $request)
@@ -59,22 +58,27 @@ class RuanganController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Validasi Gagal',
-                'msgField' => $validator->errors()
+                'errors' => $validator->errors()
             ], 422); // Tambahkan status code 422 untuk validation error
         }
 
         $ruangan = new RuanganModel();
-        $ruangan->gedung_id = $request->gedung_id;
         $ruangan->lantai_id = $request->lantai_id;
         $ruangan->ruangan_nama = $request->ruangan_nama;
         $ruangan->ruangan_deskripsi = $request->ruangan_deskripsi;
-        
+
         $ruangan->save();
 
         return response()->json([
             'status' => true,
             'message' => 'Ruangan berhasil ditambahkan.'
         ]);
+    }
+
+    public function getLantaiByGedung($gedung_id)
+    {
+        $lantai = LantaiModel::where('gedung_id', $gedung_id)->get();
+        return response()->json($lantai);
     }
 
     public function edit_ruangan($ruangan_id)

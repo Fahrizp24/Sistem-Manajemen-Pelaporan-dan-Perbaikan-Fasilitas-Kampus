@@ -8,6 +8,7 @@ use App\Models\RuanganModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\LantaiModel;
 
 class FasilitasController extends Controller
 {
@@ -38,18 +39,20 @@ class FasilitasController extends Controller
 
     public function create_fasilitas()
     {
-        $ruangan = RuanganModel::with('lantai.gedung')->get();
-        return view('admin.fasilitas.create_ajax', compact('ruangan'));
+        $gedung = GedungModel::all();
+        return view('admin.fasilitas.create_ajax', compact('gedung'));
     }
 
     public function store_fasilitas(Request $request)
     {
         $rules = [
-            'fasilitas_nama' => 'required|string|max:255',
-            'fasilitas_deskripsi' => 'required|string',
-            'kategori' => 'required|in:Elektronik, Furniture, Pendingin, Alat Tulis',
+            'gedung_id' => 'required|exists:gedung,gedung_id',
+            'lantai_id' => 'required|exists:lantai,lantai_id',
             'ruangan_id' => 'required|exists:ruangan,ruangan_id',
+            'fasilitas_nama' => 'required|string|max:255',
+            'kategori' => 'required|in:Elektronik,Jaringan,Furniture,Perlengkapan Kelas,Listrik',
             'status' => 'required|in:normal,rusak',
+            'fasilitas_deskripsi' => 'required|string|min:10',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -63,10 +66,10 @@ class FasilitasController extends Controller
         }
 
         $fasilitas = new FasilitasModel();
+        $fasilitas->ruangan_id = $request->ruangan_id;
         $fasilitas->fasilitas_nama = $request->fasilitas_nama;
         $fasilitas->fasilitas_deskripsi = $request->fasilitas_deskripsi;
         $fasilitas->kategori = $request->kategori;
-        $fasilitas->ruangan_id = $request->ruangan_id;
         $fasilitas->status = $request->status;
         $fasilitas->save();
 
@@ -76,11 +79,25 @@ class FasilitasController extends Controller
         ]);
     }
 
+    // app/Http/Controllers/Admin/FasilitasController.php
+    public function getLantaiByGedung($gedung_id)
+    {
+        $lantai = LantaiModel::where('gedung_id', $gedung_id)->get();
+        return response()->json($lantai);
+    }
+
+    public function getRuanganByLantai($lantai_id)
+    {
+        $ruangan = RuanganModel::where('lantai_id', $lantai_id)->get();
+        return response()->json($ruangan);
+    }
+
+
     public function edit_fasilitas($fasilitas_id)
     {
         $fasilitas = FasilitasModel::with('ruangan.lantai.gedung')->find($fasilitas_id);
-        $gedung_id = $fasilitas->ruangan->lantai->gedung->gedung_id; 
-        $gedung = GedungModel::all(); 
+        $gedung_id = $fasilitas->ruangan->lantai->gedung->gedung_id;
+        $gedung = GedungModel::all();
         return view('admin.fasilitas.edit_ajax', compact('fasilitas', 'gedung', 'gedung_id'));
 
     }
