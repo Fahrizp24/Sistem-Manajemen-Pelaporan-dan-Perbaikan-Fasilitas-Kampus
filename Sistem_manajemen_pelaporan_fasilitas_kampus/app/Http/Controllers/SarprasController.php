@@ -6,6 +6,7 @@ use App\Models\CrispModel;
 use App\Models\KriteriaModel;
 use App\Models\LaporanModel;
 use App\Models\TeknisiModel;
+use App\Models\FasilitasModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -134,16 +135,39 @@ class SarprasController extends Controller
         ];
 
         $activeMenu = 'penugasan';
-        $laporan_masuk_pelapor = LaporanModel::with('fasilitas.ruangan.lantai.gedung')->where('status', 'diajukan')->get();
-        $laporan_masuk_admin = LaporanModel::where('status', 'memilih teknisi')->get();
-        $laporan_masuk_teknisi = LaporanModel::where('status', 'telah diperbaiki')->get();
-
-        return view('sarpras.laporan_masuk', compact('breadcrumb', 'page', 'activeMenu', 'laporan_masuk_pelapor', 'laporan_masuk_admin', 'laporan_masuk_teknisi'));
+        $fasilitas_diajukan = FasilitasModel::whereHas('laporan', function ($query) {
+            $query->where('status', 'diajukan');
+        })->with([
+            'laporan' => function ($query) {
+                $query->where('status', 'diajukan')->with('pelapor');
+            },
+            'ruangan.lantai.gedung'
+        ])->get();
+        
+        // Fasilitas dengan laporan status 'memilih teknisi'
+        $fasilitas_memilih_teknisi = FasilitasModel::whereHas('laporan', function ($query) {
+            $query->where('status', 'memilih teknisi');
+        })->with([
+            'laporan' => function ($query) {
+                $query->where('status', 'memilih teknisi')->with('pelapor');
+            },
+            'ruangan.lantai.gedung'
+        ])->get();
+        // Fasilitas dengan laporan status 'telah diperbaiki'
+        $fasilitas_telah_diperbaiki = FasilitasModel::whereHas('laporan', function ($query) {
+            $query->where('status', 'telah diperbaiki');
+        })->with([
+            'laporan' => function ($query) {
+                $query->where('status', 'telah diperbaiki')->with('pelapor');
+            },
+            'ruangan.lantai.gedung'
+        ])->get();
+        return view('sarpras.laporan_masuk', compact('breadcrumb', 'page', 'activeMenu', 'fasilitas_diajukan', 'fasilitas_memilih_teknisi', 'fasilitas_telah_diperbaiki'));
     }
 
     public function show_laporan(string $id)
     {
-        $laporan = LaporanModel::findOrFail($id);
+        $laporan = FasilitasModel::findOrFail($id);
 
         $breadcrumb = (object) [
             'title' => 'Data Penugasan',

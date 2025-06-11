@@ -34,23 +34,26 @@
                                     <thead class="table-white">
                                         <tr>
                                             <th width="5%">No</th>
-                                            <th>Pelapor</th>
                                             <th>Gedung</th>
+                                            <th>Lantai</th>
+                                            <th>Ruangan</th>
                                             <th>Fasilitas</th>
                                             <th>Tanggal</th>
                                             <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($laporan_masuk_pelapor as $item)
+                                        @foreach ($fasilitas_diajukan as $item)
                                             <tr>
+                                                
                                                 <td class="fw-bold">{{ $loop->iteration }}</td>
-                                                <td>{{ $item->pelapor->nama }}</td>
-                                                <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-                                                <td>{{ $item->fasilitas->ruangan->ruangan_nama .' - '. $item->fasilitas->fasilitas_nama }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}</td>
+                                                <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
+                                                <td>{{ $item->ruangan->lantai->lantai_nama }}</td>
+                                                <td>{{ $item->ruangan->ruangan_nama }}</td>
+                                                <td>{{ $item->fasilitas_nama }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y') }}</td>
                                                 <td class="text-center">
-                                                    <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=pelapor')" class="btn btn-sm btn-primary">
+                                                    <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=pelapor')" class="btn btn-sm btn-primary">
                                                         <i class="bi bi-eye-fill me-1"></i> Detail
                                                     </button>
                                                 </td>
@@ -58,7 +61,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                <small class="text-indigo-600 d-block mt-2">{{ count($laporan_masuk_pelapor) }} laporan perlu diterima/ditolak</small>
+                                <small class="text-indigo-600 d-block mt-2">{{ count($fasilitas_diajukan) }} laporan perlu diterima/ditolak</small>
                             </div>
                         </div>
                     </div>
@@ -71,7 +74,9 @@
                                     <thead class="table-white">
                                         <tr>
                                             <th width="5%">No</th>
-                                            <th>Pelapor</th>
+                                            <th>Gedung</th>
+                                            <th>Lantai</th>
+                                            <th>Ruangan</th>
                                             <th>Fasilitas</th>
                                             <th>Tanggal</th>
                                             <th>Status</th>
@@ -79,15 +84,17 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($laporan_masuk_admin as $item)
+                                        @foreach ($fasilitas_memilih_teknisi as $item)
                                             <tr>
                                                 <td class="fw-bold">{{ $loop->iteration }}</td>
-                                                <td>{{ $item->pelapor->nama }}</td>
-                                                <td>{{ $item->fasilitas->ruangan->ruangan_nama .' - '. $item->fasilitas->fasilitas_nama }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}</td>
+                                                <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
+                                                <td>{{ $item->ruangan->lantai->lantai_nama }}</td>
+                                                <td>{{ $item->ruangan->ruangan_nama }}</td>
+                                                <td>{{ $item->fasilitas_nama }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y') }}</td>
                                                 <td><span class="text-warning">Perlu Penugasan</span></td>
                                                 <td class="text-center">
-                                                    <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=admin')" class="btn btn-sm btn-primary">
+                                                    <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=admin')" class="btn btn-sm btn-primary">
                                                         <i class="bi bi-eye-fill me-1"></i> Detail
                                                     </button>
                                                 </td>
@@ -95,7 +102,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                <small class="text-teal-600 d-block mt-2">{{ count($laporan_masuk_admin) }} laporan perlu penugasan teknisi</small>
+                                <small class="text-teal-600 d-block mt-2">{{ count($fasilitas_memilih_teknisi) }} laporan perlu penugasan teknisi</small>
                             </div>
                         </div>
                     </div>
@@ -108,7 +115,9 @@
                                     <thead class="table-white">
                                         <tr>
                                             <th width="5%">No</th>
-                                            <th>Pelapor</th>
+                                            <th>Gedung</th>
+                                            <th>Lantai</th>
+                                            <th>Ruangan</th>
                                             <th>Fasilitas</th>
                                             <th>Tanggal</th>
                                             <th>Status</th>
@@ -116,15 +125,17 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($laporan_masuk_teknisi as $item)
+                                        @foreach ($fasilitas_telah_diperbaiki as $item)
                                             <tr>
                                                 <td class="fw-bold">{{ $loop->iteration }}</td>
-                                                <td>{{ $item->pelapor->nama }}</td>
-                                                <td>{{ $item->fasilitas->ruangan->ruangan_nama .' - '. $item->fasilitas->fasilitas_nama }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}</td>
+                                                <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
+                                                <td>{{ $item->ruangan->lantai->lantai_nama }}</td>
+                                                <td>{{ $item->ruangan->ruangan_nama }}</td>
+                                                <td>{{ $item->fasilitas_nama }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y') }}</td>
                                                 <td><span class="text-orange">Perlu Ditelaah</span></td>
                                                 <td class="text-center">
-                                                    <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=teknisi')" class="btn btn-sm btn-primary">
+                                                    <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=teknisi')" class="btn btn-sm btn-primary">
                                                         <i class="bi bi-eye-fill me-1"></i> Detail
                                                     </button>
                                                 </td>
@@ -132,7 +143,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                                <small class="text-amber-600 d-block mt-2">{{ count($laporan_masuk_teknisi) }} laporan perlu ditelaah</small>
+                                <small class="text-amber-600 d-block mt-2">{{ count($fasilitas_telah_diperbaiki) }} laporan perlu ditelaah</small>
                             </div>
                         </div>
                     </div>

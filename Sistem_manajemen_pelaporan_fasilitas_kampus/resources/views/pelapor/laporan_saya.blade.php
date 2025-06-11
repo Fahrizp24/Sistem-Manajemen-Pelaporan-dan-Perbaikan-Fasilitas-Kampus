@@ -24,7 +24,7 @@
                             @foreach ($laporan_saya as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama.' - '.$item->fasilitas->ruangan->ruangan_nama }}</td>
+                                    <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
                                     <td>{{ $item->fasilitas->fasilitas_nama }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y') }}</td>
                                     <td>{{ Str::limit($item->deskripsi, 50) }}</td>

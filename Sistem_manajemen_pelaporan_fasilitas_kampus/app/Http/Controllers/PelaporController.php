@@ -206,10 +206,9 @@ class PelaporController extends Controller
             $laporan->status = 'diajukan';
             $laporan->save();
 
-            $fasilitas = FasilitasModel::find(1);
+            $fasilitas = FasilitasModel::find($request->fasilitas_id);
             $fasilitas->status = 'rusak';
             $fasilitas->save();
-
 
             return response()->json([
                 'status' => true,
