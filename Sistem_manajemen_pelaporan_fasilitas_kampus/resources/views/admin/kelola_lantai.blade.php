@@ -60,7 +60,7 @@
 
         $(document).on('click', '.btnEditlantai', function() {
             var id = $(this).data('id');
-            modalAction('/admin/edit_lantai/' + id);
+            modalAction('/admin/lantai/edit/' + id);
         });
         var dataLantai;
         $(document).ready(function() {

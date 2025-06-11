@@ -6,6 +6,7 @@ use App\Models\LantaiModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\GedungModel;
 
 class LantaiController extends Controller
 {
@@ -19,7 +20,7 @@ class LantaiController extends Controller
                 ->addColumn('aksi', function ($row) {
                     $btn = '
                     <button type="button" class="btn btn-sm btn-primary btnEditlantai" data-id="' . $row->lantai_id . '">Edit</button>
-                    <form action="' . route('admin.destroy_lantai', $row->lantai_id) . '" id="formDeletelantai" method="POST" style="display:inline;">
+                    <form action="' . route('admin.destroy_lantai', $row->lantai_id) . '" id="formDeleteLantai" method="POST" style="display:inline;">
                         ' . csrf_field() . method_field('DELETE') . '
                         <button class="btn btn-sm btn-danger">Hapus</button>
                     </form>';
@@ -37,7 +38,8 @@ class LantaiController extends Controller
 
     public function create_lantai()
     {
-        return view('admin.lantai.create_ajax');
+        $gedung = GedungModel::all();
+        return view('admin.lantai.create_ajax', compact('gedung'));
     }
 
     public function store_lantai(Request $request)
@@ -45,7 +47,7 @@ class LantaiController extends Controller
         $rules = [
             'lantai_nama' => 'required|string',
             'lantai_deskripsi' => 'required|string|min:10',
-            'ruangan_id' => 'required|exists:ruangan,ruangan_id',
+            'gedung_id' => 'required|exists:gedung,gedung_id',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -61,6 +63,7 @@ class LantaiController extends Controller
         $lantai = new LantaiModel();
         $lantai->lantai_nama = $request->lantai_nama;
         $lantai->lantai_deskripsi = $request->lantai_deskripsi;
+        $lantai->gedung_id = $request->gedung_id;
         $lantai->save();
 
         return response()->json([
