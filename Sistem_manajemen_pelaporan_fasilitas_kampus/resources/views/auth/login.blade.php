@@ -165,7 +165,7 @@
             </form>
 
             <div class="forgot-password">
-                <a class="font-bold" href="auth-forgot-password.html">Forgot password?</a>
+                <a class="font-bold" href="forgot_password">Forgot password?</a>
             </div>
         </div>
     </div>

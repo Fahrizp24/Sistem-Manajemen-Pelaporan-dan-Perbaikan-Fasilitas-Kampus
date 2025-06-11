@@ -21,6 +21,11 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::get('forgot_password', [AuthController::class, 'forgot_password'])->name('forgot_password');
+Route::post('forgot_password/cek_username', [AuthController::class, 'cek_username'])->name('forgot_password.check');
+Route::post('forgot_password/pertanyaan', [AuthController::class, 'cek_pertanyaan'])->name('forgot_password.pertanyaan');
+Route::get('forgot_password/reset_password/{id}', [AuthController::class, 'reset_password'])->name('forgot_password.reset_password');
+Route::post('forgot_password/reset_password_store', [AuthController::class, 'reset_passwordStore'])->name('forgot_password.reset_password_store');
 
 // Authenticated Routes
 Route::middleware(['auth'])->group(function () {
