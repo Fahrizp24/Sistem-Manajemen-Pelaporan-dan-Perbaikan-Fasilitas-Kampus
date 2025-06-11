@@ -84,7 +84,7 @@
                                 <th width="5%">No</th>
                                 <th>Gedung</th>
                                 <th>Fasilitas</th>
-                                <th>Tanggal Laporan</th>
+                                <th>Tanggal Revisi</th>
                                 <th>Deskripsi</th>
                                 <th>Status</th>
                                 <th>Foto</th>
@@ -97,7 +97,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
                                     <td>{{ $item->fasilitas->fasilitas_nama }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d/m/Y') }}</td>
                                     <td>{{ Str::limit($item->deskripsi, 50) }}</td>
                                     <td>
                                         @php

@@ -72,8 +72,9 @@
         <div class="row mt-4">
             <div class="col-12">
                 @if ($laporan->foto)
-                    <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg') }}"
-                        class="img-thumbnail w-150% mx-auto d-block" style="max-width: 100%; height: 100%; max-height: 400px;">
+                <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}"
+                class="img-thumbnail w-150% mx-auto d-block" 
+                style="max-width: 100%; height: 100%; max-height: 400px;">           
                 @else
                     <div class="alert alert-info text-center">
                         <i class="fas   fa-image"></i> Tidak ada foto

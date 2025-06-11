@@ -131,10 +131,16 @@ class TeknisiController extends Controller
         $teknisi_id = Auth::id();
 
         $activeMenu = 'penugasan';
-        $penugasan = LaporanModel::where('teknisi_id', $teknisi_id)->where('status', 'diperbaiki')->get();
-        $revisi = LaporanModel::where('teknisi_id', $teknisi_id)->where('status', 'revisi')->get();
-        // $ruangan = RuanganModel::where('ruangan_id',39)->get();
-        // dd($revisi,$ruangan);
+        $penugasan = LaporanModel::where('teknisi_id', $teknisi_id)
+            ->where('status', 'diperbaiki')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $revisi = LaporanModel::where('teknisi_id', $teknisi_id)
+            ->where('status', 'revisi')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
         return view('teknisi.penugasan', compact('penugasan', 'revisi', 'breadcrumb', 'page', 'activeMenu'));
     }
 
@@ -163,13 +169,18 @@ class TeknisiController extends Controller
         try {
             $laporan = LaporanModel::findOrFail($id);
 
-            // Upload file
+            // Upload file foto
             if ($request->hasFile('foto_pengerjaan')) {
-                $path = $request->file('foto_pengerjaan')->store('foto_pengerjaan', 'public');
+                $file = $request->file('foto_pengerjaan');
+                $extension = $file->getClientOriginalExtension();
+                $filename = $laporan->laporan_id . '_' . time() . '.' . $extension;
+                $path = $file->storeAs('foto_pengerjaan', $filename, 'public');
+
                 $laporan->foto_pengerjaan = $path;
             }
 
             $laporan->status = 'telah diperbaiki';
+            $laporan->foto_pengerjaan = $filename ?? null;
             $laporan->save();
 
             if ($request->ajax()) {
@@ -180,7 +191,6 @@ class TeknisiController extends Controller
             }
 
             return redirect()->back()->with('success', 'Laporan berhasil diajukan ke sarpras.');
-
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Gagal mengajukan laporan: ' . $e->getMessage());
