@@ -9,43 +9,58 @@
             <div class="modal-body">
                 <div class="form-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="fasilitas_nama">Nama Fasilitas</label>
-                            <input type="text" name="fasilitas_nama" class="form-control" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="kategori">Kategori</label>
-                            <select name="kategori" class="form-control" required>
-                                <option value="Elektronik">Elektronik</option>
-                                <option value="Jaringan">Jaringan</option>
-                                <option value="Furniture">Furniture</option>
-                                <option value="Perlengkapan Kelas">Perlengkapan kelas</option>
-                                <option value="Listrik">Listrik</option>
+                        <div class="col-md-4 mb-3">
+                            <label for="gedung_id">Gedung</label>
+                            <select name="gedung_id" id="gedung_id" class="form-control" required>
+                                <option value="">-- Pilih Gedung --</option>
+                                @foreach($gedung as $g)
+                                    <option value="{{ $g->gedung_id }}">{{ $g->gedung_nama }}</option>
+                                @endforeach
                             </select>
                         </div>
-                        <div class="col-md-12 mb-3">
-                            <label for="fasilitas_deskripsi">Deskripsi</label>
-                            <textarea name="fasilitas_deskripsi" class="form-control" rows="3" required></textarea>
+                        <div class="col-md-4 mb-3">
+                            <label for="lantai_id">Lantai</label>
+                            <select name="lantai_id" id="lantai_id" class="form-control" required disabled>
+                                <option value="">-- Pilih Lantai --</option>
+                            </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="ruangan_id">Ruangan</label>
-                            <select name="ruangan_id" class="form-control" required>
+                            <select name="ruangan_id" id="ruangan_id" class="form-control" required disabled>
                                 <option value="">-- Pilih Ruangan --</option>
-                                @foreach($ruangan as $r)
-                                    <option value="{{ $r->ruangan_id }}">{{ $r->ruangan_deskripsi }}</option>
-                                @endforeach
+                                
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="fasilitas_nama">Nama Fasilitas</label>
+                            <input type="text" name="fasilitas_nama" id="fasilitas_nama" class="form-control" required disabled>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="kategori">Kategori</label>
+                            <select name="kategori" id="kategori" class="form-control" required disabled>
+                                <option value="Elektronik">Elektronik</option>
+                                <option value="Jaringan">Jaringan</option>
+                                <option value="Furniture">Furniture</option>
+                                <option value="Perlengkapan Kelas">Perlengkapan Kelas</option>
+                                <option value="Listrik">Listrik</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="status">Status</label>
-                            <select name="status" class="form-control" required>
+                            <select name="status" id="status" class="form-control" required disabled>
                                 <option value="normal">Normal</option>
                                 <option value="rusak">Rusak</option>
                             </select>
                         </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="fasilitas_deskripsi">Deskripsi</label>
+                            <textarea name="fasilitas_deskripsi" id="fasilitas_deskripsi" class="form-control" rows="3" required disabled></textarea>
+                        </div>
+                        
+                        
 
                         <div class="col-12 d-flex justify-content-end mt-3">
-                            <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
+                            <button type="submit" id="submit-btn" class="btn btn-primary me-1 mb-1" disabled>Simpan</button>
                         </div>
                     </div>
                 </div>
@@ -54,67 +69,159 @@
     </div>
 </div>
 <script>
-    $(document).ready(function () {
-        $("#form-tambah").validate({
-            rules: {
-                fasilitas_nama: { required: true, minlength: 3 },
-                kategori: { required: true },
-                fasilitas_deskripsi: { required: true, minlength: 10 },
-                ruangan_id: { required: true },
-                status: { required: true }
-            },
-            messages: {
-                fasilitas_nama: {
-                    required: "nama wajib diisi",
-                    minlength: "Minimal 3 karakter"
-                },
-                fasilitas_deskripsi: {
-                    required: "kategori wajib diisi",
-                    minlength: "Minimal 10 karakter"
-                }
-            },
-            errorElement: 'div',
-            errorPlacement: function (error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.mb-3').append(error);
-            },
-            highlight: function (element) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element) {
-                $(element).removeClass('is-invalid');
-            },
-            submitHandler: function (form) {
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: $(form).serialize(),
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status) {
-                            $('#myModal').modal('hide');
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message,
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-                            dataFasilitas.ajax.reload(null, false);
-                        }
-                    },
-                    error: function (xhr) {
-                        if (xhr.status === 422) {
-                            const errors = xhr.responseJSON.errors;
-                            $.each(errors, function (key, value) {
-                                $(`#error-${key}`).text(value[0]);
-                                $(`[name="${key}"]`).addClass('is-invalid');
-                            });
-                        }
-                    }
+$(document).ready(function() {
+    // Inisialisasi - disable semua input kecuali gedung
+    $('#lantai_id, #ruangan_id, #fasilitas_nama, #kategori, #fasilitas_deskripsi, #status, #submit-btn').prop('disabled', true);
+    
+    // Handler ketika gedung dipilih
+    $('#gedung_id').change(function() {
+        const gedungId = $(this).val();
+        
+        if (gedungId) {
+            // Reset dan disable lantai dan ruangan
+            $('#lantai_id').empty().append('<option value="">-- Pilih Lantai --</option>').prop('disabled', false);
+            $('#ruangan_id').empty().append('<option value="">-- Pilih Ruangan --</option>').prop('disabled', true);
+            
+            // Ambil data lantai berdasarkan gedung
+            $.get(`/admin/fasilitas/get-lantai/${gedungId}`, function(data) {
+                $.each(data, function(key, value) {
+                    $('#lantai_id').append(`<option value="${value.lantai_id}">${value.lantai_nama}</option>`);
                 });
-                return false;
-            }
-        });
+            });
+        } else {
+            // Reset semua jika gedung tidak dipilih
+            $('#lantai_id, #ruangan_id').empty().prop('disabled', true);
+            $('#lantai_id').append('<option value="">-- Pilih Lantai --</option>');
+            $('#ruangan_id').append('<option value="">-- Pilih Ruangan --</option>');
+            disableFormInputs();
+        }
     });
+    
+    // Handler ketika lantai dipilih
+    $('#lantai_id').change(function() {
+        const lantaiId = $(this).val();
+        
+        if (lantaiId) {
+            // Reset dan enable ruangan
+            $('#ruangan_id').empty().append('<option value="">-- Pilih Ruangan --</option>').prop('disabled', false);
+            
+            // Ambil data ruangan berdasarkan lantai
+            $.get(`/admin/fasilitas/get-ruangan/${lantaiId}`, function(data) {
+                $.each(data, function(key, value) {
+                    $('#ruangan_id').append(`<option value="${value.ruangan_id}">${value.ruangan_deskripsi}</option>`);
+                });
+            });
+        } else {
+            // Reset ruangan jika lantai tidak dipilih
+            $('#ruangan_id').empty().append('<option value="">-- Pilih Ruangan --</option>').prop('disabled', true);
+            disableFormInputs();
+        }
+    });
+    
+    // Handler ketika ruangan dipilih
+    $('#ruangan_id').change(function() {
+        if ($(this).val()) {
+            // Enable semua input form
+            $('#fasilitas_nama, #kategori, #fasilitas_deskripsi, #status').prop('disabled', false);
+        } else {
+            disableFormInputs();
+        }
+    });
+    
+    // Validasi saat input berubah
+    $('input, select, textarea').on('change input', function() {
+        validateForm();
+    });
+    
+    // Fungsi untuk disable semua input form
+    function disableFormInputs() {
+        $('#fasilitas_nama, #kategori, #fasilitas_deskripsi, #status, #submit-btn').prop('disabled', true);
+    }
+    
+    // Fungsi validasi form
+    function validateForm() {
+        const allFilled = $('#gedung_id').val() && 
+                         $('#lantai_id').val() && 
+                         $('#ruangan_id').val() && 
+                         $('#fasilitas_nama').val().trim() && 
+                         $('#kategori').val() && 
+                         $('#fasilitas_deskripsi').val().trim() && 
+                         $('#status').val();
+        
+        $('#submit-btn').prop('disabled', !allFilled);
+    }
+
+    // Validasi form dengan jQuery Validate
+    $("#form-tambah").validate({
+        rules: {
+            gedung_id: { required: true },
+            lantai_id: { required: true },
+            ruangan_id: { required: true },
+            fasilitas_nama: { required: true, minlength: 3 },
+            kategori: { required: true },
+            fasilitas_deskripsi: { required: true, minlength: 10 },
+            status: { required: true }
+        },
+        messages: {
+            fasilitas_nama: {
+                required: "Nama wajib diisi",
+                minlength: "Minimal 3 karakter"
+            },
+            fasilitas_deskripsi: {
+                required: "Deskripsi wajib diisi",
+                minlength: "Minimal 10 karakter"
+            }
+        },
+        errorElement: 'div',
+        errorPlacement: function(error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.mb-3').append(error);
+        },
+        highlight: function(element) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function(element) {
+            $(element).removeClass('is-invalid');
+        },
+        submitHandler: function(form) {
+            const btn = $('#submit-btn');
+            btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...');
+            
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status) {
+                        $('#myModal').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        dataFasilitas.ajax.reload(null, false);
+                    }
+                },
+                error: function(xhr) {
+                    btn.prop('disabled', false).html('Simpan');
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            $(`[name="${key}"]`).addClass('is-invalid');
+                            $(`.error-${key}`).remove();
+                            $(`[name="${key}"]`).after(`<div class="error-${key} invalid-feedback">${value[0]}</div>`);
+                        });
+                    }
+                },
+                complete: function() {
+                    btn.prop('disabled', false).html('Simpan');
+                }
+            });
+            return false;
+        }
+    });
+});
 </script>

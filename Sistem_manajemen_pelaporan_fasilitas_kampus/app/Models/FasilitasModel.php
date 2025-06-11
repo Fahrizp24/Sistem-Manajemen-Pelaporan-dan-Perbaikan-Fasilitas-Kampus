@@ -19,10 +19,10 @@ class FasilitasModel extends Model
 
     // Define the attributes that are mass assignable
     protected $fillable = [
-        'nama',
-        'deskripsi',
-        'kategori',
         'ruangan_id',
+        'fasilitas_nama',
+        'fasilitas_deskripsi',
+        'kategori',
         'status'
     ];
 
