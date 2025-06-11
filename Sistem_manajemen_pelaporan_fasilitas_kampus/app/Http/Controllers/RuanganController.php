@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GedungModel;
 use App\Models\RuanganModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -39,15 +40,17 @@ class RuanganController extends Controller
     public function create_ruangan()
     {
         $lantai = LantaiModel::all();
-        return view('admin.ruangan.create_ajax', compact('lantai'));
+        $gedung = GedungModel::all();
+        return view('admin.ruangan.create_ajax', compact('lantai', 'gedung'));
     }
 
     public function store_ruangan(Request $request)
     {
         $rules = [
+            'gedung_id' => 'required|exists:gedung,gedung_id',
+            'lantai_id' => 'required|exists:lantai,lantai_id',
             'ruangan_nama' => 'required|string',
             'ruangan_deskripsi' => 'required|string|min:10',
-            'lantai_id' => 'required|exists:lantai,lantai_id',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -61,9 +64,10 @@ class RuanganController extends Controller
         }
 
         $ruangan = new RuanganModel();
+        $ruangan->gedung_id = $request->gedung_id;
+        $ruangan->lantai_id = $request->lantai_id;
         $ruangan->ruangan_nama = $request->ruangan_nama;
         $ruangan->ruangan_deskripsi = $request->ruangan_deskripsi;
-        $ruangan->lantai_id = $request->lantai_id;
         
         $ruangan->save();
 

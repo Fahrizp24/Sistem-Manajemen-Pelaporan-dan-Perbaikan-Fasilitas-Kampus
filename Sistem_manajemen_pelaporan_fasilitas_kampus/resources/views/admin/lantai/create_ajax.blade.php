@@ -9,14 +9,6 @@
             <div class="modal-body">
                 <div class="form-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="nama">Nama Lantai</label>
-                            <input type="text" name="lantai_nama" class="form-control" required>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label for="deskripsi">Deskripsi</label>
-                            <textarea name="lantai_deskripsi" class="form-control" rows="3" required></textarea>
-                        </div>
                         <div class="col-md-12 mb-3">
                             <label for="gedung_id">Gedung</label>
                             <select name="gedung_id" class="form-control" required>
@@ -25,6 +17,14 @@
                                     <option value="{{ $g->gedung_id }}">{{ $g->gedung_nama }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nama">Nama Lantai</label>
+                            <input type="text" name="lantai_nama" class="form-control" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="deskripsi">Deskripsi</label>
+                            <textarea name="lantai_deskripsi" class="form-control" rows="3" required></textarea>
                         </div>
                         <div class="col-12 d-flex justify-content-end mt-3">
                             <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
@@ -39,11 +39,14 @@
     $(document).ready(function () {
         $("#form-tambah").validate({
             rules: {
+                gedung_id: { required: true }
                 lantai_nama: { required: true, minlength: 3 },
                 lantai_deskripsi: { required: true, minlength: 10 },
-                gedung_id: { required: true }
             },
             messages: {
+                gedung_id: {
+                    required: "gedung wajib diisi"
+                }
                 lantai_nama: {
                     required: "nama wajib diisi",
                     minlength: "Minimal 3 karakter"
@@ -52,9 +55,6 @@
                     required: "deskripsi wajib diisi",
                     minlength: "Minimal 10 karakter"
                 },
-                gedung_id: {
-                    required: "gedung wajib diisi"
-                }
             },
             errorElement: 'div',
             errorPlacement: function (error, element) {

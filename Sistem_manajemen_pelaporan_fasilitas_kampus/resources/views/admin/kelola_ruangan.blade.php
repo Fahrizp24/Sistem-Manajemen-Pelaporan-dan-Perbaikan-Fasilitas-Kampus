@@ -17,7 +17,7 @@
                     + Tambah Ruangan
                 </button>
             </div>
-            <div class="card-body">
+            <div class="card-body"> 
                 <table class="table table-bordered" id="tableRuangan">
                     <thead>
                         <tr>
