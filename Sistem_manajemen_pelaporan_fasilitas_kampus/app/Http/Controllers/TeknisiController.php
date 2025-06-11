@@ -131,10 +131,16 @@ class TeknisiController extends Controller
         $teknisi_id = Auth::id();
 
         $activeMenu = 'penugasan';
-        $penugasan = LaporanModel::where('teknisi_id', $teknisi_id)->where('status', 'diperbaiki')->get();
-        $revisi = LaporanModel::where('teknisi_id', $teknisi_id)->where('status', 'revisi')->get();
-        // $ruangan = RuanganModel::where('ruangan_id',39)->get();
-        // dd($revisi,$ruangan);
+        $penugasan = LaporanModel::where('teknisi_id', $teknisi_id)
+            ->where('status', 'diperbaiki')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $revisi = LaporanModel::where('teknisi_id', $teknisi_id)
+            ->where('status', 'revisi')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
         return view('teknisi.penugasan', compact('penugasan', 'revisi', 'breadcrumb', 'page', 'activeMenu'));
     }
 
@@ -147,30 +153,34 @@ class TeknisiController extends Controller
             'list' => ['Data Penugasan']
         ];
 
-        $page = (object)[
+        $page = (object) [
             'title' => 'Detail Penugasan',
             'subtitle' => 'Informasi lengkap mengenai penugasan'
         ];
         return view('teknisi.detail_penugasan', compact('laporan', 'breadcrumb', 'page'));
     }
-    
+
     public function ajukanKeSarpras(string $id, Request $request)
     {
+        $request->validate([
+            'foto_pengerjaan' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
         try {
             $laporan = LaporanModel::findOrFail($id);
 
-            if (!$laporan->bukti_pengerjaan) {
-                if ($request->ajax()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Tidak bisa diajukan. Silakan unggah foto bukti pengerjaan terlebih dahulu.'
-                    ]);
-                }
+            // Upload file foto
+            if ($request->hasFile('foto_pengerjaan')) {
+                $file = $request->file('foto_pengerjaan');
+                $extension = $file->getClientOriginalExtension();
+                $filename = $laporan->laporan_id . '_' . time() . '.' . $extension;
+                $path = $file->storeAs('foto_pengerjaan', $filename, 'public');
 
-                return redirect()->back()->with('error', 'Silakan unggah foto bukti pengerjaan terlebih dahulu.');
+                $laporan->foto_pengerjaan = $path;
             }
 
             $laporan->status = 'telah diperbaiki';
+            $laporan->foto_pengerjaan = $filename ?? null;
             $laporan->save();
 
             if ($request->ajax()) {
@@ -182,18 +192,12 @@ class TeknisiController extends Controller
 
             return redirect()->back()->with('success', 'Laporan berhasil diajukan ke sarpras.');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal mengkonfirmasi laporan: ' . $e->getMessage()
-                ], 500);
-            }
-
-            return redirect()->back()->with('error', 'Gagal mengkonfirmasi laporan: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Gagal mengajukan laporan: ' . $e->getMessage());
         }
     }
 
-    
+
     public function riwayat_penugasan()
     {
         $breadcrumb = (object) [
@@ -207,7 +211,7 @@ class TeknisiController extends Controller
         $activeMenu = 'riwayat_penugasan';
         $teknisi_id = Auth::id();
 
-        $laporan = LaporanModel::whereIn('status', ['selesai','telah diperbaiki'])
+        $laporan = LaporanModel::whereIn('status', ['selesai', 'telah diperbaiki'])
             ->where('teknisi_id', $teknisi_id)
             ->get();
         return view('teknisi.riwayat_penugasan', compact('laporan', 'breadcrumb', 'page', 'activeMenu'));
@@ -222,11 +226,11 @@ class TeknisiController extends Controller
             'list' => ['Data Riwayat Penugasan']
         ];
 
-        $page = (object)[
+        $page = (object) [
             'title' => 'Detail Laporan',
             'subtitle' => 'Informasi lengkap mengenai riwayat penugasan'
         ];
 
-        return view('teknisi.detail_riwayat_penugasan', compact('laporan', 'breadcrumb','page'));
+        return view('teknisi.detail_riwayat_penugasan', compact('laporan', 'breadcrumb', 'page'));
     }
 }

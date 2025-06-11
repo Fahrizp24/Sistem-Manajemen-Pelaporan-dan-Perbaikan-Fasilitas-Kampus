@@ -1,12 +1,20 @@
 @extends('layouts.template')
 
 @section('content')
-    <section class="section">
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center bg-gradient-indigo py-3">
-                <h5 class="card-title mb-0 text-blue"><i class="bi bi-clipboard-data me-2"></i>Daftar Penugasan</h5>
-            </div>
-                <div class="card-body pt-3">
+<section class="section">
+    <div class="accordion" id="penugasanAccordion">
+
+        {{-- Accordion Item: Daftar Penugasan --}}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingPenugasan">
+                <button class="accordion-button bg-gradient-indigo text-blue" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapsePenugasan" aria-expanded="true" aria-controls="collapsePenugasan">
+                    <i class="bi bi-clipboard-data me-2"></i> Daftar Penugasan
+                </button>
+            </h2>
+            <div id="collapsePenugasan" class="accordion-collapse collapse show" aria-labelledby="headingPenugasan"
+                data-bs-parent="#penugasanAccordion">
+                <div class="accordion-body">
                     <table class="table table-bordered table-striped mb-0" id="table-teknisi">
                         <thead>
                             <tr>
@@ -16,6 +24,7 @@
                                 <th>Tanggal Laporan</th>
                                 <th>Deskripsi</th>
                                 <th>Status</th>
+                                <th>Foto</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -36,14 +45,14 @@
                                                 'konfirmasi' => 'bg-primary',
                                                 'memilih teknisi' => 'bg-info',
                                                 'diperbaiki' => 'bg-info',
-                                                'telah diperbaiki' => 'bg-Info',
+                                                'telah diperbaiki' => 'bg-info',
                                                 'revisi' => 'bg-warning',
                                                 'selesai' => 'bg-success',
                                             ][$item->status] ?? 'bg-secondary';
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
                                     </td>
-                                    <td>{{$item->foto}}</td>
+                                    <td>{{ $item->foto }}</td>
                                     <td>
                                         <button onclick="showDetailModal('{{ url('teknisi/penugasan/'.$item->laporan_id) }}')" 
                                             class="btn btn-sm btn-primary">
@@ -57,20 +66,28 @@
                 </div>
             </div>
         </div>
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center bg-gradient-indigo py-3">
-                <h5 class="card-title mb-0 text-blue"><i class="bi bi-journal-text me-2"></i>Daftar Revisi</h5>
-            </div>
-                <div class="card-body pt-3">
+
+        {{-- Accordion Item: Daftar Revisi --}}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingRevisi">
+                <button class="accordion-button collapsed bg-gradient-indigo text-blue" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseRevisi" aria-expanded="false" aria-controls="collapseRevisi">
+                    <i class="bi bi-journal-text me-2"></i> Daftar Revisi
+                </button>
+            </h2>
+            <div id="collapseRevisi" class="accordion-collapse collapse" aria-labelledby="headingRevisi"
+                data-bs-parent="#penugasanAccordion">
+                <div class="accordion-body">
                     <table class="table table-bordered table-striped mb-0" id="table-sarpras">
                         <thead>
                             <tr>
                                 <th width="5%">No</th>
                                 <th>Gedung</th>
                                 <th>Fasilitas</th>
-                                <th>Tanggal Laporan</th>
+                                <th>Tanggal Revisi</th>
                                 <th>Deskripsi</th>
                                 <th>Status</th>
+                                <th>Foto</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -78,9 +95,9 @@
                             @foreach ($revisi as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama  }}</td>
+                                    <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
                                     <td>{{ $item->fasilitas->fasilitas_nama }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d/m/Y') }}</td>
                                     <td>{{ Str::limit($item->deskripsi, 50) }}</td>
                                     <td>
                                         @php
@@ -91,14 +108,14 @@
                                                 'konfirmasi' => 'bg-primary',
                                                 'memilih teknisi' => 'bg-info',
                                                 'diperbaiki' => 'bg-info',
-                                                'telah diperbaiki' => 'bg-Info',
+                                                'telah diperbaiki' => 'bg-info',
                                                 'revisi' => 'bg-warning',
                                                 'selesai' => 'bg-success',
                                             ][$item->status] ?? 'bg-secondary';
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
                                     </td>
-                                    <td>{{$item->foto}}</td>
+                                    <td>{{ $item->foto }}</td>
                                     <td>
                                         <button onclick="showDetailModal('{{ url('teknisi/penugasan/'.$item->laporan_id) }}')" 
                                             class="btn btn-sm btn-primary">
@@ -112,21 +129,22 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Modal Structure -->
-        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="detailModalLabel">Detail Penugasan</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="modalContent">
-                    </div>
+
+    </div>
+
+    {{-- Modal --}}
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">Detail Penugasan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
+                <div class="modal-body" id="modalContent"></div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection
 
 @push('scripts')
@@ -204,3 +222,4 @@
         }
     </script>
 @endpush
+

@@ -26,7 +26,7 @@
                 <div class="col-md-4"><label>Kriteria Crisp</label></div>
                 <div class="col-md-8">
                     <select name="kriteria_id" class="form-control">
-                        <option value="{{ $crisp->kriteria->kriteria_id }}" disabled selected>{{ $crisp->kriteria->nama }}</option>
+                        <option value="{{ $crisp->kriteria->kriteria_id }}" selected>{{ $crisp->kriteria->nama }}</option>
                     </select>
                 </div>
                 <div class="col-md-4"><label>Judul Crisp</label></div>
@@ -105,7 +105,7 @@
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,
-                    type: form.method,
+                    method: form.method,
                     data: $(form).serialize(),
                     dataType: 'json',
                     success: function(response) {

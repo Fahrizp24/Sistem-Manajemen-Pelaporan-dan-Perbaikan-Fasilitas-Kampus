@@ -19,9 +19,20 @@
 @else
     <div class="modal-body">
         <div class="row">
-            
+            <!-- Kolom Foto (Kiri) -->
+            <div class="col-md-4">
+                @if ($laporan->foto)
+                    <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-thumbnail w-100 mb-3"
+                        style="max-height: 300px; object-fit: contain;">
+                @else
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-image"></i> Tidak ada foto
+                    </div>
+                @endif
+            </div>
+
             <!-- Kolom Informasi (Kanan) -->
-            <div class="col-12">
+            <div class="col-md-8">
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <tr>
@@ -68,58 +79,59 @@
                 </div>
             </div>
         </div>
-<div class="row mt-4">
-        <div class="col-12">
-            @if ($laporan->foto)
-                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
-                     class="img-thumbnail w-150% mx-auto d-block"
-                     style="max-width: 100%; height: 100%; max-height: 400px;">
-            @else
-                <div class="alert alert-info text-center">
-                    <i class="fas fa-image"></i> Tidak ada foto
-                </div>
-            @endif
-        </div>
-    </div>
+
         <div class="mt-3 text-center">
             @if ($source == 'pelapor')
-                    <form class="form" method="POST"
-                        action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}"
-                        enctype="multipart/form-data" data-parsley-validate>
-                        @csrf
-                        <div class="row">
-                            <div class="divider divider-left">
-                                <h4 class="divider-text">Berikan Penilaian Kriteria</h4>
-                            </div>
-
-                            @foreach ($kriteria as $kriteriaItem)
-                                <div class="col-12">
-                                    <div class="form-group mandatory mt-3 divider divider-left">
-                                        <label for="kriteria_{{ $kriteriaItem->kriteria_id }}" class="form-label divider-text" style="padding:0">{{ $kriteriaItem->nama }}</label>
-                                        <select id="kriteria_{{ $kriteriaItem->kriteria_id }}" name="kriteria[{{ $kriteriaItem->kriteria_id }}]" class="form-select" data-parsley-required="true" required>
-                                            <option value="">Pilih {{ strtolower($kriteriaItem->nama) }}</option>
-                                            @foreach ($crisp->where('kriteria_id', $kriteriaItem->kriteria_id) as $crispItem)
-                                                <option value="{{ $crispItem->poin }}">{{ $crispItem->judul }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            @endforeach
+                <form class="form" method="POST"
+                    action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}"
+                    enctype="multipart/form-data" data-parsley-validate>
+                    @csrf
+                    <div class="row">
+                        <div class="divider divider-left">
+                            <h4 class="divider-text">Berikan Penilaian Kriteria</h4>
                         </div>
 
-                        <button type="submit" class="btn btn-success mt-3 gap-2" 
-                            onclick="return confirm('Anda Yakin Untuk Menerima Laporan Ini?')">
-                            Terima Laporan
-                        </button>
-                        </form>
-                        <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-danger mt-3" 
-                                onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
-                                Tolak Laporan
-                            </button>
-                        </form>
-                    </form>
+                        @foreach ($kriteria as $kriteriaItem)
+                            <div class="col-12">
+                                <div class="form-group mandatory mt-3 divider divider-left">
+                                    <label for="kriteria_{{ $kriteriaItem->kriteria_id }}" class="form-label divider-text"
+                                        style="padding:0">{{ $kriteriaItem->nama }}</label>
+                                    <select id="kriteria_{{ $kriteriaItem->kriteria_id }}"
+                                        name="kriteria[{{ $kriteriaItem->kriteria_id }}]" class="form-select"
+                                        data-parsley-required="true" required>
+                                        <option value="">Pilih {{ strtolower($kriteriaItem->nama) }}</option>
+                                        @foreach ($crisp->where('kriteria_id', $kriteriaItem->kriteria_id) as $crispItem)
+                                            <option value="{{ $crispItem->poin }}">{{ $crispItem->judul }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <button type="submit" class="btn btn-success mt-3 gap-2"
+                        onclick="return confirm('Anda Yakin Untuk Menerima Laporan Ini?')">
+                        Terima Laporan
+                    </button>
+                </form>
+                <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
+                    @csrf
+                    <div class="col-12">
+                        <div class="form-group mandatory mt-3 divider divider-left">
+                            <label for="alasan_ditolak" class="form-label divider-text" style="padding:0">Alasan
+                                Penolakan</label>
+                            <input type="text" id="alasan_ditolak" name="alasan_ditolak" class="form-control"
+                                placeholder="Masukkan alasan penolakan" required>
+                            <span class="error-text" id="error-alasan_tolak"></span>
+                            <span class="text-muted">*Wajib diisi jika menolak laporan</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-danger mt-3"
+                        onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
+                        Tolak Laporan
+                    </button>
+                </form>
+                </form>
             @elseif($source == 'admin')
                 <form action="{{ url('/sarpras/laporan_masuk/pilih_teknisi/' . $laporan->laporan_id) }}" method="POST">
                     @csrf
@@ -138,6 +150,9 @@
                     </div>
                 </form>
             @elseif($source == 'teknisi')
+                <span>Foto Hasil Pengerjaan</span>
+                <img src="{{ Storage::url('foto_pengerjaan/' . $laporan->foto_pengerjaan) }}"
+                    class="img-thumbnail w-150% mx-auto d-block" style="max-width: 100%; height: 100%; max-height: 400px;">
                 <form action="{{ url('/sarpras/laporan_masuk/selesaikan/' . $laporan->laporan_id) }}" method="POST">
                     @csrf
                     <div class="row justify-content-center">
@@ -152,6 +167,23 @@
                             </button>
                         </div>
                     </div>
+                </form>
+                <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $laporan->laporan_id) }}" method="POST">
+                    @csrf
+                    <div class="col-12">
+                        <div class="form-group mandatory mt-3 divider divider-left">
+                            <label for="alasan_ditolak" class="form-label divider-text" style="padding:0">Alasan
+                                Penolakan</label>
+                            <input type="text" id="alasan_ditolak" name="alasan_ditolak" class="form-control"
+                                placeholder="Masukkan alasan penolakan" required>
+                            <span class="error-text" id="error-alasan_tolak"></span>
+                            <span class="text-muted">*Wajib diisi jika menolak laporan</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-danger mt-3"
+                        onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
+                        Tolak Laporan
+                    </button>
                 </form>
             @elseif($source == 'ajukan')
                 <form action="{{ url('/sarpras/ajukan_laporan/' . $laporan->laporan_id) }}" method="POST">

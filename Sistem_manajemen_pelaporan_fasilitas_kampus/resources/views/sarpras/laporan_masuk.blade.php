@@ -42,7 +42,7 @@
                                                 <td class="fw-bold">{{ $loop->iteration }}</td>
                                                 <td><div class="d-flex align-items-center">{{ $item->pelapor->nama }}</div></td>
                                                 <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-                                                <td>{{ $item->fasilitas->fasilitas_nama }}</td>
+                                                <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama .' - '.$item->fasilitas->ruangan->ruangan_nama .' - '. $item->fasilitas->fasilitas_nama }}</td>
                                                 <td><span class="card-title mb-0 text-blue">{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}</span></td>
                                                 <td class="text-center">
                                                     <button onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=pelapor')" class="btn btn-sm btn-primary text-white">
@@ -88,7 +88,7 @@
                                             <tr>
                                                 <td class="fw-bold">{{ $loop->iteration }}</td>
                                                 <td><div class="d-flex align-items-center">{{ $item->pelapor->nama }}</div></td>
-                                                <td>{{ $item->fasilitas->fasilitas_nama }}</td>
+                                                <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama .' - '.$item->fasilitas->ruangan->ruangan_nama .' - '. $item->fasilitas->fasilitas_nama }}</td>
                                                 <td><span class="card-title mb-0 text-blue">{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}</span></td>
                                                 <td><span class="card-title mb-0 text-yellow">Perlu Penugasan</span></td>
                                                 <td class="text-center">
@@ -135,7 +135,7 @@
                                             <tr>
                                                 <td class="fw-bold">{{ $loop->iteration }}</td>
                                                 <td><div class="d-flex align-items-center">{{ $item->pelapor->nama }}</div></td>
-                                                <td>{{ $item->fasilitas->fasilitas_nama }}</td>
+                                                <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama .' - '.$item->fasilitas->ruangan->ruangan_nama .' - '. $item->fasilitas->fasilitas_nama }}</td>
                                                 <td><span class="card-title mb-0 text-orange">{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}</span></td>
                                                 <td><span class="card-title mb-0 text-orange">Perlu Ditelaah</span></td>
                                                 <td class="text-center">

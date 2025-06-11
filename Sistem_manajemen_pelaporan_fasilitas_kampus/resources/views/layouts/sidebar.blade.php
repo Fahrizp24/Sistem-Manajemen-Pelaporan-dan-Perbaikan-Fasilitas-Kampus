@@ -50,10 +50,13 @@
                 @endphp
 
                 <li class="sidebar-item">
-                    <div class="text-center w-100">
-                        <span>
-                            {{ Auth::user()->nama }} - 
-                            @php
+                    <div class="text-left w-100 fs-6">
+                        
+                            <strong>
+                                Halo, <span>{{ Auth::user()->nama }}</span>
+                            </strong>
+                            <span class="d-block">
+                                 @php
                                 $peranMap = [
                                     'admin' => 'Admin',
                                     'sarpras' => 'Sarana Prasarana',
@@ -67,13 +70,21 @@
                                 ];
                             @endphp
                             {{ $peranMap[Auth::user()->peran] ?? 'Pengguna' }}
-                        </span>
+                            </span>
+                        
                     </div>
                 </li>
 
-
                 {{-- Dosen, Mahasiswa, Tendik --}}
                 @if(in_array($peran, ['pelapor']))
+
+                    <li class="sidebar-item {{ str_contains($currentUrl, '/pelapor/laporan_saya') ? 'active' : '' }}">
+                        <a href="{{ url('pelapor/laporan_saya') }}" class='sidebar-link'>
+                            <i class="bi bi-layout-text-window-reverse"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
                     <li class="sidebar-title">Menu</li>
 
                     <li class="sidebar-item {{ str_contains($currentUrl, '/pelapor/profile') ? 'active' : '' }}">
@@ -91,29 +102,24 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item {{ str_contains($currentUrl, '/pelapor/laporan_saya') ? 'active' : '' }}">
-                        <a href="{{ url('pelapor/laporan_saya') }}" class='sidebar-link'>
-                            <i class="bi bi-file-earmark-text"></i>
-                            <span>Laporan Saya</span>
-                        </a>
-                    </li>
                 @endif
 
                 {{-- Sarana Prasarana --}}
                 @if($peran === 'sarpras')
+                
+                    <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/laporan_masuk') ? 'active' : '' }}">
+                        <a href="{{ url('sarpras/laporan_masuk') }}" class='sidebar-link'>
+                            <i class="bi bi-layout-text-window-reverse"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    
                     <li class="sidebar-title">Menu</li>
 
                     <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/profile') ? 'active' : '' }}">
                         <a href="{{ url('/sarpras/profile') }}" class='sidebar-link'>
                             <i class="bi bi-person"></i>
                             <span>Profil</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item {{ str_contains($currentUrl, '/sarpras/laporan_masuk') ? 'active' : '' }}">
-                        <a href="{{ url('sarpras/laporan_masuk') }}" class='sidebar-link'>
-                            <i class="bi bi-inbox"></i>
-                            <span>Laporan Masuk</span>
                         </a>
                     </li>
 
@@ -142,14 +148,14 @@
                 {{-- Admin --}}
                 @if($peran === 'admin')
 
-                    <li class="sidebar-title">Menu Laporan</li>
-
                     <li class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
                         <a href="{{ url('admin/laporan_periodik') }}" class='sidebar-link'>
-                            <i class="bi bi-calendar-range"></i>
-                            <span>Laporan Periodik</span>
+                            <i class="bi bi-layout-text-window-reverse"></i>
+                            <span>Dashboard</span>
                         </a>
                     </li>
+
+                    <li class="sidebar-title">Menu Laporan</li>
 
                     <li
                         class="sidebar-item {{ str_contains($currentUrl, '/admin/laporan_masuk') && !str_contains($currentUrl, '/admin/kelola_laporan') && !str_contains($currentUrl, '/admin/laporan_periodik') ? 'active' : '' }}">
@@ -196,23 +202,38 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-item {{ str_contains($currentUrl, 'lantai') ? 'active' : '' }}">
+                        <a href="{{ url('admin/lantai') }}" class='sidebar-link'>
+                            <i class="bi bi-layers"></i>
+                            <span>Lantai</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {{ str_contains($currentUrl, 'ruangan') ? 'active' : '' }}">
+                        <a href="{{ url('admin/ruangan') }}" class='sidebar-link'>
+                            <i class="bi bi-door-closed"></i>
+                            <span>Ruangan</span>
+                        </a>
+                    </li>
+
                 @endif
 
                 {{-- Teknisi --}}
                 @if($peran === 'teknisi')
+
+                    <li class="sidebar-item {{ str_contains($currentUrl, '/teknisi/penugasan') ? 'active' : '' }}">
+                        <a href="{{ url('teknisi/penugasan') }}" class='sidebar-link'>
+                            <i class="bi bi-layout-text-window-reverse"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
                     <li class="sidebar-title">Menu</li>
 
                     <li class="sidebar-item {{ str_contains($currentUrl, '/teknisi/profile') ? 'active' : '' }}">
                         <a href="{{ url('/teknisi/profile') }}" class='sidebar-link'>
                             <i class="bi bi-person"></i>
                             <span>Profil</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item {{ str_contains($currentUrl, '/teknisi/penugasan') ? 'active' : '' }}">
-                        <a href="{{ url('teknisi/penugasan') }}" class='sidebar-link'>
-                            <i class="bi bi-tools"></i>
-                            <span>Penugasan</span>
                         </a>
                     </li>
 
@@ -249,7 +270,7 @@
     .sidebar-menu {
         display: flex;
         flex-direction: column;
-        height: calc(100vh - 120px);
+        height: calc(100vh + 30px);
         /* Adjust based on your header height */
     }
 
@@ -283,4 +304,5 @@
     .sidebar-item.active>.sidebar-link i {
         color: #fff;
     }
+    
 </style>

@@ -23,6 +23,14 @@ return new class extends Migration
             $table->string('password');
             $table->enum('peran', ['admin', 'pelapor', 'sarpras', 'teknisi']);
             $table->string('foto_profil')->nullable()->default('default.jpg');
+            $table->string('pertanyaan_masa_kecil')->nullable();
+            $table->string('jawaban_masa_kecil')->nullable();
+            $table->string('pertanyaan_keluarga')->nullable();
+            $table->string('jawaban_keluarga')->nullable();
+            $table->string('pertanyaan_tempat')->nullable();
+            $table->string('jawaban_tempat')->nullable();
+            $table->string('pertanyaan_pengalaman')->nullable();
+            $table->string('jawaban_pengalaman')->nullable();
             $table->timestamps();
         });
     }

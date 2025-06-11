@@ -69,37 +69,32 @@
                 </table>
             </div>
         </div>
-<div class="row mt-4">
-        <div class="col-12">
-            @if ($laporan->foto)
-                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
-                     class="img-thumbnail w-150% mx-auto d-block"
-                     style="max-width: 100%; height: 100%; max-height: 400px;">
-            @else
-                <div class="alert alert-info text-center">
-                    <i class="fas fa-image"></i> Tidak ada foto
-                </div>
-            @endif
+        <div class="row mt-4">
+            <div class="col-12">
+                @if ($laporan->foto)
+                <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}"
+                class="img-thumbnail w-150% mx-auto d-block" 
+                style="max-width: 100%; height: 100%; max-height: 400px;">           
+                @else
+                    <div class="alert alert-info text-center">
+                        <i class="fas   fa-image"></i> Tidak ada foto
+                    </div>
+                @endif
+            </div>
         </div>
-    </div>
         <div class="card-footer text-center mt-3">
-            @php
-                $bisaAjukan = !empty($laporan->bukti_pengerjaan);
-            @endphp
-
-            <form action="{{ url('/teknisi/penugasan/' . $laporan->laporan_id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ url('/teknisi/penugasan/' .
+            $laporan->laporan_id) }}" method="POST" enctype="multipart/form-data" id="formBukti">
                 @csrf
                 <!-- Upload file -->
                 <div class="form-group">
-                    <label for="bukti_pengerjaan">Upload Foto Bukti Pengerjaan</label>
-                    <input type="file" name="bukti_pengerjaan" id="bukti_pengerjaan" class="form-control">
-                    <span class="text-danger error-text" id="error-bukti_pengerjaan"></span>
+                    <label for="foto_pengerjaan">Upload Foto Bukti Pengerjaan</label>
+                    <input type="file" name="foto_pengerjaan" id="foto_pengerjaan" class="form-control" required>
+                    <span class="text-danger error-text" id="error-foto_pengerjaan"></span>
                 </div>
 
                 <!-- Tombol ajukan -->
-                <button type="submit" class="btn btn-success px-4"
-                    onclick="return confirm('Anda Yakin Untuk Mengkonfirmasi Laporan Ini?')"
-                    {{ $bisaAjukan ? '' : 'disabled' }}>
+                <button type="submit" class="btn btn-success px-4" id="btnAjukan">
                     <i class="fas fa-paper-plane me-2"></i> Ajukan ke Sarpras
                 </button>
             </form>
@@ -107,9 +102,9 @@
     </div>
 @endempty
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('form[action*="/teknisi/penugasan/telah_diperbaiki"]').validate({
-            submitHandler: function(form) {
+            submitHandler: function (form) {
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -117,9 +112,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
-                            $('#detailModal').fadeOut(300, function() {
+                            $('#detailModal').fadeOut(300, function () {
                                 $(this).modal('hide');
                             });
 
@@ -131,7 +126,7 @@
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.msgField, function (prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
                             }
@@ -147,14 +142,14 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight: function(element, errorClass, validClass) {
+            highlight: function (element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight: function(element, errorClass, validClass) {
+            unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             }
         });

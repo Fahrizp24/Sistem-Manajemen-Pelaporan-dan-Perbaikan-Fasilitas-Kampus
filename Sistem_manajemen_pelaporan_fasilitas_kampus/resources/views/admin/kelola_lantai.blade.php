@@ -9,75 +9,92 @@
             </div>
         @endif
 
-        {{-- Tabel Gedung --}}
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Daftar Gedung</h5>
+                <h5 class="mb-0">Daftar Lantai</h5>
                 <button type="button" class="btn btn-success mb-3"
-                    onclick="modalAction('{{url('admin/gedung/create_gedung')}}')">+ Tambah Gedung</button>
+                    onclick="modalAction('{{ route('admin.create_lantai') }}')">
+                    + Tambah Lantai
+                </button>
             </div>
             <div class="card-body">
-                <table class="table table-bordered" id="gedungTable">
+                <table class="table table-bordered" id="tableLantai">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Gedung</th>
+                            <th>Nama Lantai</th>
                             <th>Deskripsi</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                    </tbody>
                 </table>
             </div>
         </div>
     </div>
-@endsection
-<!-- Modal -->
-@push('scripts')
-    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalLantai" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-                <div class="modal-body">
-                    <div id="modalContent">Memuat...</div>
-                </div>
+            <div class="modal-body">
+                <div id="contentModalLantai">Memuat...</div>
+            </div>
         </div>
     </div>
-    <script>
+@endsection
 
+@push('scripts')
+    <script>
         function modalAction(url) {
             $.ajax({
                 url: url,
                 type: "GET",
-                success: function (res) {
-                    $('#modalContent').html(res);
-                    $('#myModal').modal('show');
+                success: function(res) {
+                    $('#contentModalLantai').html(res);
+                    $('#modalLantai').modal('show');
                 },
-                error: function () {
-                    $('#modalContent').html('<p class="text-danger">Gagal memuat data.</p>');
+                error: function() {
+                    $('#contentModalLantai').html('<p class="text-danger">Gagal memuat data.</p>');
                 }
             });
         }
 
-        $(document).on('click', '.btnEditGedung', function () {
+        $(document).on('click', '.btnEditlantai', function() {
             var id = $(this).data('id');
-            modalAction('/admin/gedung/edit/' + id);
+            modalAction('/admin/edit_lantai/' + id);
         });
-
-        var dataGedung;
-        $(document).ready(function () {
-            dataGedung = $('#gedungTable').DataTable({
+        var dataLantai;
+        $(document).ready(function() {
+            dataLantai = $('#tableLantai').DataTable({
                 processing: true,
                 serverSide: false,
-                ajax: { url: "{{ route('admin.data_gedung') }}", type: "POST" },
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'gedung_nama', name: 'gedung_nama' },
-                    { data: 'gedung_deskripsi', name: 'gedung_deskripsi' },
-                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                ajax: {
+                    url: "{{ route('admin.data_lantai') }}",
+                    type: "POST"
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'lantai_nama',
+                        name: 'lantai_nama'
+                    },
+                    {
+                        data: 'lantai_deskripsi',
+                        name: 'lantai_deskripsi'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        orderable: false,
+                        searchable: false
+                    }
                 ]
             });
         });
-        $(document).on('submit', '#formDeleteGedung', function (e) {
+        $(document).on('submit', '#formDeleteLantai', function(e) {
             e.preventDefault(); // Cegah form langsung submit
 
             let form = this;
@@ -97,6 +114,5 @@
                 }
             });
         });
-
     </script>
 @endpush

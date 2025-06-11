@@ -122,14 +122,12 @@ class AdminController extends Controller
             ], 500);
         }
     }
-    /**
-     * Display a listing of the resource.
-     */
+ 
 
     public function data_pengguna(Request $request)
     {
         if ($request->ajax()) {
-            $data = UserModel::select(['pengguna_id', 'username', 'nama', 'email', 'peran']);
+            $data = UserModel::select(['pengguna_id', 'username', 'nama', 'email', 'no_telp', 'peran']);
             // dd($data);
             return DataTables::of($data)
                 ->addIndexColumn() // untuk DT_RowIndex
@@ -275,18 +273,19 @@ class AdminController extends Controller
     }
 
 
-    public function create_ajax()
+    public function create_pengguna()
     {
         return view('admin.pengguna.create_ajax');
     }
 
 
-    public function store_ajax(Request $request)
+    public function store_pengguna(Request $request)
     {
         $rules = [
             'username' => 'required|string',
             'nama' => 'required|string',
             'email' => 'required|email|unique:users,email',
+            'no_telp' => 'required|digits_between:10,15',
             'password' => 'required|min:6',
             'peran' => 'required|in:admin,sarpras,pelapor,teknisi',
         ];
@@ -358,7 +357,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy_pengguna($id)
     {
         $pengguna = UserModel::find($id);
 
@@ -371,7 +370,7 @@ class AdminController extends Controller
         return redirect()->route('admin.pengguna')->with('success', 'Pengguna berhasil dihapus.');
     }
 
-    public function resetPassword($id)
+    public function reset_password_pengguna($id)
     {
         $pengguna = UserModel::findOrFail($id);
 

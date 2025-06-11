@@ -154,18 +154,18 @@
                     
                 </div>
 
-                <div class="form-check form-check-lg d-flex align-items-center mb-4">
+                {{-- <div class="form-check form-check-lg d-flex align-items-center mb-4">
                     <input class="form-check-input me-2" type="checkbox" name="remember" id="flexCheckDefault">
                     <label class="form-check-label text-gray-600" for="flexCheckDefault">
                         Keep me logged in
                     </label>
-                </div>
+                </div> --}}
 
                 <button type="submit" class="btn btn-primary btn-lg shadow-lg">Login</button>
             </form>
 
             <div class="forgot-password">
-                <a class="font-bold" href="auth-forgot-password.html">Forgot password?</a>
+                <a class="font-bold" href="forgot_password">Forgot password?</a>
             </div>
         </div>
     </div>
