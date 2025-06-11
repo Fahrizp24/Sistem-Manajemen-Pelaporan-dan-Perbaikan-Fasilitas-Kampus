@@ -17,7 +17,7 @@
                     + Tambah Ruangan
                 </button>
             </div>
-            <div class="card-body"> 
+            <div class="card-body table-responsive"> 
                 <table class="table table-bordered" id="tableRuangan">
                     <thead>
                         <tr>
@@ -65,6 +65,8 @@
         var dataRuangan;
         $(document).ready(function () {
             dataRuangan = $('#tableRuangan').DataTable({
+                responsive: true,
+                autoWidth: false,
                 processing: true,
                 serverSide: true,
                 ajax: {

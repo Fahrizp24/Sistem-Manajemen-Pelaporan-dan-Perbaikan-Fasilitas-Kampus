@@ -24,7 +24,7 @@
                 </div>
 
             </div>
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table class="table table-bordered mb-0" id="fasilitasTable">
                     <thead>
                         <tr>
@@ -76,6 +76,8 @@
         var dataFasilitas;
         $(document).ready(function() {
             dataFasilitas = $('#fasilitasTable').DataTable({
+                responsive: true,
+                autoWidth: false,
                 processing: true,
                 serverSide: true,
                 ajax: {

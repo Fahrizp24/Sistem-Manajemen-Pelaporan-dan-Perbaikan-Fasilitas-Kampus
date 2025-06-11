@@ -17,7 +17,7 @@
                     + Tambah Lantai
                 </button>
             </div>
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table class="table table-bordered" id="tableLantai">
                     <thead>
                         <tr>
@@ -65,8 +65,10 @@
         var dataLantai;
         $(document).ready(function() {
             dataLantai = $('#tableLantai').DataTable({
+                responsive: true,
+                autoWidth: false,
                 processing: true,
-                serverSide: false,
+                serverSide: true,
                 ajax: {
                     url: "{{ route('admin.data_lantai') }}",
                     type: "POST"

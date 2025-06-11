@@ -16,7 +16,7 @@
                 <button type="button" class="btn btn-success mb-3"
                     onclick="modalAction('{{url('admin/gedung/create_gedung')}}')">+ Tambah Gedung</button>
             </div>
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table class="table table-bordered" id="gedungTable">
                     <thead>
                         <tr>
@@ -26,13 +26,12 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 @endsection
+
 <!-- Modal -->
 @push('scripts')
     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -66,8 +65,10 @@
         var dataGedung;
         $(document).ready(function () {
             dataGedung = $('#gedungTable').DataTable({
+                responsive: true,
+                autoWidth: false,
                 processing: true,
-                serverSide: false,
+                serverSide: true,
                 ajax: { url: "{{ route('admin.data_gedung') }}", type: "POST" },
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
