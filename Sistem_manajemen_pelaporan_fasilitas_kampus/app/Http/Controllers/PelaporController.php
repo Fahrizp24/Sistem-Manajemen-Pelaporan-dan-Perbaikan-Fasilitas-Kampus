@@ -159,15 +159,28 @@ class PelaporController extends Controller
         $ruangan = RuanganModel::where('lantai_id', $request->lantai_id)->get();
         return response()->json($ruangan);
     }
+
     public function get_fasilitas_by_ruangan(Request $request)
     {
+        $pelapor_id = auth()->user()->pengguna_id;
+
         $request->validate([
             'ruangan_id' => 'required|exists:ruangan,ruangan_id',
         ]);
 
-        $fasilitas = FasilitasModel::where('ruangan_id', $request->ruangan_id)->get();
+        $statuses = ['diajukan', 'diterima', 'konfirmasi', 'memilih teknisi', 'diperbaiki', 'telah diperbaiki', 'revisi'];
+        $fasilitas = FasilitasModel::where('ruangan_id', $request->ruangan_id)
+            ->whereNotIn('fasilitas_id', function ($query) use ($statuses, $pelapor_id) {
+                $query->select('fasilitas_id')
+                    ->from('laporan')
+                    ->whereIn('status', $statuses)
+                    ->where('pelapor_id', $pelapor_id);
+            })
+            ->get();
+
         return response()->json($fasilitas);
     }
+
 
     public function store_laporan(Request $request)
     {
@@ -192,6 +205,11 @@ class PelaporController extends Controller
             $laporan->foto = $filename;
             $laporan->status = 'diajukan';
             $laporan->save();
+
+            $fasilitas = FasilitasModel::find(1);
+            $fasilitas->status = 'rusak';
+            $fasilitas->save();
+
 
             return response()->json([
                 'status' => true,
@@ -233,17 +251,15 @@ class PelaporController extends Controller
     public function show_laporan_saya(string $id)
     {
         $laporan = LaporanModel::with([
-            'pelapor',         
-            'fasilitas', 
-            'sarpras',  
-            'teknisi',  
-        ])->find($id); 
+            'pelapor',
+            'fasilitas',
+            'sarpras',
+            'teknisi',
+        ])->find($id);
 
         return view('pelapor.show_detail_laporan', [
             'laporan' => $laporan,
             'page' => (object) ['title' => 'Detail Laporan']
         ]);
     }
-
-    
 }

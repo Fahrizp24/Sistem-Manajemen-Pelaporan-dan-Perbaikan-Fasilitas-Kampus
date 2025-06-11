@@ -45,7 +45,7 @@ class AuthController extends Controller
             if (!Hash::check($credentials['password'], $user->password)) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Password salah.'
+                    'message' => 'Password/Username salah.'
                 ]);
             }
 
