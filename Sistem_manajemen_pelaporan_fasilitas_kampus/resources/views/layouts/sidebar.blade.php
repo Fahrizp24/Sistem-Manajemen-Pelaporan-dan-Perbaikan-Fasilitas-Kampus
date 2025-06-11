@@ -50,7 +50,7 @@
                 @endphp
 
                 <li class="sidebar-item">
-                    <div class="text-center w-100">
+                    <div class="text-left w-100 fs-5">
                         <span>
                             Halo,
                             @php
@@ -67,7 +67,7 @@
                                 ];
                             @endphp
                             {{ $peranMap[Auth::user()->peran] ?? 'Pengguna' }}
-                            <span class="d-block">{{ Auth::user()->nama }}</span>
+                            <span class="d-block"><strong>{{ Auth::user()->nama }}</strong></span>
                         </span>
                     </div>
                 </li>
