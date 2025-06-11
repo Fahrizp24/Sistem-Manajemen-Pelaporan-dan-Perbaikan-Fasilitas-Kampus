@@ -9,23 +9,28 @@ class RuanganSeeder extends Seeder
 {
     public function run()
     {
-        $defaultRuangan = [
+        $ruanganList = [
             'Lobby',
             'Lorong Barat',
             'Lorong Timur',
             'Kamar Mandi Laki-laki',
             'Kamar Mandi Perempuan',
+            'Laboratorium Arsitektur Komputer',
+            'Laboratorium Basisdata',
+            'Laboratorium Internet dan Web',
+            'Laboratorium Jaringan Komputer',
+            'Laboratorium Multimedia',
+            'Laboratorium Pemrograman Komputer',
+            'Laboratorium Project',
+            'Laboratorium Sistem Informasi',
         ];
 
-        $totalPerLantai = 21;
-
         for ($lantaiId = 1; $lantaiId <= 8; $lantaiId++) {
-            for ($i = 0; $i < $totalPerLantai; $i++) {
+            foreach ($ruanganList as $nama) {
                 DB::table('ruangan')->insert([
                     'lantai_id' => $lantaiId,
-                    'ruangan_nama' => $i < count($defaultRuangan)
-                        ? $defaultRuangan[$i]
-                        : 'Ruang ' . ($i - count($defaultRuangan) + 1),
+                    'ruangan_nama' => $nama,
+                    'ruangan_deskripsi' => $nama . ' Lantai ' . $lantaiId,
                 ]);
             }
         }
