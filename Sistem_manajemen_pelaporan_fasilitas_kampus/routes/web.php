@@ -10,6 +10,9 @@ use App\Http\Controllers\SarprasController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GedungController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LantaiController;
+use App\Http\Controllers\RuanganController;
+use PhpOffice\PhpSpreadsheet\Worksheet\Row;
 
 Route::pattern('id', '[0-9]+');
 
@@ -70,6 +73,28 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/edit/{id}', [GedungController::class, 'edit_gedung'])->name('admin.edit_gedung');
                 Route::put('/update/{id}', [GedungController::class, 'update_gedung'])->name('admin.update_gedung');
                 Route::delete('/{id}', [GedungController::class, 'destroy_gedung'])->name('admin.destroy_gedung');
+            });
+
+            Route::prefix('lantai')->group(function () {
+                Route::post('/data', [LantaiController::class, 'data_lantai'])->name('admin.data_lantai');
+                Route::get('/', [LantaiController::class, 'index'])->name('admin.lantai');
+                Route::get('/create_lantai', [LantaiController::class, 'create_lantai'])->name('admin.create_lantai');
+                Route::post('/store', [LantaiController::class, 'store_lantai'])->name('admin.store_lantai');
+                Route::get('/{id}', [LantaiController::class, 'show_lantai'])->name('admin.show_lantai');
+                Route::get('/edit/{id}', [LantaiController::class, 'edit_lantai'])->name('admin.edit_lantai');
+                Route::put('/update/{id}', [LantaiController::class, 'update_lantai'])->name('admin.update_lantai');
+                Route::delete('/{id}', [LantaiController::class, 'destroy_lantai'])->name('admin.destroy_lantai');
+            });
+
+            Route::prefix('ruangan')->group(function () {
+               Route::post('/data', [RuanganController::class, 'data_ruangan'])->name('admin.data_ruangan');
+               Route::get('/', [RuanganController::class, 'index'])->name('admin.ruangan');
+               Route::get('/create_ruangan', [RuanganController::class, 'create_ruangan'])->name('admin.create_ruangan');
+               Route::post('/store', [RuanganController::class, 'store_ruangan'])->name('admin.store_ruangan');
+               Route::get('/{id}', [RuanganController::class, 'show_ruangan'])->name('admin.show_ruangan');
+               Route::get('/edit/{id}', [RuanganController::class, 'edit_ruangan'])->name('admin.edit_ruangan');
+               Route::put('/update/{id}', [RuanganController::class, 'update_ruangan'])->name('admin.update_ruangan');
+               Route::delete('/{id}', [RuanganController::class, 'destroy_ruangan'])->name('admin.destroy_ruangan'); 
             });
 
             // Pengguna
