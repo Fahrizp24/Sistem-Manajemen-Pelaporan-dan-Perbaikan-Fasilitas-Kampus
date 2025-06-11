@@ -50,10 +50,13 @@
                 @endphp
 
                 <li class="sidebar-item">
-                    <div class="text-left w-100 fs-5">
-                        <span>
-                            Halo,
-                            @php
+                    <div class="text-left w-100 fs-6">
+                        
+                            <strong>
+                                Halo, <span>{{ Auth::user()->nama }}</span>
+                            </strong>
+                            <span class="d-block">
+                                 @php
                                 $peranMap = [
                                     'admin' => 'Admin',
                                     'sarpras' => 'Sarana Prasarana',
@@ -67,8 +70,8 @@
                                 ];
                             @endphp
                             {{ $peranMap[Auth::user()->peran] ?? 'Pengguna' }}
-                            <span class="d-block"><strong>{{ Auth::user()->nama }}</strong></span>
-                        </span>
+                            </span>
+                        
                     </div>
                 </li>
 
@@ -263,7 +266,7 @@
     .sidebar-menu {
         display: flex;
         flex-direction: column;
-        height: calc(100vh + 20px);
+        height: calc(100vh + 30px);
         /* Adjust based on your header height */
     }
 
