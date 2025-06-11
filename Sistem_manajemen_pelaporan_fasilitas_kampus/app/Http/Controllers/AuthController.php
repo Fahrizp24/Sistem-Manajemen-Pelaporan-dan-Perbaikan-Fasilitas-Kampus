@@ -56,7 +56,7 @@ class AuthController extends Controller
                 'admin' => '/admin/laporan_periodik',
                 'teknisi' => '/teknisi/penugasan',
                 'sarpras' => '/sarpras/laporan_masuk',
-                'pelapor' => '/pelapor/profile',
+                'pelapor' => '/pelapor/laporan_saya',
                 default => '/'
             };
 
