@@ -9,10 +9,10 @@ return new class extends Migration {
     {
         Schema::create('spk', function (Blueprint $table) {
             $table->id('spk_id');
-            $table->unsignedBigInteger('laporan_id');
-            $table->foreign('laporan_id')
-                  ->references('laporan_id')
-                  ->on('laporan')
+            $table->unsignedBigInteger('fasilitas_id');
+            $table->foreign('fasilitas_id')
+                  ->references('fasilitas_id')
+                  ->on('fasilitas')
                   ->onDelete('cascade');
             $table->timestamps();
         });

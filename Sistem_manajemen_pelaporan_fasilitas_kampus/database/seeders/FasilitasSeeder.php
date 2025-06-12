@@ -25,6 +25,12 @@ class FasilitasSeeder extends Seeder
             ['fasilitas_nama' => 'Pintu', 'kategori' => 'Bangunan'],
         ];
 
+        // Ambil fasilitas_id dari laporan yang statusnya tertentu
+        $fasilitasRusakIds = DB::table('laporan')
+            ->whereIn('status', ['diperbaiki', 'telah diperbaiki', 'revisi', 'selesai'])
+            ->pluck('fasilitas_id')
+            ->toArray();
+
         $ruangans = DB::table('ruangan')->get();
 
         foreach ($ruangans as $ruangan) {
@@ -46,7 +52,8 @@ class FasilitasSeeder extends Seeder
 
             foreach ($semuaFasilitas as $fasilitas) {
                 if (in_array($fasilitas['fasilitas_nama'], $fasilitasUntukRuangan)) {
-                    DB::table('fasilitas')->insert([
+                    // Simpan data fasilitas lalu ambil ID-nya
+                    $id = DB::table('fasilitas')->insertGetId([
                         'ruangan_id' => $ruangan->ruangan_id,
                         'fasilitas_nama' => $fasilitas['fasilitas_nama'],
                         'kategori' => $fasilitas['kategori'],
@@ -55,6 +62,13 @@ class FasilitasSeeder extends Seeder
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
+
+                    // Update status jika masuk ke daftar rusak
+                    if (in_array($id, $fasilitasRusakIds)) {
+                        DB::table('fasilitas')
+                            ->where('fasilitas_id', $id)
+                            ->update(['status' => 'rusak']);
+                    }
                 }
             }
         }

@@ -78,5 +78,16 @@ class LaporanSeeder extends Seeder
                 'updated_at' => $now,
             ]);
         }
+
+        $statusesRusak = ['diperbaiki', 'telah diperbaiki', 'revisi', 'selesai'];
+
+        $fasilitasRusakIds = DB::table('laporan')
+            ->whereIn('status', $statusesRusak)
+            ->pluck('fasilitas_id')
+            ->unique();
+
+        DB::table('fasilitas')
+            ->whereIn('fasilitas_id', $fasilitasRusakIds)
+            ->update(['status' => 'rusak']);
     }
 }

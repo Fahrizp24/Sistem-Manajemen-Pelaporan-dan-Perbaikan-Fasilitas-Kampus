@@ -45,4 +45,14 @@ class FasilitasModel extends Model
     {
         return $this->hasMany(LaporanModel::class, 'fasilitas_id', 'fasilitas_id');
     }
+
+    public function spk()
+    {
+        return $this->hasOne(SpkModel::class, 'laporan_id');
+    }
+
+    public function spk_kriteria()
+    {
+        return $this->hasMany(SpkModel::class);
+    }
 }

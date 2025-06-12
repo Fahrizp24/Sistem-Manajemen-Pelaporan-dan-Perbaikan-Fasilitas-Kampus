@@ -10,7 +10,7 @@ class SpkModel extends Model
     protected $primaryKey = 'spk_id';
     public $timestamps = true;
     protected $fillable = [
-        'laporan_id',
+        'fasilitas_id',
         'spk_id',
     ];
 
@@ -21,8 +21,8 @@ class SpkModel extends Model
             ->withTimestamps();
     }
 
-    public function laporan()
+    public function fasilitas()
     {
-        return $this->belongsTo(LaporanModel::class, 'laporan_id');
+        return $this->belongsTo(FasilitasModel::class, 'fasilitas_id');
     }
 }

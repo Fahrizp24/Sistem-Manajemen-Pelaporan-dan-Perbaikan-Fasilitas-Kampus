@@ -12,13 +12,13 @@ class SpkSeeder extends Seeder
     {
         $now = Carbon::now();
 
-        $laporanDiterima = DB::table('laporan')
-            ->where('status', 'diterima')
+        $fasilitas = DB::table('fasilitas')
+            ->where('status', 'rusak')
             ->get();
 
-        foreach ($laporanDiterima as $laporan) {
+        foreach ($fasilitas as $fasilitasItem) {
             DB::table('spk')->insert([
-                'laporan_id' => $laporan->laporan_id,
+                'fasilitas_id' => $fasilitasItem->fasilitas_id,
                 'created_at' => $now,
                 'updated_at' => $now,
             ]);
