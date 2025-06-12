@@ -28,11 +28,11 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th>Gedung</th>
+                                <th>Lantai</th>
+                                <th>Ruangan</th>
                                 <th>Fasilitas</th>
                                 <th>Tanggal Laporan</th>
-                                <th>Deskripsi</th>
                                 <th>Status</th>
-                                <th>Foto</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -40,10 +40,11 @@
                             @foreach ($penugasan as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-                                    <td>{{ $item->fasilitas->fasilitas_nama }}</td>
+                                    <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
+                                    <td>{{ $item->ruangan->lantai->lantai_nama }}</td>
+                                    <td>{{ $item->ruangan->ruangan_nama }}</td>
+                                    <td>{{ $item->fasilitas_nama }}</td>
                                     <td>{{ $item->created_at->format('d/m/Y') }}</td>
-                                    <td>{{ Str::limit($item->deskripsi, 50) }}</td>
                                     <td>
                                         @php
                                             $badgeClass = [
@@ -60,9 +61,8 @@
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
                                     </td>
-                                    <td>{{ $item->foto }}</td>
                                     <td>
-                                        <button onclick="showDetailModal('{{ url('teknisi/penugasan/'.$item->laporan_id) }}')" 
+                                        <button onclick="showDetailModal('{{ url('teknisi/penugasan/'.$item->fasilitas_id) }}')" 
                                             class="btn btn-sm btn-primary">
                                             <i class="bi bi-eye-fill"></i> Detail
                                         </button>
@@ -84,11 +84,11 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th>Gedung</th>
+                                <th>Lantai</th>
+                                <th>Ruangan</th>
                                 <th>Fasilitas</th>
-                                <th>Tanggal Revisi</th>
-                                <th>Deskripsi</th>
+                                <th>Tanggal Laporan</th>
                                 <th>Status</th>
-                                <th>Foto</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -96,10 +96,11 @@
                             @foreach ($revisi as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-                                    <td>{{ $item->fasilitas->fasilitas_nama }}</td>
+                                    <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
+                                    <td>{{ $item->ruangan->lantai->lantai_nama }}</td>
+                                    <td>{{ $item->ruangan->ruangan_nama }}</td>
+                                    <td>{{ $item->fasilitas_nama }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d/m/Y') }}</td>
-                                    <td>{{ Str::limit($item->deskripsi, 50) }}</td>
                                     <td>
                                         @php
                                             $badgeClass = [
@@ -116,9 +117,8 @@
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
                                     </td>
-                                    <td>{{ $item->foto }}</td>
                                     <td>
-                                        <button onclick="showDetailModal('{{ url('teknisi/penugasan/'.$item->laporan_id) }}')" 
+                                        <button onclick="showDetailModal('{{ url('teknisi/penugasan/'.$item->fasilitas_id) }}')" 
                                             class="btn btn-sm btn-primary">
                                             <i class="bi bi-eye-fill"></i> Detail
                                         </button>

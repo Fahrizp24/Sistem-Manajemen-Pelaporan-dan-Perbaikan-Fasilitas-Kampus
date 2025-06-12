@@ -7,11 +7,10 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Pelapor</th>
-                        <th>Peran</th>
                         <th>Gedung</th>
+                        <th>Lantai</th>
+                        <th>Ruangan</th>
                         <th>Fasilitas</th>
-                        <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -63,25 +62,20 @@
                     className: 'text-center'
                 },
                 {
-                    data: 'nama',
-                    name: 'nama'
-                },
-                {
-                    data: 'peran', 
-                    name: 'peran'
-                },
-                {
                     data: 'gedung',
                     name: 'gedung'
+                },{
+                    data: 'lantai',
+                    name: 'lantai'
+                },{
+                    data: 'ruangan',
+                    name: 'ruangan'
                 },
                 {
                     data: 'fasilitas',
                     name: 'fasilitas'
                 },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
+                
                 {
                     data: 'aksi',
                     name: 'aksi',

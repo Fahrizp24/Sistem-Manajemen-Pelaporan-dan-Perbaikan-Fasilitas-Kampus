@@ -12,6 +12,7 @@ use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Models\FasilitasModel;
 
 class TeknisiController extends Controller
 {
@@ -131,16 +132,41 @@ class TeknisiController extends Controller
         $teknisi_id = Auth::id();
 
         $activeMenu = 'penugasan';
-        $penugasan = LaporanModel::where('teknisi_id', $teknisi_id)
-            ->where('status', 'diperbaiki')
-            ->orderBy('updated_at', 'desc')
-            ->get();
 
-        $revisi = LaporanModel::where('teknisi_id', $teknisi_id)
-            ->where('status', 'revisi')
-            ->orderBy('updated_at', 'desc')
-            ->get();
+        $penugasan = FasilitasModel::whereHas('laporan', function ($query) use ($teknisi_id) {
+            $query->where('status', 'diperbaiki')
+                ->where('teknisi_id', $teknisi_id);
+        })
+            ->with([
+                'laporan' => function ($query) use ($teknisi_id) {
+                    $query->where('status', 'diperbaiki')
+                        ->where('teknisi_id', $teknisi_id)
+                        ->with('pelapor');
+                },
+                'ruangan.lantai.gedung'
+            ])
+            ->get()
+            ->sortByDesc(function ($fasilitas) {
+                // Ambil updated_at dari laporan terakhir
+                return optional($fasilitas->laporan->sortByDesc('updated_at')->first())->updated_at;
+            });
 
+        $revisi = FasilitasModel::whereHas('laporan', function ($query) use ($teknisi_id) {
+            $query->where('status', 'revisi')
+                ->where('teknisi_id', $teknisi_id);
+        })->with([
+            'laporan' => function ($query) use ($teknisi_id) {
+                $query->where('status', 'revisi')
+                    ->where('teknisi_id', $teknisi_id)
+                    ->with('pelapor');
+            },
+            'ruangan.lantai.gedung'
+        ])->get()
+            ->sortByDesc(function ($fasilitas) {
+                // Ambil updated_at dari laporan terakhir
+                return optional($fasilitas->laporan->sortByDesc('updated_at')->first())->updated_at;
+            });
+        
         return view('teknisi.penugasan', compact('penugasan', 'revisi', 'breadcrumb', 'page', 'activeMenu'));
     }
 

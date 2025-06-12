@@ -135,15 +135,9 @@ class SarprasController extends Controller
         ];
 
         $activeMenu = 'penugasan';
-        $fasilitas_diajukan = FasilitasModel::whereHas('laporan', function ($query) {
-            $query->where('status', 'diajukan');
-        })->with([
-            'laporan' => function ($query) {
-                $query->where('status', 'diajukan')->with('pelapor');
-            },
-            'ruangan.lantai.gedung'
-        ])->get();
-        
+
+        $laporan_masuk_pelapor = LaporanModel::with('fasilitas.ruangan.lantai.gedung')->where('status', 'diajukan')->get();
+
         // Fasilitas dengan laporan status 'memilih teknisi'
         $fasilitas_memilih_teknisi = FasilitasModel::whereHas('laporan', function ($query) {
             $query->where('status', 'memilih teknisi');
@@ -153,6 +147,7 @@ class SarprasController extends Controller
             },
             'ruangan.lantai.gedung'
         ])->get();
+
         // Fasilitas dengan laporan status 'telah diperbaiki'
         $fasilitas_telah_diperbaiki = FasilitasModel::whereHas('laporan', function ($query) {
             $query->where('status', 'telah diperbaiki');
@@ -162,12 +157,12 @@ class SarprasController extends Controller
             },
             'ruangan.lantai.gedung'
         ])->get();
-        return view('sarpras.laporan_masuk', compact('breadcrumb', 'page', 'activeMenu', 'fasilitas_diajukan', 'fasilitas_memilih_teknisi', 'fasilitas_telah_diperbaiki'));
+
+        return view('sarpras.laporan_masuk', compact('breadcrumb', 'page', 'activeMenu', 'laporan_masuk_pelapor', 'fasilitas_memilih_teknisi', 'fasilitas_telah_diperbaiki'));
     }
 
     public function show_laporan(string $id)
     {
-        $laporan = FasilitasModel::findOrFail($id);
 
         $breadcrumb = (object) [
             'title' => 'Data Penugasan',
@@ -187,7 +182,32 @@ class SarprasController extends Controller
 
         $crisp = CrispModel::orderBy('kriteria_id')->orderBy('poin')->get();
 
-        return view('sarpras.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
+        if ($source === 'pelapor') {
+            $laporan = LaporanModel::findOrFail($id);
+
+            return view('sarpras.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
+        } else {
+            $fasilitas = FasilitasModel::with(['laporan.pelapor', 'laporan.teknisi', 'laporan.sarpras'])->findOrFail($id);
+
+            $laporan = $fasilitas->laporan
+                ->map(function ($item) {
+                    return [
+                        'id' => $item->pelapor->pengguna_id,
+                        'nama' => $item->pelapor->nama,
+                        'foto' => $item->pelapor->foto_profil,
+                        'created_at'=>$item->created_at->toDateString(),
+                        'foto_pengerjaan' => $item->foto_pengerjaan,
+                    ];
+                })
+                ->unique('id');
+            
+                $jumlahPelapor = $fasilitas->laporan
+                ->pluck('pelapor.pengguna_id')
+                ->unique()
+                ->count();
+                
+            return view('sarpras.detail_fasilitas', compact('fasilitas','laporan','jumlahPelapor', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
+        }
     }
 
     public function terima(string $id, Request $request)
@@ -463,7 +483,7 @@ class SarprasController extends Controller
         return view('sarpras.edit_crisp', compact('crisp', 'breadcrumb', 'page'));
     }
 
-    public function update_crisp(Request $request,$id)
+    public function update_crisp(Request $request, $id)
     {
         $rules = [
             'kriteria_id' => 'required|exists:kriteria,kriteria_id',
@@ -481,7 +501,7 @@ class SarprasController extends Controller
                 'msgField' => $validator->errors()
             ], 422); // Tambahkan status code 422 untuk validation error
         }
-       
+
         try {
             $check = CrispModel::find($id);
             if ($check) {

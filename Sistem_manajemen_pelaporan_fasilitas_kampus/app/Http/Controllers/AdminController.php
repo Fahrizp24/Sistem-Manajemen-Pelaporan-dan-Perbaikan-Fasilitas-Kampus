@@ -122,7 +122,7 @@ class AdminController extends Controller
             ], 500);
         }
     }
- 
+
 
     public function data_pengguna(Request $request)
     {
@@ -193,14 +193,23 @@ class AdminController extends Controller
 
     public function data_laporan(Request $request)
     {
-        $data = LaporanModel::with(['fasilitas.ruangan.lantai.gedung', 'pelapor'])->where('status', 'konfirmasi')->get();
-        
-        return datatables()->of($data)
+        $fasilitas = FasilitasModel::whereHas('laporan', function ($query) {
+            $query->where('status', 'konfirmasi');
+        })->with([
+            'laporan' => function ($query) {
+                $query->where('status', 'konfirmasi')->with('pelapor');
+            },
+            'ruangan.lantai.gedung'
+        ])->get();
+
+        // dd($fasilitas);
+
+        return datatables()->of($fasilitas)
             ->addIndexColumn()
-            ->addColumn('nama', fn($row) => $row->pelapor->nama ?? '-')
-            ->addColumn('peran', fn($row) => ucfirst($row->pelapor->peran ?? '-'))
-            ->addColumn('gedung', fn($row) => $row->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-')
-            ->addColumn('fasilitas', fn($row) => $row->fasilitas->fasilitas_nama ?? '-')
+            ->addColumn('gedung', fn($row) => $row->ruangan->lantai->gedung->gedung_nama ?? '-')
+            ->addColumn('lantai', fn($row) => $row->ruangan->lantai->lantai_nama ?? '-')
+            ->addColumn('ruangan', fn($row) => $row->ruangan->ruangan_nama ?? '-')
+            ->addColumn('fasilitas', fn($row) => $row->fasilitas_nama ?? '-')
             ->addColumn('status', function ($row) {
                 return match ($row->status) {
                     'konfirmasi' => '<span class="badge bg-secondary">Menunggu Konfirmasi</span>',
@@ -210,7 +219,7 @@ class AdminController extends Controller
                 };
             })
             ->addColumn('aksi', function ($row) {
-                return '<button onclick="modalAction(\'' . url('admin/laporan_masuk/show_laporan/' . $row->laporan_id) . '\')" class="btn btn-sm btn-info">Detail</button>';
+                return '<button onclick="modalAction(\'' . url('admin/laporan_masuk/show_laporan/' . $row->fasilitas_id) . '\')" class="btn btn-sm btn-info">Detail</button>';
             })
             ->rawColumns(['aksi', 'status'])
             ->make(true);
@@ -218,8 +227,6 @@ class AdminController extends Controller
 
     public function show_laporan(string $id)
     {
-        $laporan = LaporanModel::findOrFail($id);
-
         $breadcrumb = (object) [
             'title' => 'Data Penugasan',
             'list' => ['Data Penugasan']
@@ -230,12 +237,28 @@ class AdminController extends Controller
             'subtitle' => 'Informasi lengkap mengenai penugasan'
         ];
 
-        $teknisi = UserModel::where('peran', 'teknisi')->get();
-
         $source = request()->query('source', 'default');
-        $kriteria = KriteriaModel::orderBy('kriteria_id')->get();
-        $crisp = CrispModel::orderBy('kriteria_id')->orderBy('poin')->get();
-        return view('admin.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
+
+        $fasilitas = FasilitasModel::with(['laporan.pelapor', 'laporan.teknisi', 'laporan.sarpras'])->findOrFail($id);
+
+        $laporan = $fasilitas->laporan
+            ->map(function ($item) {
+                return [
+                    'id' => $item->pelapor->pengguna_id,
+                    'nama' => $item->pelapor->nama,
+                    'foto' => $item->pelapor->foto_profil,
+                    'created_at' => $item->created_at->toDateString(),
+                    'foto_pengerjaan' => $item->foto_pengerjaan,
+                ];
+            })
+            ->unique('id');
+
+        $jumlahPelapor = $fasilitas->laporan
+            ->pluck('pelapor.pengguna_id')
+            ->unique()
+            ->count();
+
+        return view('admin.detail_laporan', compact('laporan', 'fasilitas' , 'jumlahPelapor','breadcrumb', 'page', 'source'));
     }
 
     public function laporan2()
@@ -272,12 +295,10 @@ class AdminController extends Controller
         return view('admin.kelola_pengguna', compact('pengguna', 'breadcrumb', 'page'));
     }
 
-
     public function create_pengguna()
     {
         return view('admin.pengguna.create_ajax');
     }
-
 
     public function store_pengguna(Request $request)
     {
