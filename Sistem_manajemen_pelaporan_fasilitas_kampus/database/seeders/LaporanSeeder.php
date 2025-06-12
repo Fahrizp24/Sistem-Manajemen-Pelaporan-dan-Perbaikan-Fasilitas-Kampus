@@ -79,7 +79,7 @@ class LaporanSeeder extends Seeder
             ]);
         }
 
-        $statusesRusak = ['diperbaiki', 'telah diperbaiki', 'revisi', 'selesai'];
+        $statusesRusak = ['diterima', 'konfirmasi', 'memilih teknisi', 'diperbaiki', 'telah diperbaiki', 'revisi'];
 
         $fasilitasRusakIds = DB::table('laporan')
             ->whereIn('status', $statusesRusak)
