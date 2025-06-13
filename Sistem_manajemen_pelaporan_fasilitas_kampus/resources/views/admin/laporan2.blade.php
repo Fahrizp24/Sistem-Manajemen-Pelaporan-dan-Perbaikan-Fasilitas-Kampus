@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Kelola Laporan')
 
 @section('content')
     <div class="card">
@@ -9,7 +10,7 @@
                         <th>No</th>
                         <th>Pelapor</th>
                         <th>Peran</th>
-                        <th>Fasiljhitas</th>
+                        <th>Fasilitas</th>
                         <th>Gedung</th>
                         <th>Deskripsi</th>
                         <th>Status</th>

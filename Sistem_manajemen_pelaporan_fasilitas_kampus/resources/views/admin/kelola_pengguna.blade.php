@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Kelola Pengguna')
 
 @section('content')
     @if (session('success'))
