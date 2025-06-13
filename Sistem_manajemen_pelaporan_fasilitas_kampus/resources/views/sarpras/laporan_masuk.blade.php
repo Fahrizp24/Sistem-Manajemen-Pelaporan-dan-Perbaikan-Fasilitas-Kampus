@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Laporan Masuk')
 
 @section('content')
     @if (session('success'))
@@ -32,7 +33,7 @@
                     <!-- Tab Pelapor -->
                     <div class="tab-pane fade show active" id="pelapor" role="tabpanel" aria-labelledby="pelapor-tab">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body table-responsive">
                                 <table class="table table-bordered table-striped" id="table-sarpras">
                                     <thead class="table-white">
                                         <tr>
@@ -75,7 +76,7 @@
                     <!-- Tab Admin -->
                     <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body table-responsive">
                                 <table class="table table-bordered table-striped" id="table-admin">
                                     <thead class="table-white">
                                         <tr>
@@ -119,7 +120,7 @@
                     <!-- Tab Teknisi -->
                     <div class="tab-pane fade" id="teknisi" role="tabpanel" aria-labelledby="teknisi-tab">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body table-responsive">
                                 <table class="table table-bordered table-striped" id="table-teknisi">
                                     <thead class="table-white">
                                         <tr>

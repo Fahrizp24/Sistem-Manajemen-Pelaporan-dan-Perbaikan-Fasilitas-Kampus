@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Kelola Sistem Rekomendasi')
 
 @section('content')
     @if (session('success'))
@@ -34,7 +35,7 @@
                                 <button type="button" class="btn btn-success mb-3"
                                     onclick="modalAction('{{url('sarpras/kriteria/create_ajax')}}')">+ Tambah kriteria</button>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body table-responsive">
                                 <table class="table table-bordered table-striped mb-0" id="kriteriaTable">
                                     <thead class="table-white">
                                         <tr>
@@ -63,7 +64,7 @@
                                     + Tambah crisp
                                 </button>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body table-responsive">
                                 <table class="table table-bordered table-striped w-100 mb-0" id="crispTable">
                                     <thead class="table-white">
                                         <tr>
@@ -123,6 +124,8 @@
         var dataKriteria;
         $(document).ready(function () {
             dataKriteria = $('#kriteriaTable').DataTable({
+                responsive: true,
+                autoWidth: false,
                 processing: true,
                 serverSide: false,
                 ajax: { url: "{{ route('sarpras.data_kriteria') }}", type: "POST" },
@@ -166,6 +169,8 @@
         var dataCrisp;
         $(document).ready(function () {
             dataCrisp = $('#crispTable').DataTable({
+                responsive: true,
+                autoWidth: false,
                 processing: true,
                 serverSide: false,
                 ajax: { url: "{{ route('sarpras.data_crisp') }}", type: "POST" },

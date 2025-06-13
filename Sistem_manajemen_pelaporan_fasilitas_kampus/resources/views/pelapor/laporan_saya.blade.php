@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Dashboard')
 
 @section('content')
     <section class="section">

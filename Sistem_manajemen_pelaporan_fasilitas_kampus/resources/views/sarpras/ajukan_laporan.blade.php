@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Ajukan Laporan')
 
 @section('content')
     <section class="section">
@@ -8,7 +9,7 @@
             </div>
 
             {{-- Tabel Laporan Diterima --}}
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table class="table table-bordered" id="laporanTable">
                     <thead>
                         <tr>
@@ -35,7 +36,7 @@
             <div class="card-header">
                 <strong>Hasil Sistem Rekomendasi (Metode TOPSIS)</strong>
             </div>
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table class="table table-striped" id="hasilSPKTable">
                     <thead>
                         <tr>
@@ -134,6 +135,8 @@
             }
 
             dataLaporan = $('#laporanTable').DataTable({
+                responsive: true,
+                autoWidth: false,
                 processing: true,
                 serverSide: true,
                 ajax: {

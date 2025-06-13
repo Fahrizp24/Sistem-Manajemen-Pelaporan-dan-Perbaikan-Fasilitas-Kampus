@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Laporakan Kerusakan')
 
 @section('content')
     <section id="multiple-column-form">
