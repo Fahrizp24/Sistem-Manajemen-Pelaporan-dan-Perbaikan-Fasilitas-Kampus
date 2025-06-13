@@ -202,20 +202,6 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item {{ str_contains($currentUrl, 'lantai') ? 'active' : '' }}">
-                        <a href="{{ url('admin/lantai') }}" class='sidebar-link'>
-                            <i class="bi bi-layers"></i>
-                            <span>Lantai</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item {{ str_contains($currentUrl, 'ruangan') ? 'active' : '' }}">
-                        <a href="{{ url('admin/ruangan') }}" class='sidebar-link'>
-                            <i class="bi bi-door-closed"></i>
-                            <span>Ruangan</span>
-                        </a>
-                    </li>
-
                 @endif
 
                 {{-- Teknisi --}}
@@ -270,7 +256,7 @@
     .sidebar-menu {
         display: flex;
         flex-direction: column;
-        height: calc(100vh + 30px);
+        height: calc(100vh - 90px);
         /* Adjust based on your header height */
     }
 
