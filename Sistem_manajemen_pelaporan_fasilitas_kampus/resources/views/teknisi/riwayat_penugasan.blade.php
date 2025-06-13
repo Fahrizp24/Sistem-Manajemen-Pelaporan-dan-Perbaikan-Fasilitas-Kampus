@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Riwayat Penugasan')
 
 @section('content')
     <section class="section">

@@ -1,4 +1,5 @@
 @extends('layouts.template')
+@section('title', 'Penugasan')
 
 @section('content')
 <section class="section">
@@ -22,7 +23,7 @@
         {{-- Tab: Penugasan --}}
         <div class="tab-pane fade show active" id="penugasan" role="tabpanel" aria-labelledby="penugasan-tab">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body table-responsive">
                     <table class="table table-bordered table-striped mb-0" id="table-teknisi">
                         <thead>
                             <tr>
@@ -78,7 +79,7 @@
         {{-- Tab: Revisi --}}
         <div class="tab-pane fade" id="revisi" role="tabpanel" aria-labelledby="revisi-tab">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body table-responsive">
                     <table class="table table-bordered table-striped mb-0" id="table-teknisi">
                         <thead>
                             <tr>
