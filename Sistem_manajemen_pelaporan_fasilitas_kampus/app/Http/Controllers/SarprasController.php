@@ -184,8 +184,16 @@ class SarprasController extends Controller
 
         if ($source === 'pelapor') {
             $laporan = LaporanModel::findOrFail($id);
+            $spk = SpkModel::with('kriteria')
+                ->where('fasilitas_id', $laporan->fasilitas_id)
+                ->first();
 
-            return view('sarpras.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
+            $penilaian = $spk
+                ? $spk->kriteria->mapWithKeys(function ($item) {
+                    return [$item->pivot->kriteria_id => $item->pivot];
+                })
+                : collect(); // supaya tidak null
+            return view('sarpras.detail_laporan', compact('laporan', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp', 'penilaian'));
         } else {
             $fasilitas = FasilitasModel::with(['laporan.pelapor', 'laporan.teknisi', 'laporan.sarpras'])->findOrFail($id);
 

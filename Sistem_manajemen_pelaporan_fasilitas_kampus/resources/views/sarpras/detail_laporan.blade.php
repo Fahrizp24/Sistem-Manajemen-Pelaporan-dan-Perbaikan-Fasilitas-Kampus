@@ -92,22 +92,36 @@
                             <h4 class="divider-text">Berikan Penilaian Kriteria</h4>
                         </div>
 
-                        @foreach ($kriteria as $kriteriaItem)
-                            <div class="col-12">
-                                <div class="form-group mandatory mt-3 divider divider-left">
-                                    <label for="kriteria_{{ $kriteriaItem->kriteria_id }}" class="form-label divider-text"
-                                        style="padding:0">{{ $kriteriaItem->nama }}</label>
-                                    <select id="kriteria_{{ $kriteriaItem->kriteria_id }}"
-                                        name="kriteria[{{ $kriteriaItem->kriteria_id }}]" class="form-select"
+                        @if ($penilaian->isNotEmpty())
+                        <div class="alert alert-success">
+                            <strong>Fasilitas ini sudah dinilai</strong> dengan nilai sebagai berikut:
+                        </div>
+                    @endif
+                    
+                    @foreach ($kriteria as $kriteriaItem)
+                        <div class="col-12">
+                            <div class="form-group mandatory mt-3 divider divider-left">
+                                <label for="kriteria_{{ $kriteriaItem->kriteria_id }}" class="form-label divider-text" style="padding:0">
+                                    {{ $kriteriaItem->nama }}
+                                </label>
+                                <select id="kriteria_{{ $kriteriaItem->kriteria_id }}"
+                                        name="kriteria[{{ $kriteriaItem->kriteria_id }}]"
+                                        class="form-select"
                                         data-parsley-required="true" required>
-                                        <option value="">Pilih {{ strtolower($kriteriaItem->nama) }}</option>
-                                        @foreach ($crisp->where('kriteria_id', $kriteriaItem->kriteria_id) as $crispItem)
-                                            <option value="{{ $crispItem->poin }}">{{ $crispItem->judul }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                    <option value="">Pilih {{ strtolower($kriteriaItem->nama) }}</option>
+                                    @foreach ($crisp->where('kriteria_id', $kriteriaItem->kriteria_id) as $crispItem)
+                                        <option value="{{ $crispItem->poin }}"
+                                            @if (isset($penilaian[$kriteriaItem->kriteria_id]) && $penilaian[$kriteriaItem->kriteria_id]->nilai == $crispItem->poin)
+                                                selected
+                                            @endif>
+                                            {{ $crispItem->judul }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                        @endforeach
+                        </div>
+                    @endforeach
+                    
                     </div>
 
                     <button type="submit" class="btn btn-success mt-3 gap-2"

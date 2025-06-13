@@ -40,6 +40,8 @@
                                             <th width="5%">No</th>
                                             <th>Pelapor</th>
                                             <th>Gedung</th>
+                                            <th>Lantai</th>                                            
+                                            <th>Ruangan</th>
                                             <th>Fasilitas</th>
                                             <th>Tanggal</th>
                                             <th class="text-center">Aksi</th>
@@ -51,7 +53,9 @@
                                                 <td class="fw-bold">{{ $loop->iteration }}</td>
                                                 <td>{{ $item->pelapor->nama }}</td>
                                                 <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-                                                <td>{{ $item->fasilitas->ruangan->ruangan_nama . ' - ' . $item->fasilitas->fasilitas_nama }}
+                                                <td>{{ $item->fasilitas->ruangan->lantai->lantai_nama }}</td>
+                                                <td>{{ $item->fasilitas->ruangan->ruangan_nama }}</td>
+                                                <td>{{ $item->fasilitas->fasilitas_nama }}</td>
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}
                                                 </td>
