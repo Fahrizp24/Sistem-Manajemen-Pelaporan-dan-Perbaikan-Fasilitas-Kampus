@@ -195,13 +195,6 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item {{ str_contains($currentUrl, '/admin/gedung') ? 'active' : '' }}">
-                        <a href="{{ url('admin/gedung') }}" class='sidebar-link'>
-                            <i class="bi bi-house-door"></i>
-                            <span>Gedung</span>
-                        </a>
-                    </li>
-
                 @endif
 
                 {{-- Teknisi --}}
@@ -256,7 +249,7 @@
     .sidebar-menu {
         display: flex;
         flex-direction: column;
-        height: calc(100vh - 90px);
+        height: calc(100vh - 140px);
         /* Adjust based on your header height */
     }
 
