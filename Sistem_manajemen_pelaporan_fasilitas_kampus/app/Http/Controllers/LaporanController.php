@@ -16,9 +16,7 @@ class LaporanController extends Controller
     {
 
         $laporan = LaporanModel::with(['pelapor', 'fasilitas'])->get();
-        return view('pelapor.laporan_kerusakan');
-        ;
-
+        return view('pelapor.laporan_kerusakan');;
     }
 
     /**
@@ -62,32 +60,31 @@ class LaporanController extends Controller
 
     public function show_laporan($id)
     {
-        try{
-        $laporan = LaporanModel::with(['pelapor', 'fasilitas'])->findOrFail($id);
+        try {
+            $laporan = LaporanModel::with(['pelapor', 'fasilitas'])->findOrFail($id);
 
-        return response()->json([
-            'pelapor' => [
-                'nama' => $laporan->pelapor->nama ?? '-',
-            ],
-            'fasilitas' => [
-                'nama' => $laporan->fasilitas->fasilitas_nama ?? '-',
-            ],
-            'deskripsi' => $laporan->deskripsi,
-            'gedung' => $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-',
-            'status' => $laporan->status,
-            'urgensi' => $laporan->urgensi ?? '-', // Pastikan ini sesuai dengan nama field di database
-        ]);
+            return response()->json([
+                'pelapor' => [
+                    'nama' => $laporan->pelapor->nama ?? '-',
+                ],
+                'fasilitas' => [
+                    'nama' => $laporan->fasilitas->fasilitas_nama ?? '-',
+                ],
+                'deskripsi' => $laporan->deskripsi,
+                'gedung' => $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-',
+                'status' => $laporan->status,
+                'urgensi' => $laporan->urgensi ?? '-', // Pastikan ini sesuai dengan nama field di database
+            ]);
         } catch (\Exception $e) {
-        return response()->json(['message' => 'Gagal mengambil data laporan'], 500);
-    }
+            return response()->json(['message' => 'Gagal mengambil data laporan'], 500);
+        }
     }
     public function show_laporan2($id)
-{
-    $laporan = LaporanModel::with(['pelapor', 'fasilitas.ruangan.lantai.gedung', 'sarpras', 'teknisi'])
-        ->findOrFail($id);
-    
-    return view('admin.detail_kelola_laporan', compact('laporan'));
-}
+    {
+        $laporan = LaporanModel::with(['pelapor', 'fasilitas.ruangan.lantai.gedung', 'sarpras', 'teknisi'])
+            ->findOrFail($id);
+        return view('admin.detail_kelola_laporan', compact('laporan'));
+    }
 
 
 
@@ -115,5 +112,4 @@ class LaporanController extends Controller
 
         return redirect()->route('admin.laporan')->with('success', 'Status laporan berhasil diperbarui.');
     }
-
 }

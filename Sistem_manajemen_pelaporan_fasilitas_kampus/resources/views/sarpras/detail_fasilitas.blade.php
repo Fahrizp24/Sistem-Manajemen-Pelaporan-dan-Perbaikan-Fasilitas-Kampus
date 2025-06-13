@@ -168,40 +168,35 @@
                 <span>Foto Hasil Pengerjaan</span>
                 <img src="{{ Storage::url('foto_pengerjaan/' . $laporan['foto_pengerjaan']) }}"
                     class="img-thumbnail w-150% mx-auto d-block" style="max-width: 100%; height: 100%; max-height: 400px;">
+
+                {{-- Form Untuk selesaikan laporan --}}
                 <form action="{{ url('/sarpras/laporan_masuk/selesaikan/' . $fasilitas->fasilitas_id) }}" method="POST">
                     @csrf
                     <div class="row justify-content-center">
                         <div class="col-md-6">
-                            <select class="form-select mb-2" name="hasil" required>
-                                <option value="" disabled selected>Status Penyelesaian</option>
-                                <option value="selesai">Tutup dan Selesai</option>
-                                <option value="revisi">Revisi</option>
-                            </select>
                             <button type="submit" class="btn btn-success w-100" onclick="return confirmSubmit()">
                                 Submit
                             </button>
                         </div>
                     </div>
                 </form>
-                <form action="{{ url('/sarpras/laporan_masuk/tolak/' . $fasilitas->fasilitas_id) }}" method="POST">
+
+                {{-- Form untuk revisi laporan --}}
+                <form action="{{ url('/sarpras/laporan_masuk/revisi/' . $fasilitas->fasilitas_id) }}" method="POST">
                     @csrf
-                    <div class="col-12">
-                        <div class="form-group mandatory mt-3 divider divider-left">
-                            <label for="alasan_ditolak" class="form-label divider-text" style="padding:0">Alasan
-                                Penolakan</label>
-                            <input type="text" id="alasan_ditolak" name="alasan_ditolak" class="form-control"
-                                placeholder="Masukkan alasan penolakan" required>
-                            <span class="error-text" id="error-alasan_tolak"></span>
-                            <span class="text-muted">*Wajib diisi jika menolak laporan</span>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <textarea name="alasan_revisi" class="form-control mb-2"
+                                placeholder="Masukkan Alasan Revisi" required></textarea>
+                            <span class="error-text" id="error-alasan_revisi"></span>
+                            <button type="submit" class="btn btn-danger w-100" onclick="return confirmSubmit()">
+                                Revisi
+                            </button>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-danger mt-3"
-                        onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
-                        Tolak Laporan
-                    </button>
                 </form>
             @elseif($source == 'ajukan')
-                <form action="{{ url('/sarpras/ajukan_laporan/' . $laporan->laporan_id) }}" method="POST">
+                <form action="{{ url('/sarpras/ajukan_laporan/' . $fasilitas->fasilitas_id) }}" method="POST">
                     @csrf
                     <div class="row justify-content-right">
                         <div class="col-md-6 mx-auto">
@@ -270,56 +265,56 @@
             }
         });
 
-        $('form[action*="/sarpras/laporan_masuk/tolak/"]').validate({
-            submitHandler: function(form) {
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: $(form).serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        if (response.status) {
-                            $('#detailModal').fadeOut(300, function() {
-                                $(this).modal('hide');
-                            });
+        // $('form[action*="/sarpras/laporan_masuk/tolak/"]').validate({
+        //     submitHandler: function(form) {
+        //         $.ajax({
+        //             url: form.action,
+        //             type: form.method,
+        //             data: $(form).serialize(),
+        //             headers: {
+        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //             },
+        //             success: function(response) {
+        //                 if (response.status) {
+        //                     $('#detailModal').fadeOut(300, function() {
+        //                         $(this).modal('hide');
+        //                     });
 
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil ditolak',
-                                text: response.message
-                            });
-                        } else {
-                            $('.error-text').text('');
-                            if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
-                                });
-                            }
+        //                     Swal.fire({
+        //                         icon: 'success',
+        //                         title: 'Berhasil ditolak',
+        //                         text: response.message
+        //                     });
+        //                 } else {
+        //                     $('.error-text').text('');
+        //                     if (response.msgField) {
+        //                         $.each(response.msgField, function(prefix, val) {
+        //                             $('#error-' + prefix).text(val[0]);
+        //                         });
+        //                     }
 
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Terjadi Kesalahan',
-                                text: response.message
-                            });
-                        }
-                    }
-                });
-                return false;
-            },
-            errorElement: 'span',
-            errorPlacement: function(error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function(element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function(element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            }
-        });
+        //                     Swal.fire({
+        //                         icon: 'error',
+        //                         title: 'Terjadi Kesalahan',
+        //                         text: response.message
+        //                     });
+        //                 }
+        //             }
+        //         });
+        //         return false;
+        //     },
+        //     errorElement: 'span',
+        //     errorPlacement: function(error, element) {
+        //         error.addClass('invalid-feedback');
+        //         element.closest('.form-group').append(error);
+        //     },
+        //     highlight: function(element, errorClass, validClass) {
+        //         $(element).addClass('is-invalid');
+        //     },
+        //     unhighlight: function(element, errorClass, validClass) {
+        //         $(element).removeClass('is-invalid');
+        //     }
+        // });
 
         // Form Pilih Teknisi (Admin)
         $('form[action*="/sarpras/laporan_masuk/pilih_teknisi/"]').validate({
@@ -374,7 +369,59 @@
         });
 
         // Form Selesaikan Penugasan (Teknisi)
-        $('form[action*="/teknisi/penugasan/selesaikan/"]').on('submit', function(e) {
+        $('form[action*="/sarpras/laporan_masuk/revisi/"]').on('submit', function(e) {
+            submitHandler: function(form) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: $(form).serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.status) {
+                            $('#myModal').fadeOut(300, function() {
+                                $(this).modal('hide');
+                            });
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message
+                            });
+                        } else {
+                            $('.error-text').text('');
+                            if (response.msgField) {
+                                $.each(response.msgField, function(prefix, val) {
+                                    $('#error-' + prefix).text(val[0]);
+                                });
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: response.message
+                            });
+                        }
+                    }
+                });
+                return false;
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
+        // Form Revisi Penugasan (Teknisi)
+        $('form[action*="/teknisi/penugasan/revisi/"]').on('submit', function(e) {
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,

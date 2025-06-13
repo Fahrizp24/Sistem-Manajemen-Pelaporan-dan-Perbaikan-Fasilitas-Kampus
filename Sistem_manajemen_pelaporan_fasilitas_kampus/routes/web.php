@@ -185,7 +185,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/terima/{id}', [SarprasController::class, 'terima'])->name('sarpras.update_laporan');
                 Route::post('/tolak/{id}', [SarprasController::class, 'tolak'])->name('sarpras.update_laporan');
                 Route::post('/pilih_teknisi/{id}', [SarprasController::class, 'pilih_teknisi'])->name('sarpras.update_laporan');
-                Route::post('/selesaikan/{id}', [SarprasController::class, 'selesaikan'])->name('sarpras.update_laporan');
+                Route::post('/selesaikan/{id}', [SarprasController::class, 'selesaikan'])->name('sarpras.selesaikan_laporan');
+                Route::post('/revisi/{id}', [SarprasController::class, 'revisi'])->name('sarpras.revisi_laporan');
             });
 
             Route::prefix('sistem_rekomendasi')->group(function () {

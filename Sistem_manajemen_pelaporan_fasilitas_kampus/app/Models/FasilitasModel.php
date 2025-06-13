@@ -48,7 +48,7 @@ class FasilitasModel extends Model
 
     public function spk()
     {
-        return $this->hasOne(SpkModel::class, 'laporan_id');
+        return $this->hasOne(SpkModel::class, 'fasilitas_id');
     }
 
     public function spk_kriteria()

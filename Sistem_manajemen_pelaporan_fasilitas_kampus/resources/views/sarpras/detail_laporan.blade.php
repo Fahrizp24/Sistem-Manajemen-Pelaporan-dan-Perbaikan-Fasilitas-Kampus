@@ -87,6 +87,7 @@
                     enctype="multipart/form-data" data-parsley-validate>
                     @csrf
                     <div class="row">
+                        <input type="text" name="fasilitas_id" value="{{ $laporan->fasilitas_id }}" hidden>
                         <div class="divider divider-left">
                             <h4 class="divider-text">Berikan Penilaian Kriteria</h4>
                         </div>

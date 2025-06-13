@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('foto_pengerjaan')->nullable();
             $table->foreignId('ditolak_oleh')->nullable()->constrained('pengguna', 'pengguna_id')->onDelete('cascade')->nullable();
             $table->text('alasan_penolakan')->nullable();
+            $table->text('alasan_revisi')->nullable();
             $table->timestamps();
         });
     }

@@ -195,18 +195,18 @@ class SarprasController extends Controller
                         'id' => $item->pelapor->pengguna_id,
                         'nama' => $item->pelapor->nama,
                         'foto' => $item->pelapor->foto_profil,
-                        'created_at'=>$item->created_at->toDateString(),
+                        'created_at' => $item->created_at->toDateString(),
                         'foto_pengerjaan' => $item->foto_pengerjaan,
                     ];
                 })
                 ->unique('id');
-            
-                $jumlahPelapor = $fasilitas->laporan
+
+            $jumlahPelapor = $fasilitas->laporan
                 ->pluck('pelapor.pengguna_id')
                 ->unique()
                 ->count();
-                
-            return view('sarpras.detail_fasilitas', compact('fasilitas','laporan','jumlahPelapor', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
+
+            return view('sarpras.detail_fasilitas', compact('fasilitas', 'laporan', 'jumlahPelapor', 'breadcrumb', 'page', 'source', 'teknisi', 'kriteria', 'crisp'));
         }
     }
 
@@ -222,7 +222,7 @@ class SarprasController extends Controller
 
             // Simpan data SPK 
             $spk = SpkModel::create([
-                'laporan_id' => $id
+                'fasilitas_id' => $request->fasilitas_id
             ]);
 
             // Siapkan data untuk relasi many-to-many
@@ -293,11 +293,9 @@ class SarprasController extends Controller
     public function pilih_teknisi(string $id, Request $request)
     {
         try {
-            $laporan = LaporanModel::findOrFail($id);
-            $laporan->teknisi_id = $request->teknisi;
-            $laporan->status = 'diperbaiki';
-            $laporan->ditugaskan_oleh = Auth::user()->pengguna_id;
-            $laporan->save();
+            LaporanModel::where('fasilitas_id', $id)
+                ->where('status', 'memilih teknisi')
+                ->update(['status' => 'diperbaiki', 'teknisi_id' =>  $request->teknisi, 'ditugaskan_oleh' => Auth::user()->pengguna_id]);
 
             if ($request->ajax()) {
                 return response()->json([
@@ -318,33 +316,52 @@ class SarprasController extends Controller
         }
     }
 
-
     public function selesaikan(string $id, Request $request)
     {
         try {
-            if ($request->hasil === 'selesai') {
-                LaporanModel::findOrFail($id)->update(['status' => 'selesai']);
+            LaporanModel::where('fasilitas_id', $id)
+                ->where('status', 'telah diperbaiki')
+                ->update(['status' => 'selesai']);
 
-                if ($request->ajax()) {
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Laporan berhasil diselesaikan.'
-                    ]);
-                }
-            } else if ($request->hasil === 'revisi') {
-                LaporanModel::findOrFail($id)->update(['status' => 'revisi']);
-
-                if ($request->ajax()) {
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Laporan direvisi dan dikirimkan kembali ke teknisi.'
-                    ]);
-                }
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Laporan berhasil diselesaikan.'
+                ]);
             }
+            return redirect()->back()->with('success', 'Laporan berhasil diselesaikan.');
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
+                    'message' => 'Gagal menyelesaikan laporan: ' . $e->getMessage()
+                ], 500);
+            }
+            return redirect()->back()->with('error', 'Gagal menyelesaikan laporan: ' . $e->getMessage());
+        }
+    }
+
+    public function revisi(string $id, Request $request)
+    {
+        try {
+            LaporanModel::where('fasilitas_id', $id)
+                ->where('status', 'telah diperbaiki')
+                ->update([
+                    'status' => 'revisi',
+                    'alasan_revisi' => $request->alasan_revisi ?? 'Tidak ada alasan yang diberikan'
+                ]);
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true, // Ubah 'status' menjadi 'success'
+                    'message' => 'Laporan direvisi dan dikirimkan kembali ke teknisi.'
+                ]);
+            }
+            return redirect()->back()->with('success', 'Laporan direvisi dan dikirimkan kembali ke teknisi.');
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false, // Ubah 'status' menjadi 'success'
                     'message' => 'Gagal menyelesaikan laporan: ' . $e->getMessage()
                 ], 500);
             }
@@ -456,7 +473,8 @@ class SarprasController extends Controller
                 'poin' => $request->poin
             ]);
             return response()->json([
-                'status' => true,
+                'success' => true,
+                // 'status' => true,
                 'message' => 'Crisp berhasil ditambahkan.'
             ]);
         } catch (\Exception $e) {
@@ -507,7 +525,8 @@ class SarprasController extends Controller
             if ($check) {
                 $check->update($request->all());
                 return response()->json([
-                    'status' => true,
+                    // 'status' => true,
+                    'success' => true,
                     'message' => 'Data berhasil diupdate'
                 ]);
             } else {
@@ -711,15 +730,24 @@ class SarprasController extends Controller
 
     public function data_laporan(Request $request)
     {
-        $data = LaporanModel::with(['fasilitas.ruangan', 'spk.kriteria'])->where('status', 'diterima')->get();
+        $data = FasilitasModel::whereHas('laporan', function ($query) {
+            $query->where('status', 'diterima');
+        })->with([
+            'laporan' => function ($query) {
+                $query->where('status', 'diterima')->with('pelapor');
+            },
+            'ruangan.lantai.gedung',
+            'spk'
+        ])->get();
+
         $allKriteria = KriteriaModel::all();
 
         return datatables()->of($data)
             ->addIndexColumn()
-            ->addColumn('gedung', fn($row) => $row->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-')
-            ->addColumn('lantai', fn($row) => $row->fasilitas->ruangan->lantai->lantai_nama ?? '-')
-            ->addColumn('ruangan', fn($row) => $row->fasilitas->ruangan->ruangan_nama ?? '-')
-            ->addColumn('fasilitas', fn($row) => $row->fasilitas->fasilitas_nama ?? '-')
+            ->addColumn('gedung', fn($row) => $row->ruangan->lantai->gedung->gedung_nama ?? '-')
+            ->addColumn('lantai', fn($row) => $row->ruangan->lantai->lantai_nama ?? '-')
+            ->addColumn('ruangan', fn($row) => $row->ruangan->ruangan_nama ?? '-')
+            ->addColumn('fasilitas', fn($row) => $row->fasilitas_nama ?? '-')
             ->addColumn('kriteria', function ($row) use ($allKriteria) {
                 $columns = [];
 
@@ -739,7 +767,7 @@ class SarprasController extends Controller
                 return $columns;
             })
             ->addColumn('aksi', function ($row) {
-                return '<button onclick="modalAction(\'' . url('sarpras/laporan_masuk/' . $row->laporan_id) . '?source=ajukan\')" class="btn btn-sm btn-info">Detail</button>';
+                return '<button onclick="modalAction(\'' . url('sarpras/laporan_masuk/' . $row->fasilitas_id) . '?source=ajukan\')" class="btn btn-sm btn-info">Detail</button>';
             })
             ->rawColumns(['aksi'])
             ->make(true);
@@ -860,24 +888,27 @@ class SarprasController extends Controller
         return $hasil;
     }
 
-
-
     public function proses_spk()
     {
-        // Ambil semua laporan yang sudah diterima beserta relasi
-        $laporans = LaporanModel::with(['fasilitas.gedung', 'spk.kriteria'])
-            ->where('status', 'diterima')
-            ->get();
 
+        $fasilitas = FasilitasModel::whereHas('laporan', function ($query) {
+            $query->where('status', 'diterima');
+        })->with([
+            'laporan' => function ($query) {
+                $query->where('status', 'diterima')->with('pelapor');
+            },
+            'ruangan.lantai.gedung',
+            'spk'
+        ])->get();
 
         // Bentuk data matriks alternatif
         $data = [];
         $kriteria = [];
 
-        foreach ($laporans as $laporan) {
-            $judul = ($laporan->fasilitas->ruangan->lantai->gedung->gedung_nama ?? '-') . ' ' . ($laporan->fasilitas->ruangan->ruangan_nama ?? '-') . ' - ' . ($laporan->fasilitas->fasilitas_nama ?? '-');
-            $laporan_id = $laporan->laporan_id;
-            $spk = $laporan->spk; // ambil SPK 
+        foreach ($fasilitas as $f) {
+            $judul = ($f->ruangan->lantai->gedung->gedung_nama ?? '-') . ' ' . ($f->ruangan->ruangan_nama ?? '-') . ' - ' . ($f->fasilitas_nama ?? '-');
+            $fasilitas_id = $f->fasilitas_id;
+            $spk = $f->spk; // ambil SPK 
 
             if (!$spk) {
                 continue; // skip laporan ini kalau tidak ada SPK-nya
@@ -894,7 +925,7 @@ class SarprasController extends Controller
             }
 
             $data[] = [
-                'laporan_id' => $laporan_id,
+                'laporan_id' => $fasilitas_id,
                 'judul' => $judul,
                 'kriteria' => $nilaiKriteria
             ];
@@ -925,9 +956,10 @@ class SarprasController extends Controller
     public function proses_ajukan_laporan(string $id, Request $request)
     {
         try {
-            $laporan = LaporanModel::findOrFail($id);
-            $laporan->status = 'konfirmasi';
-            $laporan->save();
+            // Update semua laporan dengan fasilitas_id = $id dan status 'diterima'
+            LaporanModel::where('fasilitas_id', $id)
+                ->where('status', 'diterima')
+                ->update(['status' => 'konfirmasi']);
 
             if ($request->ajax()) {
                 return response()->json([
@@ -935,6 +967,7 @@ class SarprasController extends Controller
                     'message' => 'Laporan berhasil diajukan ke admin.'
                 ]);
             }
+
             return redirect()->back()->with('success', 'Laporan berhasil diajukan ke admin.');
         } catch (\Exception $e) {
             if ($request->ajax()) {
