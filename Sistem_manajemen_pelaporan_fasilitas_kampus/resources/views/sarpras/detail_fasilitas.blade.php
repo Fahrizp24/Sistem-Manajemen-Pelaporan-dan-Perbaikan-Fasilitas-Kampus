@@ -172,7 +172,7 @@
                 </form>
             @elseif($source == 'teknisi')
                 <span>Foto Hasil Pengerjaan</span>
-                <img src="{{ Storage::url('foto_pengerjaan/' . $laporan['foto_pengerjaan']) }}"
+                <img src="{{ Storage::url('foto_pengerjaan/' . $laporan[0]['foto_pengerjaan']) }}"
                     class="img-thumbnail w-150% mx-auto d-block" style="max-width: 100%; height: 100%; max-height: 400px;">
 
                 {{-- Form Untuk selesaikan laporan --}}
