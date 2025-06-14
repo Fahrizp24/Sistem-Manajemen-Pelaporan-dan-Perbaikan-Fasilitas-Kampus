@@ -48,16 +48,16 @@
                                     <td>
                                         @php
                                             $badgeClass = [
-                                                'diajukan' => 'bg-secondary',
-                                                'diterima' => 'bg-info',
-                                                'tidak diterima' => 'bg-danger',
-                                                'konfirmasi' => 'bg-primary',
-                                                'memilih teknisi' => 'bg-info',
-                                                'diperbaiki' => 'bg-info',
-                                                'telah diperbaiki' => 'bg-info',
-                                                'revisi' => 'bg-warning',
-                                                'selesai' => 'bg-success',
-                                            ][$item->status] ?? 'bg-secondary';
+                                                'diajukan'           => 'bg-secondary text-white',  // status awal, netral
+                                                'diterima'           => 'bg-primary text-white',    // disetujui
+                                                'tidak diterima'     => 'bg-danger text-white',     // ditolak
+                                                'konfirmasi'         => 'bg-info text-white',       // menunggu proses
+                                                'memilih teknisi'    => 'bg-dark text-white',       // proses internal
+                                                'diperbaiki'         => 'bg-warning text-dark',     // proses berjalan
+                                                'telah diperbaiki'   => 'bg-light text-dark',       // sudah selesai, tapi belum divalidasi
+                                                'revisi'             => 'bg-body-secondary text-dark', // status revisi, berbeda dari warning/light
+                                                'selesai'            => 'bg-success text-white',    // final, sukses
+                                            ][$item->status] ?? 'bg-secondary text-white';
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
                                     </td>
@@ -102,16 +102,16 @@
                                     <td>
                                         @php
                                             $badgeClass = [
-                                                'diajukan' => 'bg-secondary',
-                                                'diterima' => 'bg-info',
-                                                'tidak diterima' => 'bg-danger',
-                                                'konfirmasi' => 'bg-primary',
-                                                'memilih teknisi' => 'bg-info',
-                                                'diperbaiki' => 'bg-info',
-                                                'telah diperbaiki' => 'bg-info',
-                                                'revisi' => 'bg-warning',
-                                                'selesai' => 'bg-success',
-                                            ][$item->status] ?? 'bg-secondary';
+                                                'diajukan'           => 'bg-secondary text-white',  // status awal, netral
+                                                'diterima'           => 'bg-primary text-white',    // disetujui
+                                                'tidak diterima'     => 'bg-danger text-white',     // ditolak
+                                                'konfirmasi'         => 'bg-info text-white',       // menunggu proses
+                                                'memilih teknisi'    => 'bg-dark text-white',       // proses internal
+                                                'diperbaiki'         => 'bg-warning text-dark',     // proses berjalan
+                                                'telah diperbaiki'   => 'bg-light text-dark',       // sudah selesai, tapi belum divalidasi
+                                                'revisi'             => 'bg-body-secondary text-dark', // status revisi, berbeda dari warning/light
+                                                'selesai'            => 'bg-success text-white',    // final, sukses
+                                            ][$item->status] ?? 'bg-secondary text-white';
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
                                     </td>
