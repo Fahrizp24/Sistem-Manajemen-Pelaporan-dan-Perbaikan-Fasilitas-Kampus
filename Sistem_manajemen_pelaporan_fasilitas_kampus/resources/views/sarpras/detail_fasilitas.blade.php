@@ -80,7 +80,7 @@
                             <td>
                                 @foreach ($laporan as $laporan)
                                     <div class="d-flex align-items-center mb-2">
-                                        <img src="{{ asset('storage/foto_profil/' . $laporan['foto']) }}" 
+                                        <img src="{{ asset('storage/foto_laporan/' . $laporan['foto']) }}" 
                                              alt="Foto {{ $laporan['nama'] }}" 
                                              width="40" height="40" 
                                              class="rounded-circle me-2">

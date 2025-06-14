@@ -810,7 +810,7 @@ class SarprasController extends Controller
 
         return datatables()->of($data)
             ->addIndexColumn()
-            ->addColumn('gedung', fn($row) => $row->ruangan->lantai->gedung->gedung_nama ?? '-')
+            ->addColumn('gedung', fn($row) => $row->ruangan->lantai->gedung->gedung_nama . ' - ' .$row->ruangan->lantai->lantai_nama ?? '-')
             ->addColumn('lantai', fn($row) => $row->ruangan->lantai->lantai_nama ?? '-')
             ->addColumn('ruangan', fn($row) => $row->ruangan->ruangan_nama ?? '-')
             ->addColumn('fasilitas', fn($row) => $row->fasilitas_nama ?? '-')

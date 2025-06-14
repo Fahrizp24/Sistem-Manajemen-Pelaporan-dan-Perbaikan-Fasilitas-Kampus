@@ -5,30 +5,39 @@
     <div class="card-body">
         <div class="form-body">
             <div class="row">
-                <div class="col-md-4"><label>Kriteria Crisp</label></div>
-                <div class="col-md-8">
-                    <select name="kriteria_id" class="form-control">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Kriteria Crisp</label>
+                </div>
+                <div class="col-md-8 mb-3"> <!-- Added mb-3 for bottom margin -->
+                    <select name="kriteria_id" class="form-select">
                         <option value="">Pilih Kriteria</option>
                         @foreach ($kriteria as $item)
                             <option value="{{ $item->kriteria_id }}">{{ $item->nama }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-4"><label>Judul Crisp</label></div>
-                <div class="col-md-8">
-                    <input type="text" name="judul" class="form-control" placeholder="Judul">
+                 <div class="col-md-4">
+                    <label class="form-label fw-semibold">Judul Crisp</label>
+                </div>
+                <div class="col-md-8 mb-3">
+                    <input type="text" name="judul" class="form-control" placeholder="Masukkan judul crisp">
                 </div>
 
-                <div class="col-md-4"><label>Deskripsi</label></div>
-                <div class="col-md-8">
-                    <input type="text" name="deskripsi" class="form-control" placeholder="Deskripsi">
+                <!-- Deskripsi Input -->
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Deskripsi</label>
+                </div>
+                <div class="col-md-8 mb-3">
+                    <textarea name="deskripsi" class="form-control" placeholder="Masukkan deskripsi" rows="3"></textarea>
                 </div>
 
-                <div class="col-md-4"><label>Poin</label></div>
-                <div class="col-md-8">
-                    <input type="number" name="poin" id="poin" class="form-control" placeholder="Poin">
+                <!-- Poin Input -->
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Poin</label>
                 </div>
-
+                <div class="col-md-8 mb-4"> 
+                    <input type="number" name="poin" id="poin" class="form-control" placeholder="Masukkan poin">
+                </div>
                 <div class="col-12 d-flex justify-content-end mt-3">
                     <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
                 </div>

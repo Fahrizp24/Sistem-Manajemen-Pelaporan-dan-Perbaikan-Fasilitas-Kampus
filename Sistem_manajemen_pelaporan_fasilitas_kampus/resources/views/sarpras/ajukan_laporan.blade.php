@@ -14,7 +14,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Gedung</th>
+                            <th>Gedung - Lt</th>
                             <th>Ruang</th>
                             <th>Fasilitas</th>
                             @foreach ($kriteria as $k)
@@ -149,8 +149,8 @@
                 columns: columns,
                 language: {
                     emptyTable: "Tidak ada data laporan yang diterima",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ laporan",
-                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 laporan",
+                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ fasilitas",
+                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 fasilitas",
                     loadingRecords: "Memuat data...",
                     processing: "Memproses...",
                     search: "Cari:",

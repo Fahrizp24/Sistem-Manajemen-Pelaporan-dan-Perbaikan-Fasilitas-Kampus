@@ -18,32 +18,45 @@
 @else
 <form action="{{ route('sarpras.update_crisp') }}" method="PUT" id="form-tambah">
     @csrf
-    <div class="card-header">
-    </div>
-    <div class="card-body">
-        <div class="form-body">
-            <div class="row">
-                <div class="col-md-4"><label>Kriteria Crisp</label></div>
-                <div class="col-md-8">
-                    <select name="kriteria_id" class="form-control">
-                        <option value="{{ $crisp->kriteria->kriteria_id }}" selected>{{ $crisp->kriteria->nama }}</option>
-                    </select>
-                </div>
-                <div class="col-md-4"><label>Judul Crisp</label></div>
-                <div class="col-md-8">
-                    <input type="text" name="judul" class="form-control" placeholder="Judul" value="{{ $crisp->judul }}">
+        <div class="card-body">
+            <div class="form-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Kriteria Crisp</label>
+                    </div>
+                    <div class="col-md-8">
+                        <select name="kriteria_id" class="form-control">
+                            <option value="{{ $crisp->kriteria->kriteria_id }}" selected>{{ $crisp->kriteria->nama }}</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="col-md-4"><label>Deskripsi</label></div>
-                <div class="col-md-8">
-                    <input type="text" name="deskripsi" class="form-control" placeholder="Deskripsi" value="{{ $crisp->deskripsi }}">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Judul Crisp</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" name="judul" class="form-control" placeholder="Judul" value="{{ $crisp->judul }}">
+                    </div>
                 </div>
 
-                <div class="col-md-4"><label>Poin</label></div>
-                <div class="col-md-8">
-                    <input type="number" name="poin" id="poin" class="form-control" placeholder="Poin" value="{{ $crisp->poin }}">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Deskripsi</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" name="deskripsi" class="form-control" placeholder="Deskripsi" value="{{ $crisp->deskripsi }}">
+                    </div>
                 </div>
 
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Poin</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="number" name="poin" id="poin" class="form-control" placeholder="Poin" value="{{ $crisp->poin }}">
+                    </div>
+                </div>
                 <div class="col-12 d-flex justify-content-end mt-3">
                     <button type="submit" class="btn btn-primary me-1 mb-1">Update</button>
                 </div>
