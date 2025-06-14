@@ -15,20 +15,6 @@
                             <input type="text" name="nama" class="form-control" value="{{ $fasilitas->fasilitas_nama }}"
                                 required>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="status">Kategori</label>
-                            <select name="kategori" class="form-control" required>
-                                <option value="Elektronik" {{ $fasilitas->kategori == 'Elektronik' ? 'selected' : '' }}>
-                                    Elektronik</option>
-                                <option value="Jaringan" {{ $fasilitas->kategori == 'Jaringan' ? 'selected' : '' }}>
-                                    Jaringan</option>
-                                <option value="Perlengkapan Kelas" {{ $fasilitas->kategori == 'Perlengkapan Kelas' ? 'selected' : '' }}>Perlengkapan Kelas</option>
-                                <option value="Furniture" {{ $fasilitas->kategori == 'Furniture' ? 'selected' : '' }}>
-                                    Furniture</option>
-                                <option value="Listrik" {{ $fasilitas->kategori == 'Listrik' ? 'selected' : '' }}>Listrik
-                                </option>
-                            </select>
-                        </div>
                         <div class="col-md-12 mb-3">
                             <label for="deskripsi">Deskripsi</label>
                             <textarea name="deskripsi" class="form-control" rows="3"
@@ -67,7 +53,6 @@
         $("#form-edit").validate({
             rules: {
                 nama: { required: true, minlength: 3 },
-                kategori: { required: true },
                 deskripsi: { required: true, minlength: 10 },
                 gedung: { required: true },
                 status: { required: true }

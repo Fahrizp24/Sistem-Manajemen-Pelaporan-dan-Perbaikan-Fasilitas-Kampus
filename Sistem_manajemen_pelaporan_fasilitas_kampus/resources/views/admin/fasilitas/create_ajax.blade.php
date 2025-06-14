@@ -36,16 +36,6 @@
                             <input type="text" name="fasilitas_nama" id="fasilitas_nama" class="form-control" required disabled>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="kategori">Kategori</label>
-                            <select name="kategori" id="kategori" class="form-control" required disabled>
-                                <option value="Elektronik">Elektronik</option>
-                                <option value="Jaringan">Jaringan</option>
-                                <option value="Furniture">Furniture</option>
-                                <option value="Perlengkapan Kelas">Perlengkapan Kelas</option>
-                                <option value="Listrik">Listrik</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
                             <label for="status">Status</label>
                             <select name="status" id="status" class="form-control" required disabled>
                                 <option value="normal">Normal</option>
@@ -71,7 +61,7 @@
 <script>
 $(document).ready(function() {
     // Inisialisasi - disable semua input kecuali gedung
-    $('#lantai_id, #ruangan_id, #fasilitas_nama, #kategori, #fasilitas_deskripsi, #status, #submit-btn').prop('disabled', true);
+    $('#lantai_id, #ruangan_id, #fasilitas_nama, #fasilitas_deskripsi, #status, #submit-btn').prop('disabled', true);
     
     // Handler ketika gedung dipilih
     $('#gedung_id').change(function() {
@@ -122,7 +112,7 @@ $(document).ready(function() {
     $('#ruangan_id').change(function() {
         if ($(this).val()) {
             // Enable semua input form
-            $('#fasilitas_nama, #kategori, #fasilitas_deskripsi, #status').prop('disabled', false);
+            $('#fasilitas_nama, #fasilitas_deskripsi, #status').prop('disabled', false);
         } else {
             disableFormInputs();
         }
@@ -135,7 +125,7 @@ $(document).ready(function() {
     
     // Fungsi untuk disable semua input form
     function disableFormInputs() {
-        $('#fasilitas_nama, #kategori, #fasilitas_deskripsi, #status, #submit-btn').prop('disabled', true);
+        $('#fasilitas_nama, #fasilitas_deskripsi, #status, #submit-btn').prop('disabled', true);
     }
     
     // Fungsi validasi form
@@ -144,7 +134,6 @@ $(document).ready(function() {
                          $('#lantai_id').val() && 
                          $('#ruangan_id').val() && 
                          $('#fasilitas_nama').val().trim() && 
-                         $('#kategori').val() && 
                          $('#fasilitas_deskripsi').val().trim() && 
                          $('#status').val();
         
@@ -158,7 +147,6 @@ $(document).ready(function() {
             lantai_id: { required: true },
             ruangan_id: { required: true },
             fasilitas_nama: { required: true, minlength: 3 },
-            kategori: { required: true },
             fasilitas_deskripsi: { required: true, minlength: 10 },
             status: { required: true }
         },

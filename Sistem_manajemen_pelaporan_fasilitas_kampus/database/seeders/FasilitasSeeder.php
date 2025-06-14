@@ -10,20 +10,21 @@ class FasilitasSeeder extends Seeder
     public function run()
     {
         $semuaFasilitas = [
-            ['fasilitas_nama' => 'AC', 'kategori' => 'Elektronik'],
-            ['fasilitas_nama' => 'Lampu', 'kategori' => 'Elektronik'],
-            ['fasilitas_nama' => 'Proyektor', 'kategori' => 'Elektronik'],
-            ['fasilitas_nama' => 'Access Point', 'kategori' => 'Jaringan'],
-            ['fasilitas_nama' => 'Papan Tulis', 'kategori' => 'Perlengkapan Kelas'],
-            ['fasilitas_nama' => 'Lemari', 'kategori' => 'Furniture'],
-            ['fasilitas_nama' => 'Meja', 'kategori' => 'Furniture'],
-            ['fasilitas_nama' => 'Komputer', 'kategori' => 'Elektronik'],
-            ['fasilitas_nama' => 'Stop Kontak', 'kategori' => 'Listrik'],
-            ['fasilitas_nama' => 'Kursi', 'kategori' => 'Furniture'],
-            ['fasilitas_nama' => 'Wastafel', 'kategori' => 'Sanitasi'],
-            ['fasilitas_nama' => 'Closet', 'kategori' => 'Sanitasi'],
-            ['fasilitas_nama' => 'Pintu', 'kategori' => 'Bangunan'],
+            ['fasilitas_nama' => 'AC'],
+            ['fasilitas_nama' => 'Lampu'],
+            ['fasilitas_nama' => 'Proyektor'],
+            ['fasilitas_nama' => 'Access Point'],
+            ['fasilitas_nama' => 'Papan Tulis'],
+            ['fasilitas_nama' => 'Lemari'],
+            ['fasilitas_nama' => 'Meja'],
+            ['fasilitas_nama' => 'Komputer'],
+            ['fasilitas_nama' => 'Stop Kontak'],
+            ['fasilitas_nama' => 'Kursi'],
+            ['fasilitas_nama' => 'Wastafel'],
+            ['fasilitas_nama' => 'Closet'],
+            ['fasilitas_nama' => 'Pintu'],
         ];
+
 
         // Ambil fasilitas_id dari laporan yang statusnya tertentu
         $fasilitasRusakIds = DB::table('laporan')
@@ -56,7 +57,6 @@ class FasilitasSeeder extends Seeder
                     $id = DB::table('fasilitas')->insertGetId([
                         'ruangan_id' => $ruangan->ruangan_id,
                         'fasilitas_nama' => $fasilitas['fasilitas_nama'],
-                        'kategori' => $fasilitas['kategori'],
                         'fasilitas_deskripsi' => "{$fasilitas['fasilitas_nama']} di {$ruangan->ruangan_nama}",
                         'status' => 'normal',
                         'created_at' => now(),

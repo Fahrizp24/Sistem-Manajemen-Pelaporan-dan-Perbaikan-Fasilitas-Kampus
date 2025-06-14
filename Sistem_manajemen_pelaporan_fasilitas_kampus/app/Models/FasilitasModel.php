@@ -22,7 +22,6 @@ class FasilitasModel extends Model
         'ruangan_id',
         'fasilitas_nama',
         'fasilitas_deskripsi',
-        'kategori',
         'status'
     ];
 
