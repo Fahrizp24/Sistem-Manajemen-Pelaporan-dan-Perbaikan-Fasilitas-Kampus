@@ -61,7 +61,7 @@
                                             </div>
                                         </div>
                                         <h4 class="mt-2">{{ $sarpras->nama }}</h4>
-                                        <p class="text-muted mb-0">{{ $sarpras->username}}</p>
+                                    
                                 </div>
                             </div>
 
