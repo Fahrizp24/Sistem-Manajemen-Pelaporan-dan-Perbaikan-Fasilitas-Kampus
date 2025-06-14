@@ -61,6 +61,7 @@
                                             </div>
                                         </div>
                                         <h4 class="mt-2">{{ $pelapor->nama }}</h4>
+                                        <p class="text-muted mb-0">{{ $pelapor->username}}</p>
                                     
                                 </div>
                             </div>
