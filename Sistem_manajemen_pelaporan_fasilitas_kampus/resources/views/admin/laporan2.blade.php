@@ -30,23 +30,43 @@
                             <td>
                                 @switch($item->status)
                                     @case('diajukan')
-                                        <span class="badge bg-secondary">Diajukan</span>
-                                    @break
+                                        <span class="badge bg-secondary text-white">Diajukan</span>
+                                        @break
 
-                                    @case('diproses')
-                                        <span class="badge bg-warning">Diproses</span>
-                                    @break
+                                    @case('diterima')
+                                        <span class="badge bg-primary text-white">Diterima</span>
+                                        @break
+
+                                    @case('tidak diterima')
+                                        <span class="badge bg-danger text-white">Tidak Diterima</span>
+                                        @break
+
+                                    @case('konfirmasi')
+                                        <span class="badge bg-info text-white">Konfirmasi</span>
+                                        @break
+
+                                    @case('memilih teknisi')
+                                        <span class="badge bg-dark text-white">Memilih Teknisi</span>
+                                        @break
+
+                                    @case('diperbaiki')
+                                        <span class="badge bg-warning text-dark">Diperbaiki</span>
+                                        @break
+
+                                    @case('telah diperbaiki')
+                                        <span class="badge bg-light text-dark">Telah Diperbaiki</span>
+                                        @break
+
+                                    @case('revisi')
+                                        <span class="badge bg-body-secondary text-dark">Revisi</span>
+                                        @break
 
                                     @case('selesai')
-                                        <span class="badge bg-success">Selesai</span>
-                                    @break
-
-                                    @case('ditolak')
-                                        <span class="badge bg-danger">Ditolak</span>
-                                    @break
+                                        <span class="badge bg-success text-white">Selesai</span>
+                                        @break
 
                                     @default
-                                        <span class="badge bg-light">{{ $item->status }}</span>
+                                        <span class="badge bg-light text-dark">{{ ucfirst($item->status) }}</span>
                                 @endswitch
                             </td>
                             <td>
