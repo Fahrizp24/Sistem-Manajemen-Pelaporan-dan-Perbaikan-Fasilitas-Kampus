@@ -14,9 +14,10 @@
                             <tr>
                                 <th>No</th>
                                 <th>Gedung</th>
+                                <th>Lantai</th>
+                                <th>Ruangan</th>
                                 <th>Fasilitas</th>
                                 <th>Tanggal Laporan</th>
-                                <th>Deskripsi</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -26,25 +27,25 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
+                                    <td>{{ $item->fasilitas->ruangan->lantai->lantai_nama }}</td>
+                                    <td>{{ $item->fasilitas->ruangan->ruangan_nama }}</td>
                                     <td>{{ $item->fasilitas->fasilitas_nama }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y') }}</td>
-                                    <td>{{ Str::limit($item->deskripsi, 50) }}</td>
                                     <td>
                                         @php
-                                            $badgeClass =
-                                                [
-                                                    'diajukan' => 'bg-secondary',
-                                                    'diterima' => 'bg-info',
-                                                    'tidak diterima' => 'bg-danger',
-                                                    'konfirmasi' => 'bg-primary',
-                                                    'memilih teknisi' => 'bg-info',
-                                                    'diperbaiki' => 'bg-warning',
-                                                    'telah diperbaiki' => 'bg-warning',
-                                                    'revisi' => 'bg-warning',
-                                                    'selesai' => 'bg-success',
-                                                ][$item->status] ?? 'bg-secondary';
+                                            $badgeClass = [
+                                                'diajukan' => 'bg-secondary',
+                                                'diterima' => 'bg-info',
+                                                'tidak diterima' => 'bg-danger',
+                                                'konfirmasi' => 'bg-primary',
+                                                'memilih teknisi' => 'bg-info',
+                                                'diperbaiki' => 'bg-warning',
+                                                'telah diperbaiki' => 'bg-warning',
+                                                'revisi' => 'bg-warning',
+                                                'selesai' => 'bg-success',
+                                            ][$item->status] ?? 'bg-secondary';
                                         @endphp
-                                        <span class="divider badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
+                                        <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
                                     </td>
                                     <td>
                                         <button
