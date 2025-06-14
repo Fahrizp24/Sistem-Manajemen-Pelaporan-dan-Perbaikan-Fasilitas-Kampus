@@ -17,19 +17,25 @@
         </div>
     </div>
 @else
+    <!-- Modal untuk Foto Pelapor -->
+    <div class="modal fade" id="fotoPelaporModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fotoPelaporModalLabel">Foto Pelapor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalFotoPelapor" src="" class="img-fluid" style="max-height: 70vh;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal-body">
         <div class="row">
-            {{-- <!-- Kolom Foto (Kiri) -->
-            <div class="col-md-4">
-                @if ($laporan->foto)
-                    <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-thumbnail w-100 mb-3"
-                        style="max-height: 300px; object-fit: contain;">
-                @else
-                    <div class="alert alert-info text-center">
-                        <i class="fas fa-image"></i> Tidak ada foto
-                    </div>
-                @endif
-            </div> --}}
 
             <!-- Kolom Informasi (Kanan) -->
             <div class="col-md-8">
@@ -78,15 +84,18 @@
                         <tr>
                             <th>Pelapor</th>
                             <td>
-                                @foreach ($laporan as $laporan)
-                                    <div class="d-flex align-items-center mb-2">
-                                        <img src="{{ asset('storage/foto_laporan/' . $laporan['foto']) }}" 
-                                             alt="Foto {{ $laporan['nama'] }}" 
-                                             width="40" height="40" 
-                                             class="rounded-circle me-2">
-                                        <span>{{ $laporan['nama'] }}</span>
-                                    </div>
-                                @endforeach
+                                @foreach ($laporan as $laporanItem)
+            <div class="d-flex align-items-center mb-2">
+                <button class="btn btn-sm btn-outline-primary d-flex align-items-center" 
+                        onclick="showFotoPelapor('{{ asset('storage/foto_laporan/' . $laporanItem['foto']) }}', '{{ $laporanItem['nama'] }}')">
+                    <img src="{{ asset('storage/foto_laporan/' . $laporanItem['foto']) }}" 
+                         alt="Foto {{ $laporanItem['nama'] }}" 
+                         width="40" height="40" 
+                         class="square me-2">
+                    <span>{{ $laporanItem['nama'] }}</span>
+                </button>
+            </div>
+        @endforeach
                             </td>
                         </tr>
                     </table>
@@ -208,6 +217,44 @@
             @endif
         </div>
     </div>
+    <script>
+    function showFotoPelapor(fotoUrl, namaPelapor) {
+        document.getElementById('modalFotoPelapor').src = fotoUrl;
+        document.getElementById('fotoPelaporModalLabel').textContent = 'Foto Pelapor: ' + namaPelapor;
+        var modal = new bootstrap.Modal(document.getElementById('fotoPelaporModal'));
+        modal.show();
+    }
+
+    // Untuk foto pengerjaan (jika ada)
+    @if($source == 'teknisi' && isset($laporan[0]['foto_pengerjaan']))
+        // Ganti tampilan langsung dengan tombol
+        document.querySelector('span:contains("Foto Hasil Pengerjaan")').parentElement.innerHTML = `
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#fotoPengerjaanModal">
+                <i class="fas fa-eye me-2"></i> Lihat Foto Hasil Pengerjaan
+            </button>
+            
+            <!-- Modal Foto Pengerjaan -->
+            <div class="modal fade" id="fotoPengerjaanModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Foto Hasil Pengerjaan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <img src="{{ Storage::url('foto_pengerjaan/' . $laporan[0]['foto_pengerjaan']) }}" 
+                                 class="img-fluid" 
+                                 style="max-height: 70vh;">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    @endif
+</script>
 @endempty
 <script>
     $(document).ready(function() {
