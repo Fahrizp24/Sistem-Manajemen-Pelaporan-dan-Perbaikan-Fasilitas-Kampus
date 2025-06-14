@@ -3,42 +3,41 @@
 
 @section('content')
 <section class="section">
-    <h4 class="mb-3">Penugasan</h4>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="mb-3">Penugasan</h4>
 
-    {{-- Horizontal Nav Tabs --}}
-    <ul class="nav nav-tabs" id="penugasanTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="penugasan-tab" data-bs-toggle="tab" data-bs-target="#penugasan" type="button" role="tab" aria-controls="penugasan" aria-selected="true">
-                Daftar Penugasan
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="revisi-tab" data-bs-toggle="tab" data-bs-target="#revisi" type="button" role="tab" aria-controls="revisi" aria-selected="false">
-                Daftar Revisi
-            </button>
-        </li>
-    </ul>
+            {{-- Horizontal Nav Tabs --}}
+            <ul class="nav nav-pills nav-fill mb-4">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#penugasan" data-bs-toggle="tab">Daftar Penugasan</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#revisi" data-bs-toggle="tab">Daftar Revisi</a>
+                </li>
+            </ul>
+        </div>
 
-    <div class="tab-content pt-3" id="penugasanTabContent">
-        {{-- Tab: Penugasan --}}
-        <div class="tab-pane fade show active" id="penugasan" role="tabpanel" aria-labelledby="penugasan-tab">
-            <div class="card">
-                <div class="card-body table-responsive">
-                    <table class="table table-bordered table-striped mb-0" id="table-teknisi">
-                        <thead>
-                            <tr>
-                                <th width="5%">No</th>
-                                <th>Gedung</th>
-                                <th>Lantai</th>
-                                <th>Ruangan</th>
-                                <th>Fasilitas</th>
-                                <th>Tanggal Laporan</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($penugasan as $item)
+        <div class="card-body">
+            <div class="tab-content">
+                {{-- Tab: Penugasan --}}
+                <div class="tab-pane fade show active" id="penugasan" role="tabpanel" aria-labelledby="penugasan-tab">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="table-penugasan">
+                            <thead>
+                                <tr>
+                                    <th width="5%">No</th>
+                                    <th>Gedung</th>
+                                    <th>Lantai</th>
+                                    <th>Ruangan</th>
+                                    <th>Fasilitas</th>
+                                    <th>Tanggal Laporan</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($penugasan as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
@@ -69,32 +68,30 @@
                                         </button>
                                     </td>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        {{-- Tab: Revisi --}}
-        <div class="tab-pane fade" id="revisi" role="tabpanel" aria-labelledby="revisi-tab">
-            <div class="card">
-                <div class="card-body table-responsive">
-                    <table class="table table-bordered table-striped mb-0" id="table-teknisi">
-                        <thead>
-                            <tr>
-                                <th width="5%">No</th>
-                                <th>Gedung</th>
-                                <th>Lantai</th>
-                                <th>Ruangan</th>
-                                <th>Fasilitas</th>
-                                <th>Tanggal Laporan</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($revisi as $item)
+                {{-- Tab: Revisi --}}
+                <div class="tab-pane fade" id="revisi" role="tabpanel" aria-labelledby="revisi-tab">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="table-revisi">
+                            <thead>
+                                <tr>
+                                    <th width="5%">No</th>
+                                    <th>Gedung</th>
+                                    <th>Lantai</th>
+                                    <th>Ruangan</th>
+                                    <th>Fasilitas</th>
+                                    <th>Tanggal Laporan</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($revisi as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
@@ -125,9 +122,10 @@
                                         </button>
                                     </td>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
