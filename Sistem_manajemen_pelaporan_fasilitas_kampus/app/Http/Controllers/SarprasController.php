@@ -332,12 +332,16 @@ class SarprasController extends Controller
                 ->update(['status' => 'selesai']);
 
             DB::table('spk_kriteria')
-            ->whereIn('spk_id', function ($query) use ($id) {
-                $query->select('spk_id')
-                      ->from('spk')
-                      ->where('fasilitas_id', $id);
-            })
-            ->delete();
+                ->whereIn('spk_id', function ($query) use ($id) {
+                    $query->select('spk_id')
+                        ->from('spk')
+                        ->where('fasilitas_id', $id);
+                })
+                ->delete();
+                
+            DB::table('spk')
+                ->where('fasilitas_id', $id)
+                ->delete();
 
             if ($request->ajax()) {
                 return response()->json([
@@ -345,6 +349,7 @@ class SarprasController extends Controller
                     'message' => 'Laporan berhasil diselesaikan.'
                 ]);
             }
+
             return redirect()->back()->with('success', 'Laporan berhasil diselesaikan.');
         } catch (\Exception $e) {
             if ($request->ajax()) {
@@ -353,6 +358,7 @@ class SarprasController extends Controller
                     'message' => 'Gagal menyelesaikan laporan: ' . $e->getMessage()
                 ], 500);
             }
+
             return redirect()->back()->with('error', 'Gagal menyelesaikan laporan: ' . $e->getMessage());
         }
     }
