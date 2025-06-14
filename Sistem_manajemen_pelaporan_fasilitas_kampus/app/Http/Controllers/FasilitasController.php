@@ -15,7 +15,7 @@ class FasilitasController extends Controller
     public function data_fasilitas(Request $request)
     {
         if ($request->ajax()) {
-            $data = FasilitasModel::with('ruangan.lantai.gedung')->select(['fasilitas_id', 'fasilitas_nama', 'fasilitas_deskripsi', 'kategori', 'ruangan_id', 'status']);
+            $data = FasilitasModel::with('ruangan.lantai.gedung')->select(['fasilitas_id', 'fasilitas_nama', 'fasilitas_deskripsi', 'ruangan_id', 'status']);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('aksi', function ($row) {
@@ -50,7 +50,6 @@ class FasilitasController extends Controller
             'lantai_id' => 'required|exists:lantai,lantai_id',
             'ruangan_id' => 'required|exists:ruangan,ruangan_id',
             'fasilitas_nama' => 'required|string|max:255',
-            'kategori' => 'required|in:Elektronik,Jaringan,Furniture,Perlengkapan Kelas,Listrik',
             'status' => 'required|in:normal,rusak',
             'fasilitas_deskripsi' => 'required|string|min:10',
         ];
@@ -69,7 +68,6 @@ class FasilitasController extends Controller
         $fasilitas->ruangan_id = $request->ruangan_id;
         $fasilitas->fasilitas_nama = $request->fasilitas_nama;
         $fasilitas->fasilitas_deskripsi = $request->fasilitas_deskripsi;
-        $fasilitas->kategori = $request->kategori;
         $fasilitas->status = $request->status;
         $fasilitas->save();
 
@@ -107,7 +105,6 @@ class FasilitasController extends Controller
         $rules = [
             'fasilitas_nama' => 'required|string|max:255',
             'fasilitas_deskripsi' => 'required|string|min:10',
-            'kategori' => 'required',
             'ruangan_id' => 'required',
             'status' => 'required',
         ];
@@ -125,7 +122,6 @@ class FasilitasController extends Controller
         $fasilitas = FasilitasModel::findOrFail($fasilitas_id);
         $fasilitas->nama = $request->nama;
         $fasilitas->deskripsi = $request->deskripsi;
-        $fasilitas->kategori = $request->kategori;
         $fasilitas->ruangan_id = $request->ruangan_id;
         $fasilitas->status = $request->status;
         $fasilitas->save();

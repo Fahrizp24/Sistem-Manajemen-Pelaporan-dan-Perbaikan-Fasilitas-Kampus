@@ -51,7 +51,6 @@
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>Deskripsi</th>
-                                <th>Kategori</th>
                                 <th>Gedung</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -171,7 +170,6 @@
                 { data: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'fasilitas_nama' },
                 { data: 'fasilitas_deskripsi' },
-                { data: 'kategori' },
                 { data: 'ruangan.lantai.gedung.gedung_nama' },
                 { data: 'status' },
                 { data: 'aksi', orderable: false, searchable: false }
