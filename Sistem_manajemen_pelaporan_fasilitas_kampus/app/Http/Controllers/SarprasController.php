@@ -331,6 +331,14 @@ class SarprasController extends Controller
                 ->where('status', 'telah diperbaiki')
                 ->update(['status' => 'selesai']);
 
+            DB::table('spk_kriteria')
+            ->whereIn('spk_id', function ($query) use ($id) {
+                $query->select('spk_id')
+                      ->from('spk')
+                      ->where('fasilitas_id', $id);
+            })
+            ->delete();
+
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
