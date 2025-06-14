@@ -123,7 +123,7 @@
                     @endforeach
                     
                     </div>
-
+                <form>
                     <button type="submit" class="btn btn-success mt-3 gap-2"
                         onclick="return confirm('Anda Yakin Untuk Menerima Laporan Ini?')">
                         Terima Laporan
@@ -145,7 +145,6 @@
                         onclick="return confirm('Anda Yakin Untuk Menolak Laporan Ini?')">
                         Tolak Laporan
                     </button>
-                </form>
                 </form>
             @elseif($source == 'admin')
                 <form action="{{ url('/sarpras/laporan_masuk/pilih_teknisi/' . $laporan->laporan_id) }}" method="POST">
