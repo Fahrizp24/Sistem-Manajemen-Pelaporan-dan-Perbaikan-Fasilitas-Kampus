@@ -13,7 +13,6 @@ class FasilitasSeeder extends Seeder
             ['fasilitas_nama' => 'AC'],
             ['fasilitas_nama' => 'Lampu'],
             ['fasilitas_nama' => 'Proyektor'],
-            ['fasilitas_nama' => 'Access Point'],
             ['fasilitas_nama' => 'Papan Tulis'],
             ['fasilitas_nama' => 'Lemari'],
             ['fasilitas_nama' => 'Meja'],

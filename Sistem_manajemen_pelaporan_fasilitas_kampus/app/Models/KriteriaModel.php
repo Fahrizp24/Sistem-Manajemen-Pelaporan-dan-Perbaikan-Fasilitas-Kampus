@@ -21,7 +21,9 @@ class KriteriaModel extends Model
     protected $fillable = [
         'kode',
         'nama',
-        'bobot'
+        'bobot',
+        'jenis',
+        'deskripsi',
     ];
     
     function crisp(): HasMany

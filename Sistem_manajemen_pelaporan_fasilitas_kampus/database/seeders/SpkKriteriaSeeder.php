@@ -16,14 +16,27 @@ class SpkKriteriaSeeder extends Seeder
 
         foreach ($spks as $spk) {
             foreach ($kriteriaIds as $kriteria_id) {
+                $nilai = 0;
+                
+                // Jika kriteria_id == 7, hitung jumlah laporan diterima berdasarkan fasilitas_id
+                if ($kriteria_id == 7) {
+                    $nilai = DB::table('laporan')
+                        ->where('fasilitas_id', $spk->fasilitas_id)
+                        ->where('status', 'diterima')
+                        ->count();
+                } else {
+                    $nilai = rand(1, 5); // default random nilai
+                }
+        
                 DB::table('spk_kriteria')->insert([
                     'spk_id' => $spk->spk_id,
                     'kriteria_id' => $kriteria_id,
-                    'nilai' => rand(1, 10),
+                    'nilai' => $nilai,
                     'created_at' => $now,
                     'updated_at' => $now,
                 ]);
             }
         }
+        
     }
 }
