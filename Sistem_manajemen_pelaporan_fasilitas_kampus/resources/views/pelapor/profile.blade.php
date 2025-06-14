@@ -2,9 +2,9 @@
 @section('title', 'Profil')
 
 @section('content')
-<div class="row justify-content-center py-5">
+    <div class="row justify-content-center py-5">
     <div class="col-xl-12 col-lg-16">
-        <div class="card shadow-sm" style="background-color: #f8f9fa; border-radius: 10px;">
+        <div class="card shadow-sm">
             <div class="card-body p-4">
                 <!-- Success/Error Messages -->
                 @if(session('success'))
@@ -28,86 +28,166 @@
                 <!-- Navbar -->
                 <ul class="nav nav-pills nav-fill mb-4">
                     <li class="nav-item">
-                        <a class="nav-link active" style="background-color: #4e73df;" href="#profile" data-bs-toggle="tab">Profil</a>
+                        <a class="nav-link active" href="#profile" data-bs-toggle="tab">Profil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color: #4e73df;" href="#editProfile" data-bs-toggle="tab">Edit Profil</a>
+                        <a class="nav-link" href="#editProfile" data-bs-toggle="tab">Edit Profil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color: #4e73df;" href="#changePassword" data-bs-toggle="tab">Ganti Password</a>
+                        <a class="nav-link" href="#changePassword" data-bs-toggle="tab">Ganti Password</a>
                     </li>
                 </ul>
 
                 <div class="tab-content">
-                    <!-- Profile Tab -->
                     <div class="tab-pane fade show active" id="profile">
                         <div class="row">
                             <div class="col-md-4 text-center mb-4">
                                 <div class="d-flex flex-column align-items-center">
                                     <div class="mb-3 w-100 text-center">
-                                        <h5 style="color: #4e73df;">Foto Profil</h5>
-                                        <div class="border-bottom mx-auto" style="width: 80px; border-color: #4e73df;"></div>
+                                        <span class="fw-bold" style="font-size: 1.4rem; pb-3">Foto Profil</span>
+                                        <div class="border-bottom mx-auto" style="width: 80px;"></div>
                                     </div>
-                                    <div class="profile-photo-wrapper mb-3"
-                                        style="display: inline-block; position: relative; width: 200px; height: 200px; border-radius: 10px; overflow: hidden; background-color: #e0e6f8;">
-                                        <img id="foto-profil" class="profile-user-img img-fluid"
-                                            src="{{ auth()->user()->foto_profil ? asset('storage/foto_profil/' . auth()->user()->foto_profil) : asset('storage/foto_profil/default.jpg') }}"
-                                            alt="User profile picture"
-                                            style="width: 100%; height: 100%; object-fit: cover;"
-                                            onerror="this.style.display='none'; document.getElementById('foto-fallback').style.display='flex';">
+                                    <div class="profile-photo-wrapper"
+                                        style="display: inline-block; position: relative; width: 230px; height: 280px;">
+                                       <img id="foto-profil" class="profile-user-img img-fluid"
+                                                    src="{{ auth()->user()->foto_profil ? asset('storage/foto_profil/' . auth()->user()->foto_profil) : asset('storage/foto_profil/default.jpg') }}"
+                                                    alt="User  profile picture"
+                                                    style="position: absolute; top: 0; left: 0; width: 97%; height: 97%; object-fit: cover; border: 2px solid #fff;"
+                                                    onerror="this.style.display='none'; document.getElementById('foto-fallback').style.display='flex';">
                                         <div 
-                                            id="foto-fallback"
-                                            style="display: none; width: 100%; height: 100%; background: #e0e6f8; color: #4e73df; font-size: 5rem; font-weight: bold; display: flex; justify-content: center; align-items: center;">
-                                            {{ substr($user->nama, 0, 1) }}
+                                                id="foto-fallback"
+                                                style="display: none; width: 100%; height: 100%; background: #f0f0f0; color: #666; font-size: 5rem; font-weight: bold; justify-content: center; align-items: center; text-align: center;">
+                                                {{ substr($pelapor->nama, 0, 1) }}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <h4 style="color: #4e73df;">{{ $user->nama }}</h4>
-                                    <p class="text-muted mb-0">{{ $user->role }}</p>
+                                        <h4 class="mt-2">{{ $pelapor->nama }}</h4>
+                                    
                                 </div>
                             </div>
 
                             <div class="col-md-8">
-                                <div class="border-bottom mb-4 pb-2">
-                                    <h4 style="color: #4e73df;">Informasi Profil</h4>
-                                </div>
+                                <h4 class="mb-4 border-bottom pb-3">Informasi Profil</h4>
+
                                 <div class="mb-3">
-                                    <label class="form-label text-muted">Nama Lengkap</label>
-                                    <div class="form-control-plaintext fw-bold" style="color: #4e73df;">{{ $user->nama }}</div>
+                                    <label for="nama" class="form-label">Nama Lengkap</label>
+                                    <input type="text" class="form-control" id="nama" name="nama" value="{{ $pelapor->nama }}"
+                                        required disabled>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label text-muted">Username</label>
-                                    <div class="form-control-plaintext fw-bold" style="color: #4e73df;">{{ $user->username }}</div>
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" value="{{ $pelapor->username }}"
+                                        disabled>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label text-muted">Nomor Telepon</label>
-                                    <div class="form-control-plaintext fw-bold" style="color: #4e73df;">{{ $user->no_telp ?? '-' }}</div>
+                                    <label for="no_telp" class="form-label">Nomor Telepon</label>
+                                    <input type="tel" class="form-control" id="no_telp" name="no_telp"
+                                        value="{{ $pelapor->no_telp ?? '-' }}" disabled>
                                 </div>
                 
                                 <div class="mb-3">
-                                    <label class="form-label text-muted">Email</label>
-                                    <div class="form-control-plaintext fw-bold" style="color: #4e73df;">{{ $user->email }}</div>
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        value="{{ $pelapor->email }}" required disabled>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Edit Profile and Change Password tabs remain the same -->
-                    <!-- ... -->
-                </div>
-            </div>
-            
-            <!-- Footer -->
-            <div class="card-footer text-center" style="background-color: #f8f9fa; border-top: 1px solid #e3e6f0;">
-                <div class="d-flex justify-content-between">
-                    <span class="text-muted">2025 © Mazer</span>
-                    <span class="text-muted">Crafted with by Group 4 PBL TI-2G</span>
+                    <div class="tab-pane fade" id="editProfile">
+                        <form action="{{ route('pelapor.updateProfile') }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="row">
+                                <div class="col-md-4 text-center mb-4">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <div class="mb-3 w-100 text-center">
+                                            <span class="fw-bold" style="font-size: 1.4rem; pb-3">Foto Profil</span>
+                                            <div class="border-bottom mx-auto" style="width: 80px;"></div>
+                                        </div>
+                                        <div class="profile-photo-wrapper" style="display: inline-block; position: relative; width: 225px; height: 275px;">
+                                            <label for="foto-input" style="cursor: pointer;">
+                                                <img id="foto-profil" class="profile-user-img img-fluid"
+                                                    src="{{ auth()->user()->foto_profil ? asset('storage/foto_profil/' . auth()->user()->foto_profil) : asset('storage/foto_profil/default.jpg') }}"
+                                                    alt="User  profile picture"
+                                                    style="position: absolute; top: 0; left: 0; width: 97%; height: 97%; object-fit: cover; border: 2px solid #fff;"
+                                                    onerror="this.style.display='none'; document.getElementById('foto-fallback').style.display='flex';">
+                                                <div 
+                                                    id="foto-fallback"
+                                                    style="display: none; position: absolute; top: 0; left: 0; width: 97%; height: 97%; background: #b4b4b4; color: #fff; font-weight: bold; justify-content: center; align-items: center; text-align: center; border: 2px solid #fff;">
+                                                </div>
+                                                <div 
+                                                    class="hover-overlay"
+                                                    style="position: absolute; top: 0; left: 0; width: 97%; height: 97%; background: rgba(0, 0, 0, 0.5); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;">
+                                                    <i class="bi bi-camera-fill" style="font-size: 2rem;"></i>
+                                                </div>
+                                            </label>
+                                            <input type="file" id="foto-input" name="foto" accept="image/*" style="display: none;"
+                                                onchange="uploadFoto()">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <h4 class="mb-4 border-bottom pb-3">Edit Profil</h4>
+
+                                    <div class="mb-3">
+                                        <label for="nama" class="form-label">Nama Lengkap</label>
+                                        <input type="text" class="form-control" id="nama" name="nama" value="{{ $pelapor->nama }}"
+                                            required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="no_telp" class="form-label">Nomor Telepon</label>
+                                        <input type="tel" class="form-control" id="no_telp" name="no_telp"
+                                            value="{{ $pelapor->no_telp ?? '-' }}">
+                                    </div>
+                
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                            value="{{ $pelapor->email }}" required>
+                                    </div>
+
+                                    <div class="footer d-flex justify-content-end">
+                                        <div class="col-md-3 mb-1">
+                                            <button type="submit" class="btn btn-primary w-100">Simpan Perubahan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="changePassword">
+                        <form action="{{ route('pelapor.updatePassword') }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label">Password Saat Ini</label>
+                                <input type="password" class="form-control" id="current_password" name="current_password"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new_password" class="form-label">Password Baru</label>
+                                <input type="password" class="form-control" id="new_password" name="new_password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new_password_confirmation" class="form-label">Konfirmasi Password Baru</label>
+                                <input type="password" class="form-control" id="new_password_confirmation"
+                                    name="new_password_confirmation" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Simpan Password</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <script>
         document.querySelectorAll('.profile-photo-wrapper').forEach(wrapper => {
