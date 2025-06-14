@@ -154,25 +154,41 @@ class TeknisiController extends Controller
         $revisi = FasilitasModel::whereHas('laporan', function ($query) use ($teknisi_id) {
             $query->where('status', 'revisi')
                 ->where('teknisi_id', $teknisi_id);
-        })->with([
-            'laporan' => function ($query) use ($teknisi_id) {
-                $query->where('status', 'revisi')
-                    ->where('teknisi_id', $teknisi_id)
-                    ->with('pelapor');
-            },
-            'ruangan.lantai.gedung'
-        ])->get()
+        })
+            ->with([
+                'laporan' => function ($query) use ($teknisi_id) {
+                    $query->where('status', 'revisi')
+                        ->where('teknisi_id', $teknisi_id)
+                        ->with('pelapor');
+                },
+                'ruangan.lantai.gedung'
+            ])
+            ->get()
             ->sortByDesc(function ($fasilitas) {
                 // Ambil updated_at dari laporan terakhir
                 return optional($fasilitas->laporan->sortByDesc('updated_at')->first())->updated_at;
             });
-        
+
         return view('teknisi.penugasan', compact('penugasan', 'revisi', 'breadcrumb', 'page', 'activeMenu'));
     }
 
     public function detail_penugasan($id)
     {
-        $laporan = LaporanModel::findOrFail($id);
+        $fasilitas = FasilitasModel::whereHas('laporan', function ($query) use ($id) {
+            $query->where('status', 'diperbaiki')->orwhere('status', 'revisi')
+                ->where('fasilitas_id', $id)
+                ->where('teknisi_id', Auth::id());
+        })
+            ->with([
+                'laporan' => function ($query) {
+                    $query->where('status', 'diperbaiki')->orwhere('status', 'revisi')
+                        ->where('teknisi_id', Auth::id())
+                        ->with('pelapor');
+                },
+                'ruangan.lantai.gedung'
+            ])
+            ->where('fasilitas_id', $id)
+            ->first();
 
         $breadcrumb = (object) [
             'title' => 'Data Penugasan',
@@ -183,7 +199,8 @@ class TeknisiController extends Controller
             'title' => 'Detail Penugasan',
             'subtitle' => 'Informasi lengkap mengenai penugasan'
         ];
-        return view('teknisi.detail_penugasan', compact('laporan', 'breadcrumb', 'page'));
+
+        return view('teknisi.detail_penugasan', compact('fasilitas', 'breadcrumb', 'page'));
     }
 
     public function ajukanKeSarpras(string $id, Request $request)
@@ -193,21 +210,21 @@ class TeknisiController extends Controller
         ]);
 
         try {
-            $laporan = LaporanModel::findOrFail($id);
-
+            $laporan = LaporanModel::where('fasilitas_id', $id)->where('status', 'diperbaiki')->orwhere('status', 'revisi')->get();
             // Upload file foto
             if ($request->hasFile('foto_pengerjaan')) {
                 $file = $request->file('foto_pengerjaan');
                 $extension = $file->getClientOriginalExtension();
-                $filename = $laporan->laporan_id . '_' . time() . '.' . $extension;
+                $filename = $id . '_' . time() . '.' . $extension;
                 $path = $file->storeAs('foto_pengerjaan', $filename, 'public');
-
-                $laporan->foto_pengerjaan = $path;
+                foreach ($laporan as $l) {
+                    $l->foto_pengerjaan = $path;
+                    $l->status = 'telah diperbaiki';
+                    $l->foto_pengerjaan = $filename ?? null;
+                    $l->save();
+                }
             }
 
-            $laporan->status = 'telah diperbaiki';
-            $laporan->foto_pengerjaan = $filename ?? null;
-            $laporan->save();
 
             if ($request->ajax()) {
                 return response()->json([

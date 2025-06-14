@@ -39,7 +39,6 @@
                         <span>{{ $jumlahPelapor }} orang</span>
                     </tr>
                     <table class="table table-bordered">
-                        {{-- @dd($laporan[0]->id); --}}
                         <tr>
                             <th>Gedung</th>
                             <td>{{ $fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>

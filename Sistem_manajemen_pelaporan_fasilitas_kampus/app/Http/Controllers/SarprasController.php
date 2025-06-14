@@ -406,6 +406,64 @@ class SarprasController extends Controller
         }
     }
 
+    public function edit_kriteria ($id)
+    {
+        $breadcrumb = (object) [
+            'title' => 'Edit Kriteria',
+            'list' => ['Edit Kriteria']
+        ];
+        $page = (object) [
+            'title' => 'Edit Kriteria',
+            'subtitle' => 'Edit Data Kriteria'
+        ];
+
+        $kriteria = KriteriaModel::findOrFail($id);
+        return view('sarpras.edit_kriteria', compact('kriteria', 'breadcrumb', 'page'));
+    }
+
+    public function update_kriteria(Request $request)
+    {
+        $rules = [
+            'kode' => 'required|string|max:50|unique:kriteria,kode,' . $request->id . ',kriteria_id',
+            'nama' => 'required|string|max:255',
+            'bobot' => 'required|numeric|min:0|max:1',
+            'jenis' => 'required|in:Benefit,Cost',
+            'deskripsi' => 'nullable|string|max:500'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors()
+            ], 422); // Tambahkan status code 422 untuk validation error
+        }
+
+        try {
+            $check = KriteriaModel::find($request->id);
+            if ($check) {
+                $check->update($request->all());
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data berhasil diupdate'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan data: ' . $e->getMessage(),
+                'msgField' => []
+            ], 500);
+        }
+    }
+
     public function destroy_kriteria($id)
     {
         $kriteria = KriteriaModel::find($id);

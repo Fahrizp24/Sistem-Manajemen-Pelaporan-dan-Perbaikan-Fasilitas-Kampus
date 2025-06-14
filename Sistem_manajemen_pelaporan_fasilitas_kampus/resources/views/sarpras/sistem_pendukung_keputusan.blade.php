@@ -31,10 +31,6 @@
                     {{-- Tab: Kriteria --}}
                     <div class="tab-pane fade show active" id="kriteria" role="tabpanel" aria-labelledby="kriteria-tab">
                         <div class="card">
-                            <div class="card-header d-flex justify-content-end">
-                                <button type="button" class="btn btn-success mb-3"
-                                    onclick="modalAction('{{url('sarpras/kriteria/create_ajax')}}')">+ Tambah kriteria</button>
-                            </div>
                             <div class="card-body table-responsive">
                                 <table class="table table-bordered table-striped mb-0" id="kriteriaTable">
                                     <thead class="table-white">
@@ -118,7 +114,7 @@
 
         $(document).on('click', '.btnEditKriteria', function () {
             var id = $(this).data('id');
-            modalAction('/sarpras/kriteria/edit_ajax/' + id);
+            modalAction('/sarpras/sistem_rekomendasi/edit_kriteria/' + id);
         });
 
         var dataKriteria;
