@@ -17,13 +17,13 @@
                     <a class="nav-link active" href="#fasilitasTab" data-bs-toggle="tab">Fasilitas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#gedungTab" data-bs-toggle="tab">Gedung</a>
+                    <a class="nav-link" href="#ruanganTab" data-bs-toggle="tab">Ruangan</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#lantaiTab" data-bs-toggle="tab">Lantai</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#ruanganTab" data-bs-toggle="tab">Ruangan</a>
+                    <a class="nav-link" href="#gedungTab" data-bs-toggle="tab">Gedung</a>
                 </li>
             </ul>
         </div>
