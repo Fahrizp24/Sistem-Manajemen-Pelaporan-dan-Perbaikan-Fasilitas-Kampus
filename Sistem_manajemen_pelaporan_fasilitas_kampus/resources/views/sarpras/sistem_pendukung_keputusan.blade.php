@@ -2,82 +2,83 @@
 @section('title', 'Kelola Sistem Rekomendasi')
 
 @section('content')
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    <div class="page-content">
-        <div class="row">
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
             <div class="col-12">
-                {{-- Tab Navigasi --}}
-                <ul class="nav nav-tabs" id="kriteriaTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="kriteria-tab" data-bs-toggle="tab" data-bs-target="#kriteria" type="button" role="tab" aria-controls="kriteria" aria-selected="true">
-                            Daftar Kriteria
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="crisp-tab" data-bs-toggle="tab" data-bs-target="#crisp" type="button" role="tab" aria-controls="crisp" aria-selected="false">
-                            Daftar Crisp
-                        </button>
-                    </li>
-                </ul>
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
 
-                {{-- Tab Konten --}}
-                <div class="tab-content pt-3" id="kriteriaTabContent">
-                    {{-- Tab: Kriteria --}}
-                    <div class="tab-pane fade show active" id="kriteria" role="tabpanel" aria-labelledby="kriteria-tab">
-                        <div class="card">
-                            <div class="card-body table-responsive">
-                                <table class="table table-bordered table-striped mb-0" id="kriteriaTable">
-                                    <thead class="table-white">
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Kode</th>
-                                            <th>Nama</th>
-                                            <th>Jenis</th>
-                                            <th>Bobot</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {{-- Data diisi oleh script --}}
-                                    </tbody>
-                                </table>
+                        <!-- Tab Navigation -->
+                        <ul class="nav nav-pills nav-fill mb-4">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="kriteria-tab" data-bs-toggle="tab" data-bs-target="#kriteria" type="button" role="tab" aria-controls="kriteria" aria-selected="true">
+                                    Daftar Kriteria
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="crisp-tab" data-bs-toggle="tab" data-bs-target="#crisp" type="button" role="tab" aria-controls="crisp" aria-selected="false">
+                                    Daftar Crisp
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content">
+                            <!-- Kriteria Tab -->
+                            <div class="tab-pane fade show active" id="kriteria" role="tabpanel" aria-labelledby="kriteria-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped" id="kriteriaTable">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">No</th>
+                                                <th>Kode</th>
+                                                <th>Nama</th>
+                                                <th>Jenis</th>
+                                                <th>Bobot</th>
+                                                <th width="15%">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Data will be filled by script -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Crisp Tab -->
+                            <div class="tab-pane fade" id="crisp" role="tabpanel" aria-labelledby="crisp-tab">
+                                <div class="d-flex justify-content-end mb-3">
+                                    <button type="button" class="btn btn-success"
+                                        onclick="modalAction('{{ url('sarpras/sistem_rekomendasi/create_crisp') }}')">
+                                        <i class="fas fa-plus me-2"></i>Tambah Crisp
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped" id="crispTable">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">No</th>
+                                                <th>Kriteria</th>
+                                                <th>Judul</th>
+                                                <th>Poin</th>
+                                                <th width="15%">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Data will be filled by script -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    {{-- Tab: Crisp --}}
-                    <div class="tab-pane fade" id="crisp" role="tabpanel" aria-labelledby="crisp-tab">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-end">
-                                <button type="button" class="btn btn-success mb-3"
-                                    onclick="modalAction('{{ url('sarpras/sistem_rekomendasi/create_crisp') }}')">
-                                    + Tambah crisp
-                                </button>
-                            </div>
-                            <div class="card-body table-responsive">
-                                <table class="table table-bordered table-striped w-100 mb-0" id="crispTable">
-                                    <thead class="table-white">
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Kriteria</th>
-                                            <th>Judul</th>
-                                            <th>Poin</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>

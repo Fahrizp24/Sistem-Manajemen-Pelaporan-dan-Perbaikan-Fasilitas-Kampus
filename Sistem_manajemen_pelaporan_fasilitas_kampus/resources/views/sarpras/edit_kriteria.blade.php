@@ -23,29 +23,53 @@
     <div class="card-body">
         <div class="form-body">
             <div class="row">
-                <input type="hidden" name="id" value="{{ $kriteria->kriteria_id }}">
-                <div class="col-md-4"><label>Kode Kriteria</label></div>
-                <div class="col-md-8">
-                    <input type="text" name="kode" class="form-control" placeholder="Kode Kriteria" value="{{ $kriteria->kode }}">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Kode Kriteria</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" name="kode" class="form-control" placeholder="Kode Kriteria" value="{{ $kriteria->kode }}">
+                    </div>
                 </div>
-                <div class="col-md-4"><label>Nama Kriteria</label></div>    
-                <div class="col-md-8">
-                    <input type="text" name="nama" class="form-control" placeholder="Nama Kriteria" value="{{ $kriteria->nama }}">
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Nama Kriteria</label>
+                    </div>    
+                    <div class="col-md-8">
+                        <input type="text" name="nama" class="form-control" placeholder="Nama Kriteria" value="{{ $kriteria->nama }}">
+                    </div>
                 </div>
-                <div class="col-md-4"><label>Jenis Kriteria</label></div>
-                <div class="col-md-8">
-                    <select name="jenis" class="form-control">
-                        <option value="Benefit" {{ $kriteria->jenis == 'Benefit' ? 'selected' : '' }}>Benefit</option>
-                        <option value="Cost" {{ $kriteria->jenis == 'Cost' ? 'selected' : '' }}>Cost</option>
-                    </select>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Jenis Kriteria</label>
+                    </div>
+                    <div class="col-md-8">
+                        <select name="jenis" class="form-select">
+                            <option value="Benefit" {{ $kriteria->jenis == 'Benefit' ? 'selected' : '' }}>Benefit</option>
+                            <option value="Cost" {{ $kriteria->jenis == 'Cost' ? 'selected' : '' }}>Cost</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-4"><label>Bobot Kriteria</label></div>
-                <div class="col-md-8">
-                    <input type="number" name="bobot" class="form-control" placeholder="Bobot Kriteria" value="{{ $kriteria->bobot }}" min="0" step="0.01" max="1">
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Bobot Kriteria</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="number" name="bobot" class="form-control" placeholder="Bobot Kriteria" 
+                               value="{{ $kriteria->bobot }}" min="0" step="0.01" max="1">
+                    </div>
                 </div>
-                <div class="col-md-4"><label>Deskripsi Kriteria</label></div>
-                <div class="col-md-8">
-                    <textarea name="deskripsi" class="form-control" placeholder="Deskripsi Kriteria">{{ $kriteria->deskripsi }}</textarea>
+                
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Deskripsi Kriteria</label>
+                    </div>
+                    <div class="col-md-8">
+                        <textarea name="deskripsi" class="form-control" rows="3" placeholder="Deskripsi Kriteria">{{ $kriteria->deskripsi }}</textarea>
+                    </div>
                 </div>
 
                 <div class="col-12 d-flex justify-content-end mt-3">
