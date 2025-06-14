@@ -8,50 +8,59 @@
             </div>
             <div class="modal-body">
                 <div class="form-body">
+                    <!-- Baris 1: Gedung dan Lantai -->
                     <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="gedung_id">Gedung</label>
-                            <select name="gedung_id" id="gedung_id" class="form-control" required>
+                        <div class="col-md-6 mb-3">
+                            <label for="gedung_id" class="form-label">Gedung</label>
+                            <select name="gedung_id" id="gedung_id" class="form-select" required>
                                 <option value="">-- Pilih Gedung --</option>
                                 @foreach($gedung as $g)
                                     <option value="{{ $g->gedung_id }}">{{ $g->gedung_nama }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="lantai_id">Lantai</label>
-                            <select name="lantai_id" id="lantai_id" class="form-control" required disabled>
+                        <div class="col-md-6 mb-3">
+                            <label for="lantai_id" class="form-label">Lantai</label>
+                            <select name="lantai_id" id="lantai_id" class="form-select" required disabled>
                                 <option value="">-- Pilih Lantai --</option>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="ruangan_id">Ruangan</label>
-                            <select name="ruangan_id" id="ruangan_id" class="form-control" required disabled>
-                                <option value="">-- Pilih Ruangan --</option>
-                                
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="fasilitas_nama">Nama Fasilitas</label>
-                            <input type="text" name="fasilitas_nama" id="fasilitas_nama" class="form-control" required disabled>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="status">Status</label>
-                            <select name="status" id="status" class="form-control" required disabled>
-                                <option value="normal">Normal</option>
-                                <option value="rusak">Rusak</option>
-                            </select>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label for="fasilitas_deskripsi">Deskripsi</label>
-                            <textarea name="fasilitas_deskripsi" id="fasilitas_deskripsi" class="form-control" rows="3" required disabled></textarea>
-                        </div>
-                        
-                        
+                    </div>
 
-                        <div class="col-12 d-flex justify-content-end mt-3">
-                            <button type="submit" id="submit-btn" class="btn btn-primary me-1 mb-1" disabled>Simpan</button>
-                        </div>
+                    <!-- Baris 2: Ruangan (Full Width) -->
+                    <div class="mb-3">
+                        <label for="ruangan_id" class="form-label">Ruangan</label>
+                        <select name="ruangan_id" id="ruangan_id" class="form-select" required disabled>
+                            <option value="">-- Pilih Ruangan --</option>
+                        </select>
+                    </div>
+
+                    <!-- Baris 3: Nama Fasilitas (Full Width) -->
+                    <div class="mb-3">
+                        <label for="fasilitas_nama" class="form-label">Nama Fasilitas</label>
+                        <input type="text" name="fasilitas_nama" id="fasilitas_nama" class="form-control" required disabled>
+                    </div>
+
+                    <!-- Baris 4: Status (Full Width) -->
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select name="status" id="status" class="form-select" required disabled>
+                            <option value="normal">Normal</option>
+                            <option value="rusak">Rusak</option>
+                        </select>
+                    </div>
+
+                    <!-- Baris 5: Deskripsi (Full Width) -->
+                    <div class="mb-3">
+                        <label for="fasilitas_deskripsi" class="form-label">Deskripsi</label>
+                        <textarea name="fasilitas_deskripsi" id="fasilitas_deskripsi" class="form-control" rows="3" required disabled></textarea>
+                    </div>
+
+                    <!-- Baris 6: Tombol Submit -->
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" id="submit-btn" class="btn btn-primary px-4" disabled>
+                            <i class="bi bi-save me-2"></i>Simpan
+                        </button>
                     </div>
                 </div>
             </div>
