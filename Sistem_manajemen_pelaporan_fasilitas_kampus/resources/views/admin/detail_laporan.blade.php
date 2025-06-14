@@ -17,6 +17,31 @@
         </div>
     </div>
 @else
+    <!-- Modal untuk Foto Pelapor -->
+    <div class="modal fade" id="fotoPelaporModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fotoPelaporModalLabel">Foto Laporan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalFotoPelapor" src="" class="img-fluid" style="max-height: 70vh;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            function showFotoPelapor(fotoUrl, namaPelapor) {
+        document.getElementById('modalFotoPelapor').src = fotoUrl;
+        document.getElementById('fotoPelaporModalLabel').textContent = 'Foto Laporan: ' + namaPelapor;
+        var modal = new bootstrap.Modal(document.getElementById('fotoPelaporModal'));
+        modal.show();
+    }
+        </script>
+    </div>
     <div class="modal-body">
         <!-- Kolom Informasi (Full width) -->
         <div class="row">
@@ -63,12 +88,15 @@
                         <tr>
                             <th>Pelapor</th>
                             <td>
-                                @foreach ($laporan as $laporan)
+                                @foreach ($laporan as $item)
                                     <div class="d-flex align-items-center mb-2">
-                                        <img src="{{ asset('storage/foto_profil/' . $laporan['foto']) }}"
-                                            alt="Foto {{ $laporan['nama'] }}" width="40" height="40"
-                                            class="rounded-circle me-2">
-                                        <span>{{ $laporan['nama'] }}</span>
+                                        <button class="btn btn-sm btn-outline-primary d-flex align-items-center p-1"
+                                            onclick="showFotoPelapor('{{ asset('storage/foto_laporan/' . $item['foto']) }}', '{{ $item['nama'] }}')">
+                                            <img src="{{ asset('storage/foto_laporan/' . $item['foto']) }}"
+                                                alt="Foto {{ $item['nama'] }}" width="40" height="40"
+                                                class="square me-2">
+                                            <span>{{ $item['nama'] }}</span>
+                                        </button>
                                     </div>
                                 @endforeach
                             </td>
@@ -77,23 +105,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Kolom Foto (Full width di bawah) -->
-        {{-- <div class="row mt-4">
-            <div class="col-12">
-                @if ($laporan)
-                    @foreach ($laporan as $item)
-                        <img src="{{ Storage::url('foto_laporan/' . $item->foto) }}" class="img-thumbnail w-100 mb-3"
-                            style="max-height: 300px; object-fit: contain;">
-                    @endforeach
-                @else
-                    <div class="alert alert-info text-center">
-                        <i class="fas fa-image"></i> Tidak ada foto
-                    </div>
-                @endif
-            </div>
-        </div> --}}
-
         <!-- Tombol Aksi -->
         <div class="mt-3 text-center">
             <form action="{{ url('/admin/laporan_masuk/' . $fasilitas->fasilitas_id) }}" method="POST">
@@ -110,11 +121,11 @@
     </div>
 @endempty
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         // Form terima Laporan (Pelapor)
         $('form[action*="/sarpras/laporan_masuk/terima/"]').validate({
-            submitHandler: function(form) {
+            submitHandler: function (form) {
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -122,9 +133,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
-                            $('#detailModal').fadeOut(300, function() {
+                            $('#detailModal').fadeOut(300, function () {
                                 $(this).modal('hide');
                             });
 
@@ -136,7 +147,7 @@
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.msgField, function (prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
                             }
@@ -152,20 +163,20 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight: function(element, errorClass, validClass) {
+            highlight: function (element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight: function(element, errorClass, validClass) {
+            unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             }
         });
 
         $('form[action*="/sarpras/laporan_masuk/tolak/"]').validate({
-            submitHandler: function(form) {
+            submitHandler: function (form) {
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -173,9 +184,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
-                            $('#detailModal').fadeOut(300, function() {
+                            $('#detailModal').fadeOut(300, function () {
                                 $(this).modal('hide');
                             });
 
@@ -187,7 +198,7 @@
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.msgField, function (prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
                             }
@@ -203,21 +214,21 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight: function(element, errorClass, validClass) {
+            highlight: function (element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight: function(element, errorClass, validClass) {
+            unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             }
         });
 
         // Form Pilih Teknisi (Admin)
         $('form[action*="/sarpras/laporan_masuk/pilih_teknisi/"]').validate({
-            submitHandler: function(form) {
+            submitHandler: function (form) {
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -225,9 +236,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
-                            $('#myModal').fadeOut(300, function() {
+                            $('#myModal').fadeOut(300, function () {
                                 $(this).modal('hide');
                             });
 
@@ -239,7 +250,7 @@
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.msgField, function (prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
                             }
@@ -255,20 +266,20 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight: function(element, errorClass, validClass) {
+            highlight: function (element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight: function(element, errorClass, validClass) {
+            unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             }
         });
 
         // Form Selesaikan Penugasan (Teknisi)
-        $('form[action*="/teknisi/penugasan/selesaikan/"]').on('submit', function(e) {
+        $('form[action*="/teknisi/penugasan/selesaikan/"]').on('submit', function (e) {
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,
@@ -277,9 +288,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
-                            $('#myModal').fadeOut(300, function() {
+                            $('#myModal').fadeOut(300, function () {
                                 $(this).modal('hide');
                             });
 
@@ -291,7 +302,7 @@
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.msgField, function (prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
                             }
@@ -307,10 +318,10 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function(error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
             highlight: function(element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },

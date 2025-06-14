@@ -22,7 +22,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="fotoPelaporModalLabel">Foto Pelapor</h5>
+                    <h5 class="modal-title" id="fotoPelaporModalLabel">Foto Laporan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
@@ -85,17 +85,16 @@
                             <th>Pelapor</th>
                             <td>
                                 @foreach ($laporan as $laporanItem)
-            <div class="d-flex align-items-center mb-2">
-                <button class="btn btn-sm btn-outline-primary d-flex align-items-center" 
-                        onclick="showFotoPelapor('{{ asset('storage/foto_laporan/' . $laporanItem['foto']) }}', '{{ $laporanItem['nama'] }}')">
-                    <img src="{{ asset('storage/foto_laporan/' . $laporanItem['foto']) }}" 
-                         alt="Foto {{ $laporanItem['nama'] }}" 
-                         width="40" height="40" 
-                         class="square me-2">
-                    <span>{{ $laporanItem['nama'] }}</span>
-                </button>
-            </div>
-        @endforeach
+                                    <div class="d-flex align-items-center mb-2">
+                                        <button class="btn btn-sm btn-outline-primary d-flex align-items-center"
+                                            onclick="showFotoPelapor('{{ asset('storage/foto_laporan/' . $laporanItem['foto']) }}', '{{ $laporanItem['nama'] }}')">
+                                            <img src="{{ asset('storage/foto_laporan/' . $laporanItem['foto']) }}"
+                                                alt="Foto {{ $laporanItem['nama'] }}" width="40" height="40"
+                                                class="square me-2">
+                                            <span>{{ $laporanItem['nama'] }}</span>
+                                        </button>
+                                    </div>
+                                @endforeach
                             </td>
                         </tr>
                     </table>
@@ -105,8 +104,7 @@
 
         <div class="mt-3 text-center">
             @if ($source == 'pelapor')
-                <form class="form" method="POST"
-                    action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}"
+                <form class="form" method="POST" action="{{ url('/sarpras/laporan_masuk/terima/' . $laporan->laporan_id) }}"
                     enctype="multipart/form-data" data-parsley-validate>
                     @csrf
                     <div class="row">
@@ -194,8 +192,8 @@
                     @csrf
                     <div class="row justify-content-center">
                         <div class="col-md-6">
-                            <textarea name="alasan_revisi" class="form-control mb-2"
-                                placeholder="Masukkan Alasan Revisi" required></textarea>
+                            <textarea name="alasan_revisi" class="form-control mb-2" placeholder="Masukkan Alasan Revisi"
+                                required></textarea>
                             <span class="error-text" id="error-alasan_revisi"></span>
                             <button type="submit" class="btn btn-danger w-100" onclick="return confirmSubmit()">
                                 Revisi
@@ -218,50 +216,50 @@
         </div>
     </div>
     <script>
-    function showFotoPelapor(fotoUrl, namaPelapor) {
-        document.getElementById('modalFotoPelapor').src = fotoUrl;
-        document.getElementById('fotoPelaporModalLabel').textContent = 'Foto Pelapor: ' + namaPelapor;
-        var modal = new bootstrap.Modal(document.getElementById('fotoPelaporModal'));
-        modal.show();
-    }
+        function showFotoPelapor(fotoUrl, namaPelapor) {
+            document.getElementById('modalFotoPelapor').src = fotoUrl;
+            document.getElementById('fotoPelaporModalLabel').textContent = 'Foto Pelapor: ' + namaPelapor;
+            var modal = new bootstrap.Modal(document.getElementById('fotoPelaporModal'));
+            modal.show();
+        }
 
-    // Untuk foto pengerjaan (jika ada)
-    @if($source == 'teknisi' && isset($laporan[0]['foto_pengerjaan']))
-        // Ganti tampilan langsung dengan tombol
-        document.querySelector('span:contains("Foto Hasil Pengerjaan")').parentElement.innerHTML = `
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#fotoPengerjaanModal">
-                <i class="fas fa-eye me-2"></i> Lihat Foto Hasil Pengerjaan
-            </button>
-            
-            <!-- Modal Foto Pengerjaan -->
-            <div class="modal fade" id="fotoPengerjaanModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Foto Hasil Pengerjaan</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body text-center">
-                            <img src="{{ Storage::url('foto_pengerjaan/' . $laporan[0]['foto_pengerjaan']) }}" 
-                                 class="img-fluid" 
-                                 style="max-height: 70vh;">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        // Untuk foto pengerjaan (jika ada)
+        @if($source == 'teknisi' && isset($laporan[0]['foto_pengerjaan']))
+            // Ganti tampilan langsung dengan tombol
+            document.querySelector('span:contains("Foto Hasil Pengerjaan")').parentElement.innerHTML = `
+                    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#fotoPengerjaanModal">
+                        <i class="fas fa-eye me-2"></i> Lihat Foto Hasil Pengerjaan
+                    </button>
+
+                    <!-- Modal Foto Pengerjaan -->
+                    <div class="modal fade" id="fotoPengerjaanModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Foto Hasil Pengerjaan</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img src="{{ Storage::url('foto_pengerjaan/' . $laporan[0]['foto_pengerjaan']) }}" 
+                                         class="img-fluid" 
+                                         style="max-height: 70vh;">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        `;
-    @endif
-</script>
+                `;
+        @endif
+    </script>
 @endempty
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         // Form terima Laporan (Pelapor)
         $('form[action*="/sarpras/laporan_masuk/terima/"]').validate({
-            submitHandler: function(form) {
+            submitHandler: function (form) {
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -269,9 +267,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
-                            $('#detailModal').fadeOut(300, function() {
+                            $('#detailModal').fadeOut(300, function () {
                                 $(this).modal('hide');
                             });
 
@@ -283,7 +281,7 @@
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.msgField, function (prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
                             }
@@ -299,14 +297,14 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight: function(element, errorClass, validClass) {
+            highlight: function (element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight: function(element, errorClass, validClass) {
+            unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             }
         });
@@ -364,7 +362,7 @@
 
         // Form Pilih Teknisi (Admin)
         $('form[action*="/sarpras/laporan_masuk/pilih_teknisi/"]').validate({
-            submitHandler: function(form) {
+            submitHandler: function (form) {
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -372,9 +370,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
-                            $('#myModal').fadeOut(300, function() {
+                            $('#myModal').fadeOut(300, function () {
                                 $(this).modal('hide');
                             });
 
@@ -386,7 +384,7 @@
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.msgField, function (prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
                             }
@@ -402,20 +400,20 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight: function(element, errorClass, validClass) {
+            highlight: function (element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight: function(element, errorClass, validClass) {
+            unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             }
         });
 
         // Form Selesaikan Penugasan (Teknisi)
-        $('form[action*="/sarpras/laporan_masuk/revisi/"]').on('submit', function(e) {
+        $('form[action*="/sarpras/laporan_masuk/revisi/"]').on('submit', function (e) {
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,
@@ -424,9 +422,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
-                            $('#myModal').fadeOut(300, function() {
+                            $('#myModal').fadeOut(300, function () {
                                 $(this).modal('hide');
                             });
 
@@ -438,7 +436,7 @@
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.msgField, function (prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
                             }
@@ -454,10 +452,10 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function(error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
             highlight: function(element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
@@ -467,7 +465,7 @@
         });
 
         // Form Revisi Penugasan (Teknisi)
-        $('form[action*="/teknisi/penugasan/revisi/"]').on('submit', function(e) {
+        $('form[action*="/teknisi/penugasan/revisi/"]').on('submit', function (e) {
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,
@@ -476,9 +474,9 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
-                            $('#myModal').fadeOut(300, function() {
+                            $('#myModal').fadeOut(300, function () {
                                 $(this).modal('hide');
                             });
 
@@ -490,7 +488,7 @@
                         } else {
                             $('.error-text').text('');
                             if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
+                                $.each(response.msgField, function (prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
                                 });
                             }
@@ -506,10 +504,10 @@
                 return false;
             },
             errorElement: 'span',
-            errorPlacement: function(error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.form-group').append(error);
+                },
             highlight: function(element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
