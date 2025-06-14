@@ -2,6 +2,7 @@
 @section('title', 'Profil')
 
 @section('content')
+
     <div class="row justify-content-center py-5">
     <div class="col-xl-12 col-lg-16">
         <div class="card shadow-sm">
@@ -27,6 +28,7 @@
 
                 <!-- Navbar -->
                 <ul class="nav nav-pills nav-fill mb-4">
+                    
                     <li class="nav-item">
                         <a class="nav-link active" href="#profile" data-bs-toggle="tab">Profil</a>
                     </li>
@@ -44,27 +46,32 @@
                             <div class="col-md-4 text-center mb-4">
                                 <div class="d-flex flex-column align-items-center">
                                     <div class="mb-3 w-100 text-center">
-                                        <span class="fw-bold" style="font-size: 1.4rem; pb-3">Foto Profil</span>
+                                        <h4 class="fw-bold" style="font-size: 1.4rem; pb-3">Foto Profil</h4>
                                         <div class="border-bottom mx-auto" style="width: 80px;"></div>
                                     </div>
                                     <div class="profile-photo-wrapper"
                                         style="display: inline-block; position: relative; width: 230px; height: 280px;">
                                         <img id="foto-profil" class="profile-user-img img-fluid"
-                                            src="{{ auth()->user()->foto_profil ? asset('storage/foto_profil/' . auth()->user()->foto_profil) : asset('storage/foto_profil/default.jpg') }}"
-                                            alt="User  profile picture"
-                                            style="position: absolute; top: 0; left: 0; width: 105%; height: 105; object-fit: cover; border: 2px solid #fff;"
-                                            onerror="this.style.display='none'; document.getElementById('foto-fallback').style.display='flex';">
-                                        <div 
-                                            id="foto-fallback"
-                                            style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #b4b4b4; color: #fff; font-weight: bold; justify-content: center; align-items: center; text-align: center; border: 2px solid #fff;">
+                                                    src="{{ auth()->user()->foto_profil ? asset('storage/foto_profil/' . auth()->user()->foto_profil) : asset('storage/foto_profil/default.jpg') }}"
+                                                    alt="User  profile picture"
+                                                    style="position: absolute; top: 0; left: 0; width: 97%; height: 97%; object-fit: cover; border: 2px solid #fff;"
+                                                    onerror="this.style.display='none'; document.getElementById('foto-fallback').style.display='flex';">
+                                                    
+                                            <div 
+                                                id="foto-fallback"
+                                                style="display: none; width: 100%; height: 100%; background: #f0f0f0; color: #666; font-size: 5rem; font-weight: bold; justify-content: center; align-items: center; text-align: center;">
+                                                {{ substr($teknisi->nama, 0, 1) }}
+                                            </div>
                                         </div>
-                                    </div>
+                                        <h4 class="mt-2">{{ $teknisi->nama }}</h4>
+                                        <p class="text-muted mb-0">{{ $teknisi->username}}</p>
+                                    
                                 </div>
+                               
                             </div>
 
                             <div class="col-md-8">
                                 <h4 class="mb-4 border-bottom pb-3">Informasi Profil</h4>
-
                                 <div class="mb-3">
                                     <label for="nama" class="form-label">Nama Lengkap</label>
                                     <input type="text" class="form-control" id="nama" name="nama" value="{{ $teknisi->nama }}"
@@ -101,7 +108,7 @@
                                 <div class="col-md-4 text-center mb-4">
                                     <div class="d-flex flex-column align-items-center">
                                         <div class="mb-3 w-100 text-center">
-                                            <span class="fw-bold" style="font-size: 1.4rem; pb-3">Foto Profil</span>
+                                            <h4 class="fw-bold" style="font-size: 1.4rem; pb-3">Foto Profil</h4>
                                             <div class="border-bottom mx-auto" style="width: 80px;"></div>
                                         </div>
                                         <div class="profile-photo-wrapper" style="display: inline-block; position: relative; width: 225px; height: 275px;">

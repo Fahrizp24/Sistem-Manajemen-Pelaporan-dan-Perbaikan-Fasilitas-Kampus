@@ -57,14 +57,13 @@
                                                     onerror="this.style.display='none'; document.getElementById('foto-fallback').style.display='flex';"
                                                 >
                                                 <div 
-                                                    id="foto-fallback"
-                                                    style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #b4b4b4; color: #fff; font-weight: bold; justify-content: center; align-items: center; text-align: center; border: 2px solid #fff;"
-                                                >
-                                                </div>
-                                            </label>
-                                            
+                                                id="foto-fallback"
+                                                style="display: none; width: 100%; height: 100%; background: #f0f0f0; color: #666; font-size: 5rem; font-weight: bold; justify-content: center; align-items: center; text-align: center;">
+                                                {{ substr($admin->nama, 0, 1) }}
+                                            </div>
                                         </div>
-                                    </div>
+                                        <h4 class="mt-2">{{ $admin->nama }}</h4>
+                                        <p class="text-muted mb-0">{{ $admin->username}}</p>
                                 </div>
 
                                 <div class="col-md-8">
@@ -111,7 +110,7 @@
                                         </div>
                                         <div class="profile-photo-wrapper" style="display: inline-block; position: relative; width: 225px; height: 275px;">
                                             <label for="foto-input" style="cursor: pointer;">
-                                                <img id="foto-profil" class="profile-user-img img-fluid"
+                                               <img id="foto-profil" class="profile-user-img img-fluid"
                                                     src="{{ auth()->user()->foto_profil ? asset('storage/foto_profil/' . auth()->user()->foto_profil) : asset('storage/foto_profil/default.jpg') }}"
                                                     alt="User  profile picture"
                                                     style="position: absolute; top: 0; left: 0; width: 97%; height: 97%; object-fit: cover; border: 2px solid #fff;"
