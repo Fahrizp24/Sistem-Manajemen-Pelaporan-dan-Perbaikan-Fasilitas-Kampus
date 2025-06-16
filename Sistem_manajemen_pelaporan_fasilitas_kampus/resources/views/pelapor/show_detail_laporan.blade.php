@@ -61,19 +61,13 @@
                         <th>Deskripsi</th>
                         <td>{{ $laporan->deskripsi }}</td>
                     </tr>
-                    @if ($laporan->status == 'tidak diterima')
-                        <tr>
-                            <th>Alasan Penolakan</th>
-                            <td>{{ $laporan->alasan_penolakan }}</td>
-                        </tr>
-                    @endif
                 </table>
             </div>
         </div>
 <div class="row mt-4">
         <div class="col-12">
             @if ($laporan->foto)
-                <img src="{{ Storage::url('foto_laporan/'.$laporan->foto ) }}" 
+                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
                      class="img-thumbnail w-150% mx-auto d-block"
                      style="max-width: 100%; height: 100%; max-height: 400px;">
             @else
@@ -83,32 +77,31 @@
             @endif
         </div>
     </div>
-        @if ($laporan->status == 'selesai')
+         @if ($laporan->status == 'selesai')
         <div class="mt-4">
             <h5>Rating Layanan</h5>
             @if ($laporan->rating !== null)
                 <div class="my-rating" 
-                        data-rating="{{ $laporan->rating }}" 
-                        data-readonly="true"
-                        data-laporan-id="{{ $laporan->laporan_id }}"></div>
+                     data-rating="{{ $laporan->rating }}" 
+                     data-readonly="true"
+                     data-laporan-id="{{ $laporan->laporan_id }}"></div>
                 <p class="text-muted mt-2">Anda telah memberikan rating {{ $laporan->rating }} bintang</p>
             @else
                 <div class="my-rating" 
-                        data-rating="0" 
-                        data-readonly="false"
-                        data-laporan-id="{{ $laporan->laporan_id }}"></div>
+                     data-rating="0" 
+                     data-readonly="false"
+                     data-laporan-id="{{ $laporan->laporan_id }}"></div>
                 <form id="ratingForm_{{ $laporan->laporan_id }}" class="rating-form" method="POST" 
-                        action="{{ url('pelapor/laporan_saya/rating/', $laporan->laporan_id) }}">
+                      action="{{ url('pelapor/laporan_saya/rating/', $laporan->laporan_id) }}">
                     @csrf
-                    <input type="hidden" name="rating" class="rating-input">
-                    <button type="submit" class="btn btn-primary mt-2 submit-rating" disabled>
+                    <input type="hidden" name="rating" id="ratingInput" class="rating-input">
+                    <button type="submit" id="submitRating" class="btn btn-primary mt-2 submit-rating" disabled>
                         Simpan Rating
                     </button>
                 </form>
             @endif
         </div>
-        @endif
-    </div>
+    @endif
 @endif
 
 @push('scripts')
@@ -121,6 +114,9 @@
         ratingElements.forEach(element => {
             const isReadOnly = element.dataset.readonly === 'true';
             const currentRating = parseFloat(element.dataset.rating) || 0;
+            const laporanId = element.dataset.laporanId;
+            const ratingInput = document.querySelector(`#ratingForm_${laporanId} .rating-input`);
+            const submitButton = document.querySelector(`#ratingForm_${laporanId} .submit-rating`);
             
             const rater = raterJs({
                 element: element,
@@ -129,9 +125,11 @@
                 rating: currentRating,
                 onRate: function(rating) {
                     if (!isReadOnly) {
-                        // Aktifkan tombol submit jika rating diberikan
-                        document.getElementById('ratingInput').value = rating;
-                        document.getElementById('submitRating').disabled = false;
+                        // Update hidden input value
+                        ratingInput.value = rating;
+                        
+                        // Enable submit button
+                        submitButton.disabled = false;
                     }
                 }
             });
