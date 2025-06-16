@@ -208,7 +208,6 @@ class SarprasController extends Controller
                     ];
                 })
                 ->unique('id');
-
             $jumlahPelapor = $fasilitas->laporan
                 ->pluck('pelapor.pengguna_id')
                 ->unique()
@@ -228,19 +227,42 @@ class SarprasController extends Controller
                 'kriteria.*' => 'required|numeric'
             ]);
 
-            // Simpan data SPK 
-            $spk = SpkModel::create([
-                'fasilitas_id' => $request->fasilitas_id
-            ]);
+            $fasilitas = FasilitasModel::findOrFail($request->fasilitas_id);
 
-            // Siapkan data untuk relasi many-to-many
-            $kriteriaData = [];
-            foreach ($request->kriteria as $kriteriaId => $nilai) {
-                $kriteriaData[$kriteriaId] = ['nilai' => $nilai];
+            // Cek apakah sudah ada SPK untuk fasilitas ini
+            $spk = SpkModel::where('fasilitas_id', $request->fasilitas_id)->first();
+
+            // Hitung jumlah pelapor unik untuk laporan "diterima"
+            $jumlahPelapor = $fasilitas->laporan
+                ->where('status', 'diterima')
+                ->pluck('pelapor.pengguna_id')
+                ->unique()
+                ->count();
+
+            $nilaiKriteria7 = $jumlahPelapor + 1;
+
+            if ($spk) {
+                // Jika SPK sudah ada, update atau tambahkan nilai kriteria ke-7
+                $spk->kriteria()->syncWithoutDetaching([
+                    7 => ['nilai' => $nilaiKriteria7]
+                ]);
+            } else {
+                // Jika belum ada, buat SPK baru
+                $spk = SpkModel::create([
+                    'fasilitas_id' => $request->fasilitas_id
+                ]);
+
+                $data = $request->all();
+                $data['kriteria'][7] = $nilaiKriteria7;
+
+                // Siapkan data untuk relasi many-to-many
+                $kriteriaData = [];
+                foreach ($data['kriteria'] as $kriteriaId => $nilai) {
+                    $kriteriaData[$kriteriaId] = ['nilai' => $nilai];
+                }
+
+                $spk->kriteria()->sync($kriteriaData);
             }
-
-            // Gunakan sync() atau attach() setelah SPK tersimpan
-            $spk->kriteria()->sync($kriteriaData);
 
             // Update status laporan
             LaporanModel::findOrFail($id)->update(['status' => 'diterima']);
@@ -269,6 +291,7 @@ class SarprasController extends Controller
             return redirect()->back()->with('error', 'Gagal menerima laporan: ' . $e->getMessage());
         }
     }
+
 
     public function tolak(string $id, Request $request)
     {
@@ -420,7 +443,7 @@ class SarprasController extends Controller
         }
     }
 
-    public function edit_kriteria ($id)
+    public function edit_kriteria($id)
     {
         $breadcrumb = (object) [
             'title' => 'Edit Kriteria',
@@ -824,7 +847,7 @@ class SarprasController extends Controller
 
         return datatables()->of($data)
             ->addIndexColumn()
-            ->addColumn('gedung', fn($row) => $row->ruangan->lantai->gedung->gedung_nama . ' - ' .$row->ruangan->lantai->lantai_nama ?? '-')
+            ->addColumn('gedung', fn($row) => $row->ruangan->lantai->gedung->gedung_nama . ' - ' . $row->ruangan->lantai->lantai_nama ?? '-')
             ->addColumn('lantai', fn($row) => $row->ruangan->lantai->lantai_nama ?? '-')
             ->addColumn('ruangan', fn($row) => $row->ruangan->ruangan_nama ?? '-')
             ->addColumn('fasilitas', fn($row) => $row->fasilitas_nama ?? '-')

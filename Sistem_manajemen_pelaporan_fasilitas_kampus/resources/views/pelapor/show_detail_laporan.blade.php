@@ -18,64 +18,64 @@
     </div>
 @else
     <div class="card-body">
-            <!-- Kolom Kanan untuk Informasi Laporan -->
-            <div class="col-12">
-                <table class="table table-bordered table-striped table-hover table-sm">
+        <!-- Kolom Kanan untuk Informasi Laporan -->
+        <div class="col-12">
+            <table class="table table-bordered table-striped table-hover table-sm">
+                <tr>
+                    <th width="30%">Pelapor</th>
+                    <td>{{ $laporan->pelapor->nama }}</td>
+                </tr>
+                <tr>
+                    <th>Gedung</th>
+                    <td>{{ $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
+                </tr>
+                <tr>
+                    <th>Lantai</th>
+                    <td>{{ $laporan->fasilitas->ruangan->lantai->lantai_nama }}</td>
+                </tr>
+                <tr>
+                    <th>Ruangan</th>
+                    <td>{{ $laporan->fasilitas->ruangan->ruangan_nama }}</td>
+                </tr>
+                <tr>
+                    <th>Fasilitas</th>
+                    <td>{{ $laporan->fasilitas->fasilitas_nama }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ $laporan->status }}</td>
+                </tr>
+                <tr>
+                    <th>Tanggal Laporan</th>
+                    <td>{{ $laporan->created_at }}</td>
+                </tr>
+                <tr>
+                    <th>Ditugaskan Oleh</th>
+                    <td>{{ $laporan->sarpras->nama ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Ditugaskan Kepada</th>
+                    <td>{{ $laporan->teknisi->nama ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Deskripsi</th>
+                    <td>{{ $laporan->deskripsi }}</td>
+                </tr>
+                @if ($laporan->status == 'tidak diterima')
                     <tr>
-                        <th width="30%">Pelapor</th>
-                        <td>{{ $laporan->pelapor->nama }}</td>
+                        <th>Alasan Penolakan</th>
+                        <td>{{ $laporan->alasan_penolakan }}</td>
                     </tr>
-                    <tr>
-                        <th>Gedung</th>
-                        <td>{{ $laporan->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-                    </tr>
-                    <tr>
-                        <th>Lantai</th>
-                        <td>{{ $laporan->fasilitas->ruangan->lantai->lantai_nama }}</td>
-                    </tr>
-                    <tr>
-                        <th>Ruangan</th>
-                        <td>{{ $laporan->fasilitas->ruangan->ruangan_nama }}</td>
-                    </tr>
-                    <tr>
-                        <th>Fasilitas</th>
-                        <td>{{ $laporan->fasilitas->fasilitas_nama }}</td>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td>{{ $laporan->status }}</td>
-                    </tr>
-                    <tr>
-                        <th>Tanggal Laporan</th>
-                        <td>{{ $laporan->created_at }}</td>
-                    </tr>
-                    <tr>
-                        <th>Ditugaskan Oleh</th>
-                        <td>{{ $laporan->sarpras->nama ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Ditugaskan Kepada</th>
-                        <td>{{ $laporan->teknisi->nama ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Deskripsi</th>
-                        <td>{{ $laporan->deskripsi }}</td>
-                    </tr>
-                    @if ($laporan->status == 'tidak diterima')
-                        <tr>
-                            <th>Alasan Penolakan</th>
-                            <td>{{ $laporan->alasan_penolakan }}</td>
-                        </tr>
-                    @endif
-                </table>
-            </div>
+                @endif
+            </table>
         </div>
-<div class="row mt-4">
+    </div>
+    <div class="row mt-4">
         <div class="col-12">
             @if ($laporan->foto)
-                <img src="{{ Storage::url('foto_laporan/'.$laporan->foto ) }}" 
-                     class="img-thumbnail w-150% mx-auto d-block"
-                     style="max-width: 100%; height: 100%; max-height: 400px;">
+                <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}"
+                    class="img-thumbnail w-150% mx-auto d-block"
+                    style="max-width: 100%; height: 100%; max-height: 400px;">
             @else
                 <div class="alert alert-info text-center">
                     <i class="fas fa-image"></i> Tidak ada foto
@@ -83,62 +83,132 @@
             @endif
         </div>
     </div>
-        @if ($laporan->status == 'selesai')
+    @if ($laporan->status == 'selesai')
         <div class="mt-4">
             <h5>Rating Layanan</h5>
             @if ($laporan->rating !== null)
-                <div class="my-rating" 
-                        data-rating="{{ $laporan->rating }}" 
-                        data-readonly="true"
-                        data-laporan-id="{{ $laporan->laporan_id }}"></div>
+                <div class="my-rating" data-rating="{{ $laporan->rating }}" data-readonly="true"
+                    data-laporan-id="{{ $laporan->laporan_id }}"></div>
                 <p class="text-muted mt-2">Anda telah memberikan rating {{ $laporan->rating }} bintang</p>
             @else
-                <div class="my-rating" 
-                        data-rating="0" 
-                        data-readonly="false"
-                        data-laporan-id="{{ $laporan->laporan_id }}"></div>
-                <form id="ratingForm_{{ $laporan->laporan_id }}" class="rating-form" method="POST" 
-                        action="{{ url('pelapor/laporan_saya/rating/', $laporan->laporan_id) }}">
+                <div class="my-rating" data-rating="0" data-readonly="false"
+                    data-laporan-id="{{ $laporan->laporan_id }}"></div>
+
+                <form id="ratingForm_{{ $laporan->laporan_id }}" class="rating-form" method="POST"
+                    action="{{ url('pelapor/laporan_saya/rating/' . $laporan->laporan_id) }}">
                     @csrf
                     <input type="hidden" name="rating" class="rating-input">
+
+                    <div class="form-group mt-2">
+                        <label for="komentar_{{ $laporan->laporan_id }}">Komentar (Opsional)</label>
+                        <textarea name="komentar" id="komentar_{{ $laporan->laporan_id }}" rows="3" class="form-control"
+                            placeholder="Tulis komentar Anda tentang layanan..."></textarea>
+                    </div>
+
                     <button type="submit" class="btn btn-primary mt-2 submit-rating" disabled>
                         Simpan Rating
                     </button>
                 </form>
             @endif
         </div>
-        @endif
+    @endif
+
     </div>
 @endif
 
 @push('scripts')
-<script src="{{ asset('mazer/dist/assets/extensions/rater-js/index.js') }}"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Inisialisasi rating
-        const ratingElements = document.querySelectorAll(".my-rating");
-        
-        ratingElements.forEach(element => {
-            const isReadOnly = element.dataset.readonly === 'true';
-            const currentRating = parseFloat(element.dataset.rating) || 0;
-            
-            const rater = raterJs({
-                element: element,
-                starSize: 32,
-                readOnly: isReadOnly,
-                rating: currentRating,
-                onRate: function(rating) {
-                    if (!isReadOnly) {
-                        // Aktifkan tombol submit jika rating diberikan
-                        document.getElementById('ratingInput').value = rating;
-                        document.getElementById('submitRating').disabled = false;
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi rating
+            const ratingElements = document.querySelectorAll(".my-rating");
+
+            ratingElements.forEach(element => {
+                const isReadOnly = element.dataset.readonly === 'true';
+                const currentRating = parseFloat(element.dataset.rating) || 0;
+
+                const rater = raterJs({
+                    element: element,
+                    starSize: 32,
+                    readOnly: isReadOnly,
+                    rating: currentRating,
+                    onRate: function(rating) {
+                        if (!isReadOnly) {
+                            const form = element.closest('form');
+                            if (form) {
+                                form.querySelector('.rating-input').value = rating;
+                                form.querySelector('.submit-rating').disabled = false;
+                            }
+                        }
                     }
-                }
+                });
+
+                // Simpan instance rater di DOM element
+                element.rater = rater;
             });
-            
-            // Simpan instance rater ke element untuk referensi
-            element.rater = rater;
+
+            $('form[action*="/pelapor/laporan_saya/rating"]').validate({
+                submitHandler: function(form) {
+                    const formElement = $(form);
+                    const submitBtn = formElement.find('.submit-rating');
+                    const ratingElement = formElement.prev('.my-rating')[0];
+
+                    submitBtn.prop('disabled', true).html(`
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Menyimpan...
+        `);
+
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: $(form).serialize(),
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: response.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+
+                                // Update UI setelah sukses
+                                if (ratingElement?.rater) {
+                                    ratingElement.rater.setRating(response.rating);
+                                    ratingElement.rater.setReadOnly(true);
+                                }
+
+                                // Ganti form dengan tampilan rating saja
+                                formElement.replaceWith(`
+                        <div class="my-rating" 
+                             data-rating="${response.rating}" 
+                             data-readonly="true"
+                             data-laporan-id="${formElement.data('laporan-id')}"></div>
+                        <p class="text-muted mt-2">Anda telah memberikan rating ${response.rating} bintang</p>
+                    `);
+
+                                // Re-initialize rating display
+                                initRating();
+                            }
+                        },
+                        error: function(xhr) {
+                            submitBtn.prop('disabled', false).text('Simpan Rating');
+
+                            let errorMessage = 'Terjadi kesalahan saat menyimpan rating';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: errorMessage
+                            });
+                        }
+                    });
+                    return false;
+                },
+                // ... (rules dan error handling tetap sama)
+            });
         });
-    });
-</script>
+    </script>
 @endpush

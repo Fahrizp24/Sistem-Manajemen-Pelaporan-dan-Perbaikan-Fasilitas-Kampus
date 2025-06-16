@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\UserModel;
 use App\Models\LaporanModel;
 use App\Models\RuanganModel;
+use App\Models\UmpanBalikModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -181,7 +182,6 @@ class PelaporController extends Controller
         return response()->json($fasilitas);
     }
 
-
     public function store_laporan(Request $request)
     {
         $request->validate([
@@ -259,6 +259,27 @@ class PelaporController extends Controller
         return view('pelapor.show_detail_laporan', [
             'laporan' => $laporan,
             'page' => (object) ['title' => 'Detail Laporan']
+        ]);
+    }
+
+    public function submit_rating(Request $request, $laporan_id)
+    {
+        $request->validate([
+            'rating' => 'required|numeric|min:1|max:5',
+            'komentar' => 'nullable|string|max:1000',
+        ]);
+
+        UmpanBalikModel::create([
+            'laporan_id' => $laporan_id,
+            'pengguna_id' => auth()->id(),
+            'penilaian' => $request->rating,
+            'komentar' => $request->komentar,
+        ]);
+
+        return response()->json([
+            'success' => true, 
+            'message' => 'Rating berhasil disimpan!',
+            'rating' => $request->rating 
         ]);
     }
 }

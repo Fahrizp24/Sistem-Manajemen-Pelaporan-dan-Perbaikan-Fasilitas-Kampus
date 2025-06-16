@@ -14,10 +14,8 @@ class UmpanBalikModel extends Model
 
     protected $primaryKey = 'umpan_balik_id';
 
-    // Disable timestamps if your table doesn't have 'created_at' and 'updated_at' columns
-    public $timestamps = true;
+   public $timestamps = true;
 
-    // Define the attributes that are mass assignable
     protected $fillable = [
         'laporan_id',
         'pengguna_id',
