@@ -16,7 +16,7 @@
         </div>
     </div>
 @else
-<form action="{{ route('sarpras.update_kriteria' ) }}" method="POST" id="form-tambah">
+<form action="{{ route('sarpras.update_kriteria' ) }}" method="POST" id="form-edit">
     @csrf
     <div class="card-header">
     </div>
@@ -82,7 +82,7 @@
 @endif
 <script>
     $(document).ready(function() {
-        $("#form-tambah").validate({
+        $("#form-edit").validate({
             rules: {
                 kode: {
                     required: true,
