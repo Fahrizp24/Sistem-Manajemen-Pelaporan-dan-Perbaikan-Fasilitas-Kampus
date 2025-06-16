@@ -73,8 +73,7 @@
     <div class="row mt-4">
         <div class="col-12">
             @if ($laporan->foto)
-                <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}"
-                    class="img-thumbnail w-150% mx-auto d-block"
+                <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-thumbnail w-150% mx-auto d-block"
                     style="max-width: 100%; height: 100%; max-height: 400px;">
             @else
                 <div class="alert alert-info text-center">
@@ -84,41 +83,48 @@
         </div>
     </div>
     @if ($laporan->status == 'selesai')
-        <div class="mt-4">
-            <h5>Rating Layanan</h5>
-            @if ($laporan->rating !== null)
-                <div class="my-rating" data-rating="{{ $laporan->rating }}" data-readonly="true"
-                    data-laporan-id="{{ $laporan->laporan_id }}"></div>
-                <p class="text-muted mt-2">Anda telah memberikan rating {{ $laporan->rating }} bintang</p>
-            @else
-                <div class="my-rating" data-rating="0" data-readonly="false"
-                    data-laporan-id="{{ $laporan->laporan_id }}"></div>
-
-                <form id="ratingForm_{{ $laporan->laporan_id }}" class="rating-form" method="POST"
-                    action="{{ url('pelapor/laporan_saya/rating/' . $laporan->laporan_id) }}">
-                    @csrf
-                    <input type="hidden" name="rating" class="rating-input">
-
-                    <div class="form-group mt-2">
-                        <label for="komentar_{{ $laporan->laporan_id }}">Komentar (Opsional)</label>
-                        <textarea name="komentar" id="komentar_{{ $laporan->laporan_id }}" rows="3" class="form-control"
-                            placeholder="Tulis komentar Anda tentang layanan..."></textarea>
+    <div class="mt-4">
+        <h5>Rating Layanan</h5>
+        @if ($laporan->umpanBalik)
+            <div class="my-rating" data-rating="{{ $laporan->umpanBalik->penilaian }}" data-readonly="true"
+                data-laporan-id="{{ $laporan->laporan_id }}"></div>
+            <p class="text-muted mt-2">Anda telah memberikan rating {{ $laporan->umpanBalik->penilaian }} bintang</p>
+            @if ($laporan->umpanBalik->komentar)
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <h6>Komentar Anda:</h6>
+                        <p>{{ $laporan->umpanBalik->komentar }}</p>
                     </div>
-
-                    <button type="submit" class="btn btn-primary mt-2 submit-rating" disabled>
-                        Simpan Rating
-                    </button>
-                </form>
+                </div>
             @endif
-        </div>
-    @endif
+        @else
+            <div class="my-rating" data-rating="0" data-readonly="false" data-laporan-id="{{ $laporan->laporan_id }}"></div>
+
+            <form id="ratingForm_{{ $laporan->laporan_id }}" class="rating-form" method="POST"
+                action="{{ url('pelapor/laporan_saya/rating/' . $laporan->laporan_id) }}">
+                @csrf
+                <input type="hidden" name="rating" class="rating-input">
+
+                <div class="form-group mt-2">
+                    <label for="komentar_{{ $laporan->laporan_id }}">Komentar (Opsional)</label>
+                    <textarea name="komentar" id="komentar_{{ $laporan->laporan_id }}" rows="3" class="form-control"
+                        placeholder="Tulis komentar Anda tentang layanan..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-2 submit-rating" disabled>
+                    Simpan Rating
+                </button>
+            </form>
+        @endif
+    </div>
+@endif
 
     </div>
 @endif
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Inisialisasi rating
             const ratingElements = document.querySelectorAll(".my-rating");
 
@@ -131,7 +137,7 @@
                     starSize: 32,
                     readOnly: isReadOnly,
                     rating: currentRating,
-                    onRate: function(rating) {
+                    onRate: function (rating) {
                         if (!isReadOnly) {
                             const form = element.closest('form');
                             if (form) {
@@ -146,69 +152,63 @@
                 element.rater = rater;
             });
 
-            $('form[action*="/pelapor/laporan_saya/rating"]').validate({
-                submitHandler: function(form) {
-                    const formElement = $(form);
-                    const submitBtn = formElement.find('.submit-rating');
-                    const ratingElement = formElement.prev('.my-rating')[0];
+            $('.rating-form').on('submit', function (e) {
+                e.preventDefault();
 
-                    submitBtn.prop('disabled', true).html(`
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Menyimpan...
-        `);
+                const form = $(this);
+                const submitBtn = form.find('.submit-rating');
+                const modal = $('#detailModal');
 
-                    $.ajax({
-                        url: form.action,
-                        type: form.method,
-                        data: $(form).serialize(),
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil',
-                                    text: response.message,
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                });
+                submitBtn.prop('disabled', true).html(`
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Menyimpan...
+                        `);
 
-                                // Update UI setelah sukses
-                                if (ratingElement?.rater) {
-                                    ratingElement.rater.setRating(response.rating);
-                                    ratingElement.rater.setReadOnly(true);
-                                }
-
-                                // Ganti form dengan tampilan rating saja
-                                formElement.replaceWith(`
-                        <div class="my-rating" 
-                             data-rating="${response.rating}" 
-                             data-readonly="true"
-                             data-laporan-id="${formElement.data('laporan-id')}"></div>
-                        <p class="text-muted mt-2">Anda telah memberikan rating ${response.rating} bintang</p>
-                    `);
-
-                                // Re-initialize rating display
-                                initRating();
-                            }
-                        },
-                        error: function(xhr) {
-                            submitBtn.prop('disabled', false).text('Simpan Rating');
-
-                            let errorMessage = 'Terjadi kesalahan saat menyimpan rating';
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                errorMessage = xhr.responseJSON.message;
-                            }
-
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            // Tampilkan notifikasi sukses
                             Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal',
-                                text: errorMessage
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false
                             });
+
+                            // Tutup modal
+                            modal.modal('hide');
+
+                            // Reload DataTables
+                            $('#table1').DataTable().ajax.reload(null, false);
+
+                            // Jika ingin menampilkan rating yang sudah diberikan di modal berikutnya
+                            // Anda bisa menyimpan data rating di localStorage atau variabel global
                         }
-                    });
-                    return false;
-                },
-                // ... (rules dan error handling tetap sama)
-            });
+                    },
+                    error: function (xhr) {
+                        submitBtn.prop('disabled', false).html('Simpan Rating');
+
+                        let errorMessage = 'Terjadi kesalahan saat menyimpan rating';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: errorMessage
+                        });
+                    }
+                });
+                return false;
+            },
+
+            );
         });
+
     </script>
 @endpush

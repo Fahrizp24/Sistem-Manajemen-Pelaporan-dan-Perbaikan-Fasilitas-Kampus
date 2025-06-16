@@ -20,7 +20,7 @@ class LaporanModel extends Model
         'pelapor_id',
         'fasilitas_id',
         'ditugaskan_oleh',
-        'teknisi_id', 
+        'teknisi_id',
         'deskripsi',
         'foto',
         'status',
@@ -29,7 +29,7 @@ class LaporanModel extends Model
         'ditolak_oleh',
         'alasan_penolakan',
         'alasan_revisi',
-    ]; 
+    ];
 
     // Jika tabel tidak menggunakan timestamps (created_at, updated_at)
     public $timestamps = true;
@@ -69,5 +69,10 @@ class LaporanModel extends Model
     public function teknisi()
     {
         return $this->belongsTo(UserModel::class, 'teknisi_id', 'pengguna_id');
+    }
+
+    public function umpanBalik()
+    {
+        return $this->hasOne(UmpanBalikModel::class, 'laporan_id', 'laporan_id');
     }
 }

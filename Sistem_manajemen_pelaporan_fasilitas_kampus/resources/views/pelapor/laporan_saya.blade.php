@@ -23,40 +23,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($laporan_saya as $item)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-                                    <td>{{ $item->fasilitas->ruangan->lantai->lantai_nama }}</td>
-                                    <td>{{ $item->fasilitas->ruangan->ruangan_nama }}</td>
-                                    <td>{{ $item->fasilitas->fasilitas_nama }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y') }}</td>
-                                    <td>
-                                        @php
-                                            $badgeClass =
-                                                [
-                                                    'diajukan' => 'bg-secondary text-white', // status awal, netral
-                                                    'diterima' => 'bg-primary text-white', // disetujui
-                                                    'tidak diterima' => 'bg-danger text-white', // ditolak
-                                                    'konfirmasi' => 'bg-info text-white', // menunggu proses
-                                                    'memilih teknisi' => 'bg-dark text-white', // proses internal
-                                                    'diperbaiki' => 'bg-warning text-dark', // proses berjalan
-                                                    'telah diperbaiki' => 'bg-light text-dark', // sudah selesai, tapi belum divalidasi
-                                                    'revisi' => 'bg-body-secondary text-dark', // status revisi, berbeda dari warning/light
-                                                    'selesai' => 'bg-success text-white', // final, sukses
-                                                ][$item->status] ?? 'bg-secondary text-white';
-                                        @endphp
-                                        <span class="badge {{ $badgeClass }}">{{ ucfirst($item->status) }}</span>
-                                    </td>
-                                    <td>
-                                        <button
-                                            onclick="showDetailModal('{{ url('pelapor/laporan_saya/' . $item->laporan_id) }}')"
-                                            class="btn btn-sm btn-primary">
-                                            <i class="bi bi-eye-fill"></i> Detail
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -89,7 +55,6 @@
 
 @push('scripts')
     <script src="{{ asset('mazer/dist/assets/extensions/rater-js/index.js?v=2') }}"></script>
-    <script src="{{ asset('mazer/dist/assets/extensions/jquery/jquery.min.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('mazer/dist/assets/static/js/initTheme.js') }}"></script>
@@ -107,7 +72,7 @@
                     starSize: 32,
                     readOnly: isReadOnly,
                     rating: currentRating,
-                    rateCallback: function(rating, done) {
+                    rateCallback: function (rating, done) {
                         this.setRating(rating);
                         done();
 
@@ -128,21 +93,47 @@
             });
         }
 
+        $('#table1').DataTable().clear().destroy();
+
+        $(document).ready(function () {
+            // Inisialisasi DataTables
+            var table = $('#table1').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('pelapor.laporan_saya.data') }}",
+                    type: 'GET'
+                },
+                dom: '<"top"<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>><"table-responsive"t><"bottom"<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>>',
+
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'gedung', name: 'fasilitas.ruangan.lantai.gedung.gedung_nama' },
+                    { data: 'lantai', name: 'fasilitas.ruangan.lantai.lantai_nama' },
+                    { data: 'ruangan', name: 'fasilitas.ruangan.ruangan_nama' },
+                    { data: 'fasilitas', name: 'fasilitas.fasilitas_nama' },
+                    { data: 'tanggal', name: 'tanggal_laporan' },
+                    { data: 'status', name: 'status', orderable: false, searchable: false },
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                ]
+            });
+        });
+
         // Initialize rating when modal is shown
-        document.getElementById('detailModal').addEventListener('shown.bs.modal', function() {
+        document.getElementById('detailModal').addEventListener('shown.bs.modal', function () {
             initRating();
         });
 
         // Initialize any ratings on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initRating();
         });
         // Biarkan bagian lain seperti ini
-        document.getElementById('detailModal').addEventListener('shown.bs.modal', function() {
+        document.getElementById('detailModal').addEventListener('shown.bs.modal', function () {
             initRating();
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initRating();
         });
 
@@ -154,15 +145,68 @@
                     const modal = new bootstrap.Modal(document.getElementById('detailModal'));
                     modal.show();
 
-                    setTimeout(initRating, 300);
+                    // Re-initialize rating setelah modal ditampilkan
+                    setTimeout(() => {
+                        initRating();
+
+                        // Handle form submission
+                        $('.rating-form').off('submit').on('submit', function (e) {
+                            e.preventDefault();
+                            handleRatingSubmit($(this));
+                        });
+                    }, 300);
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     document.getElementById('modalContent').innerHTML = `
-                        <div class="alert alert-danger">Gagal memuat konten. Silakan coba lagi.</div>
-                    `;
+                    <div class="alert alert-danger">Gagal memuat konten. Silakan coba lagi.</div>
+                `;
                     new bootstrap.Modal(document.getElementById('detailModal')).show();
                 });
+        }
+
+        function handleRatingSubmit(form) {
+            const submitBtn = form.find('.submit-rating');
+            const modal = $('#detailModal');
+
+            submitBtn.prop('disabled', true).html(`
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Menyimpan...
+        `);
+
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+                        modal.modal('hide');
+                        $('#table1').DataTable().ajax.reload(null, false);
+                    }
+                },
+                error: function (xhr) {
+                    submitBtn.prop('disabled', false).html('Simpan Rating');
+
+                    let errorMessage = 'Terjadi kesalahan saat menyimpan rating';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: errorMessage
+                    });
+                }
+            });
         }
     </script>
 @endpush
