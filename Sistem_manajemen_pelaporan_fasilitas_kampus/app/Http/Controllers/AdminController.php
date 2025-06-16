@@ -166,23 +166,23 @@ class AdminController extends Controller
     public function konfirmasi_laporan(string $id, Request $request)
     {
         try {
-
-            // Update status laporan
-            LaporanModel::findOrFail($id)->update(['status' => 'memilih teknisi']);
+            LaporanModel::where('fasilitas_id', $id)
+                ->where('status', 'konfirmasi')
+                ->update(['status' => 'memilih teknisi']);
 
             if ($request->ajax()) {
                 return response()->json([
-                    'success' => true,
+                    // 'success' => true,
+                    'status' =>  true,
                     'message' => 'Laporan berhasil dikonfirmasi.'
                 ]);
             }
 
             return redirect()->back()->with('success', 'Laporan berhasil dikonfirmasi.');
         } catch (\Exception $e) {
-
             if ($request->ajax()) {
                 return response()->json([
-                    'success' => false,
+                    'status' => false,
                     'message' => 'Gagal mengkonfirmasi laporan: ' . $e->getMessage()
                 ], 500);
             }
@@ -258,7 +258,7 @@ class AdminController extends Controller
             ->unique()
             ->count();
 
-        return view('admin.detail_laporan', compact('laporan', 'fasilitas' , 'jumlahPelapor','breadcrumb', 'page', 'source'));
+        return view('admin.detail_laporan', compact('laporan', 'fasilitas', 'jumlahPelapor', 'breadcrumb', 'page', 'source'));
     }
 
     public function laporan2()
@@ -334,7 +334,6 @@ class AdminController extends Controller
             'message' => 'Pengguna berhasil ditambahkan.'
         ]);
     }
-
 
     public function show_pengguna()
     {
