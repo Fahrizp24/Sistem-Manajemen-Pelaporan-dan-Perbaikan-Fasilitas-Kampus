@@ -161,7 +161,7 @@
                                     @endforeach
                                 </select>
                                 <button type="submit" class="btn btn-success w-100" onclick="return confirmSubmit()">
-                                    Submit
+                                    Ajukan Penugasan
                                 </button>
                             </div>
                         </div>
@@ -181,7 +181,7 @@
                                     <option value="revisi">Revisi</option>
                                 </select>
                                 <button type="submit" class="btn btn-success w-100" onclick="return confirmSubmit()">
-                                    Submit
+                                    Selesaikan
                                 </button>
                             </div>
                         </div>
