@@ -82,6 +82,17 @@
             @endif
         </div>
     </div>
+    <!-- Foto Bukti Perbaikan (hanya untuk status telah diperbaiki dan selesai) -->
+    @if(in_array($laporan->status, ['telah diperbaiki', 'selesai']) && $laporan->foto_pengerjaan)
+    <div class="row mt-4">
+        <div class="col-12">
+            <h5>Bukti Perbaikan Teknisi</h5>
+            <img src="{{ Storage::url('foto_pengerjaan/' . $laporan->foto_pengerjaan) }}" 
+                 class="img-thumbnail w-150% mx-auto d-block"
+                 style="max-width: 100%; height: 100%; max-height: 400px;">
+        </div>
+    </div>
+    @endif
     @if ($laporan->status == 'selesai')
     <div class="mt-4">
         <h5>Rating Layanan</h5>
