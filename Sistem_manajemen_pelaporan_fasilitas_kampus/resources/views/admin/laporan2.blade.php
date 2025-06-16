@@ -31,39 +31,39 @@
                                 @switch($item->status)
                                     @case('diajukan')
                                         <span class="badge bg-secondary text-white">Diajukan</span>
-                                        @break
+                                    @break
 
                                     @case('diterima')
                                         <span class="badge bg-primary text-white">Diterima</span>
-                                        @break
+                                    @break
 
                                     @case('tidak diterima')
                                         <span class="badge bg-danger text-white">Tidak Diterima</span>
-                                        @break
+                                    @break
 
                                     @case('konfirmasi')
                                         <span class="badge bg-info text-white">Konfirmasi</span>
-                                        @break
+                                    @break
 
                                     @case('memilih teknisi')
                                         <span class="badge bg-dark text-white">Memilih Teknisi</span>
-                                        @break
+                                    @break
 
                                     @case('diperbaiki')
                                         <span class="badge bg-warning text-dark">Diperbaiki</span>
-                                        @break
+                                    @break
 
                                     @case('telah diperbaiki')
                                         <span class="badge bg-light text-dark">Telah Diperbaiki</span>
-                                        @break
+                                    @break
 
                                     @case('revisi')
                                         <span class="badge bg-body-secondary text-dark">Revisi</span>
-                                        @break
+                                    @break
 
                                     @case('selesai')
                                         <span class="badge bg-success text-white">Selesai</span>
-                                        @break
+                                    @break
 
                                     @default
                                         <span class="badge bg-light text-dark">{{ ucfirst($item->status) }}</span>
@@ -101,17 +101,19 @@
     @endsection
 
     @push('css')
-    <style>
-        .bg-gradient-indigo {
-            background: linear-gradient(to right, #6610f2, #6f42c1);
-        }
-        .text-blue {
-            color: white;
-        }
-        .btn-close-blue {
-            filter: invert(1) grayscale(100%) brightness(200%);
-        }
-    </style>
+        <style>
+            .bg-gradient-indigo {
+                background: linear-gradient(to right, #6610f2, #6f42c1);
+            }
+
+            .text-blue {
+                color: white;
+            }
+
+            .btn-close-blue {
+                filter: invert(1) grayscale(100%) brightness(200%);
+            }
+        </style>
     @endpush
 
     @push('scripts')
@@ -119,12 +121,14 @@
             $(document).ready(function() {
                 $('#laporanTable').DataTable();
 
-                $('.btn-detail').click(function() {
-                    var url = $(this).data('url');
-                    modalAction(url);
-                });
+                $('#laporanTable').on('click', '.btn-detail', function() {
+                    var $btn = $(this); 
+                    var originalText = $btn.html(); 
+                    var url = $btn.data('url');
 
-                function modalAction(url) {
+                    $btn.prop('disabled', true);
+                    $btn.html('<span class="spinner-border spinner-border-sm me-1"></span>Loading...');
+
                     $.ajax({
                         url: url,
                         type: "GET",
@@ -133,9 +137,17 @@
                             $('#detailModal').modal('show');
                         },
                         error: function() {
-                            $('#modalContent').html('<p class="text-danger">Gagal memuat data.</p>');
+                            $('#modalContent').html(
+                            '<p class="text-danger">Gagal memuat data.</p>');
+                        },
+                        complete: function() {
+                            $btn.prop('disabled', false);
+                            $btn.html(originalText);
                         }
                     });
+                });
+
+                function modalAction(url) {
                 }
             });
         </script>

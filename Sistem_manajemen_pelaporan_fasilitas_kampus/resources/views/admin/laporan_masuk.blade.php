@@ -43,11 +43,11 @@
             $.ajax({
                 url: url,
                 type: "GET",
-                success: function (res) {
+                success: function(res) {
                     $('#modalContent').html(res);
                     $('#detailModal').modal('show');
                 },
-                error: function () {
+                error: function() {
                     $('#modalContent').html('<p class="text-danger">Gagal memuat data.</p>');
                 }
             });
@@ -65,10 +65,10 @@
                 {
                     data: 'gedung',
                     name: 'gedung'
-                },{
+                }, {
                     data: 'lantai',
                     name: 'lantai'
-                },{
+                }, {
                     data: 'ruangan',
                     name: 'ruangan'
                 },
@@ -76,7 +76,7 @@
                     data: 'fasilitas',
                     name: 'fasilitas'
                 },
-                
+
                 {
                     data: 'aksi',
                     name: 'aksi',
@@ -121,6 +121,30 @@
                     }
                 }
             });
+
+            // $('#laporanTable tbody').on('click', '.btn-detail', function() {
+            //     const btn = $(this);
+            //     const original = btn.html();
+            //     btn.prop('disabled', true).html('Loading...');
+
+            //     const url = btn.data('url');
+            //     $.ajax({
+            //         url,
+            //         type: "GET",
+            //         success: function(res) {
+            //             $('#modalContent').html(res);
+            //             $('#detailModal').modal('show');
+            //         },
+            //         error: function() {
+            //             $('#modalContent').html(
+            //             '<p class="text-danger">Gagal memuat data.</p>');
+            //         },
+            //         complete: function() {
+            //             btn.prop('disabled', false).html(original);
+            //         }
+            //     });
+            // });
+
         });
     </script>
 @endpush

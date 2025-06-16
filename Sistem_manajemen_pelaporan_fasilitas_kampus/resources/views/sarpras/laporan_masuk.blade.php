@@ -61,7 +61,7 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <button
-                                                        onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=pelapor')"
+                                                        onclick="showDetailModal(this,'{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=pelapor')"
                                                         class="btn btn-sm btn-primary">
                                                         <i class="bi bi-eye-fill me-1"></i> Detail
                                                     </button>
@@ -106,7 +106,7 @@
                                                 <td><span class="text-warning">Perlu Penugasan</span></td>
                                                 <td class="text-center">
                                                     <button
-                                                        onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=admin')"
+                                                        onclick="showDetailModal(this,'{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=admin')"
                                                         class="btn btn-sm btn-primary">
                                                         <i class="bi bi-eye-fill me-1"></i> Detail
                                                     </button>
@@ -150,7 +150,7 @@
                                                 <td><span class="text-orange">Perlu Ditelaah</span></td>
                                                 <td class="text-center">
                                                     <button
-                                                        onclick="showDetailModal('{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=teknisi')"
+                                                        onclick="showDetailModal(this,'{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=teknisi')"
                                                         class="btn btn-sm btn-primary">
                                                         <i class="bi bi-eye-fill me-1"></i> Detail
                                                     </button>
@@ -196,76 +196,102 @@
             });
         });
 
-        function showDetailModal(url) {
-            // Fetch the content
-            fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    // Insert the content into the modal
-                    document.getElementById('modalContent').innerHTML = html;
+      function showDetailModal(button, url) {
+    // Simpan isi tombol sebelum diubah
+    const originalHTML = button.innerHTML;
 
-                    // Initialize the modal
-                    var modal = new bootstrap.Modal(document.getElementById('detailModal'));
-                    modal.show();
+    // Ubah tombol jadi loading
+    button.disabled = true;
+    button.innerHTML = `
+        <span class="spinner-border spinner-border-sm me-1"></span> Memuat...
+    `;
 
-                    const form = document.querySelector('#detailModal form');
-                    if (form) {
-                        form.addEventListener('submit', function(e) {
-                            e.preventDefault();
+    const modalContent = document.getElementById('modalContent');
+    modalContent.innerHTML = `
+        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    `;
 
-                            // Submit form via AJAX
-                            fetch(form.action, {
-                                    method: form.method,
-                                    body: new FormData(form),
-                                    headers: {
-                                        'X-Requested-With': 'XMLHttpRequest',
-                                        'Accept': 'application/json'
-                                    }
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        // Hide modal
-                                        modal.hide();
+    // Tampilkan modal langsung
+    const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+    modal.show();
 
-                                        // Show success alert
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Sukses',
-                                            text: data.message || 'Aksi berhasil dilakukan',
-                                            timer: 2000,
-                                            showConfirmButton: false
-                                        });
+    // Fetch konten modal
+    fetch(url)
+        .then(response => response.text())
+        .then(html => {
+            modalContent.innerHTML = html;
 
-                                        // Optional: refresh page or update table
-                                        setTimeout(() => {
-                                            location.reload();
-                                        }, 2000);
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Gagal',
-                                            text: data.message || 'Terjadi kesalahan'
-                                        });
-                                    }
-                                })
-                                .catch(error => {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: 'Terjadi kesalahan saat mengirim data'
-                                    });
+            // Restore tombol
+            button.disabled = false;
+            button.innerHTML = originalHTML;
+
+            // Handle form di modal
+            const form = document.querySelector('#detailModal form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const submitBtn = form.querySelector('[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Memproses...`;
+
+                    fetch(form.action, {
+                            method: form.method,
+                            body: new FormData(form),
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                modal.hide();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Sukses',
+                                    text: data.message || 'Aksi berhasil dilakukan',
+                                    timer: 2000,
+                                    showConfirmButton: false
                                 });
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 2000);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: data.message || 'Terjadi kesalahan'
+                                });
+                            }
+                        })
+                        .catch(() => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Terjadi kesalahan saat mengirim data'
+                            });
+                        })
+                        .finally(() => {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
                         });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading modal content:', error);
-                    document.getElementById('modalContent').innerHTML =
-                        '<div class="alert alert-danger">Error loading content</div>';
-                    var modal = new bootstrap.Modal(document.getElementById('detailModal'));
-                    modal.show();
                 });
-        }
+            }
+        })
+        .catch(error => {
+            console.error('Error loading modal content:', error);
+            modalContent.innerHTML = `<div class="alert alert-danger">Gagal memuat konten</div>`;
+            button.disabled = false;
+            button.innerHTML = originalHTML;
+        });
+}
+
     </script>
 @endpush

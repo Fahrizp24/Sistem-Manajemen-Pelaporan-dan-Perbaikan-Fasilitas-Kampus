@@ -1,4 +1,4 @@
-@empty($laporan)
+@empty($fasilitas)
     <div class="modal fade" id="errorModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -19,6 +19,7 @@
 @else
     </div>
     <div class="modal-body">
+        @dd($fasilitas)
         <!-- Kolom Informasi (Full width) -->
         <div class="row">
             <div class="col-12">
