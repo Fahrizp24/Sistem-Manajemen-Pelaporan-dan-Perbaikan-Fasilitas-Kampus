@@ -81,13 +81,11 @@ class LantaiController extends Controller
     public function update_lantai(Request $request, $lantai_id)
     {
         $request->validate([
-            'gedung_id' => 'required|exists:gedung,gedung_id',
             'lantai_nama' => 'required|string|max:255',
             'lantai_deskripsi' => 'required|string',
         ]);
 
-        $lantai = LantaiModel::findOrFail($lantai_id);
-        $lantai->gedung_id = $request->gedung_id;
+        $lantai = LantaiModel::findOrFail($lantai_id);;
         $lantai->lantai_nama = $request->lantai_nama;
         $lantai->lantai_deskripsi = $request->lantai_deskripsi;
         $lantai->save();

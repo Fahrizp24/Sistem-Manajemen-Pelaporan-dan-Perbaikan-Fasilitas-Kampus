@@ -34,8 +34,8 @@
     $(document).ready(function () {
         $("#form-edit").validate({
             rules: {
-                lantai_nama: { required: true, minlength: 3 },
-                lantai_deskripsi: { required: true, minlength: 10 }
+                nama: { required: true, minlength: 3 },
+                deskripsi: { required: true, minlength: 10 }
             },
             submitHandler: function (form) {
                 $.ajax({
