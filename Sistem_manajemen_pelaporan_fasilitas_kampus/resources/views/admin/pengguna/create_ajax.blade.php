@@ -83,7 +83,7 @@
                     digits: true,
                     minlength: 10,
                     maxlength: 15
-                }
+                },
                 peran: { required: true },
                 password: { required: true, minlength: 6 }
             },

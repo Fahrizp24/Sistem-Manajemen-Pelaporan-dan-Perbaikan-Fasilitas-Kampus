@@ -88,7 +88,7 @@
                     digits: true,
                     minlength: 10,
                     maxlength: 15
-                }
+                },
                 peran: { required: true }
             },
             submitHandler: function (form) {

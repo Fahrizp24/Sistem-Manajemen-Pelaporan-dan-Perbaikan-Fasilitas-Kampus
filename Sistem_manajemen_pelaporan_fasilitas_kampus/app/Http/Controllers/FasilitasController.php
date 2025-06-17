@@ -135,13 +135,20 @@ class FasilitasController extends Controller
     public function destroy_fasilitas($fasilitas_id)
     {
         $fasilitas = FasilitasModel::find($fasilitas_id);
+
         if (!$fasilitas) {
-            return redirect()->route('admin.fasilitas')->with('error', 'Fasilitas tidak ditemukan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Fasilitas tidak ditemukan.'
+            ], 404);
         }
 
         $fasilitas->delete();
 
-        return redirect()->route('admin.fasilitas')->with('success', 'Fasilitas berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Fasilitas berhasil dihapus.'
+        ]);
     }
 
 }

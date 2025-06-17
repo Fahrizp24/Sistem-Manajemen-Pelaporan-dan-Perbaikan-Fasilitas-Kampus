@@ -64,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}', [FasilitasController::class, 'show_fasilitas'])->name('admin.show_fasilitas');
                 Route::get('/edit_ajax/{id}', [FasilitasController::class, 'edit_fasilitas'])->name('admin.edit_fasilitas');
                 Route::put('/update/{id}', [FasilitasController::class, 'update_fasilitas'])->name('admin.update_fasilitas');
-                Route::delete('/{id}', [FasilitasController::class, 'destroy__fasilitas'])->name('admin.destroy_fasilitas');
+                Route::delete('/{id}', [FasilitasController::class, 'destroy_fasilitas'])->name('admin.destroy_fasilitas');
                 Route::get('/get-lantai/{gedung_id}', [FasilitasController::class, 'getLantaiByGedung'])->name('admin.fasilitas.get_lantai');
                 Route::get('/get-ruangan/{lantai_id}', [FasilitasController::class, 'getRuanganByLantai'])->name('admin.fasilitas.get_ruangan');
             });

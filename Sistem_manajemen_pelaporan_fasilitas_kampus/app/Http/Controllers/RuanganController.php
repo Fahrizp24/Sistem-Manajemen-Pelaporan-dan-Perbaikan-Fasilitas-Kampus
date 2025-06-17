@@ -112,16 +112,23 @@ class RuanganController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy_ruangan($ruangan_id)
+   public function destroy_ruangan($ruangan_id)
     {
         $ruangan = RuanganModel::find($ruangan_id);
 
         if (!$ruangan) {
-            return redirect()->route('admin.ruangan')->with('error', 'Ruangan tidak ditemukan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Ruangan tidak ditemukan.'
+            ], 404);
         }
 
         $ruangan->delete();
 
-        return redirect()->route('admin.ruangan')->with('success', 'Ruangan berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Ruangan berhasil dihapus.'
+        ]);
     }
+
 }
