@@ -38,7 +38,7 @@
         <div class="row">
 
             <!-- Kolom Informasi (Kanan) -->
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="table-responsive">
                     <tr>
                         <span>Laporan ini dilaporkan oleh:</span>

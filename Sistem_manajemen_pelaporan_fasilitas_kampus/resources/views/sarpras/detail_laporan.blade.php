@@ -19,7 +19,20 @@
 @else
     <div class="modal-body">
         <div class="row">
-            <div class="col-md-12">
+            <!-- Kolom Foto (Kiri) -->
+            <div class="col-md-4">
+                @if ($laporan->foto)
+                    <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-thumbnail w-100 mb-3"
+                        style="max-height: 300px; object-fit: contain;">
+                @else
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-image"></i> Tidak ada foto
+                    </div>
+                @endif
+            </div>
+
+            <!-- Kolom Informasi (Kanan) -->
+            <div class="col-md-8">
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <tr>
@@ -66,14 +79,7 @@
                 </div>
             </div>
         </div>
-        @if ($laporan->foto)
-                    <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-thumbnail w-100 mb-3"
-                        style="max-height: 300px; object-fit: contain;">
-                @else
-                    <div class="alert alert-info text-center">
-                        <i class="fas fa-image"></i> Tidak ada foto
-                    </div>
-                @endif
+
         <div class="mt-3 text-center">
             @if ($source == 'pelapor')
                 <form class="form" method="POST"
@@ -87,35 +93,35 @@
                         </div>
 
                         @if ($penilaian->isNotEmpty())
-                        <div class="alert alert-success">
-                            <strong>Fasilitas ini sudah dinilai</strong> dengan nilai sebagai berikut:
-                        </div>
-                    @endif
-                    
-                    @foreach ($kriteria as $kriteriaItem)
-                        <div class="col-12">
-                            <div class="form-group mandatory mt-3 divider divider-left">
-                                <label for="kriteria_{{ $kriteriaItem->kriteria_id }}" class="form-label divider-text" style="padding:0">
-                                    {{ $kriteriaItem->nama }}
-                                </label>
-                                <select id="kriteria_{{ $kriteriaItem->kriteria_id }}"
-                                        name="kriteria[{{ $kriteriaItem->kriteria_id }}]"
-                                        class="form-select"
-                                        data-parsley-required="true" required>
-                                    <option value="">Pilih {{ strtolower($kriteriaItem->nama) }}</option>
-                                    @foreach ($crisp->where('kriteria_id', $kriteriaItem->kriteria_id) as $crispItem)
-                                        <option value="{{ $crispItem->poin }}"
-                                            @if (isset($penilaian[$kriteriaItem->kriteria_id]) && $penilaian[$kriteriaItem->kriteria_id]->nilai == $crispItem->poin)
-                                                selected
-                                            @endif>
-                                            {{ $crispItem->judul }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                            <div class="alert alert-success">
+                                <strong>Fasilitas ini sudah dinilai</strong> dengan nilai sebagai berikut:
                             </div>
-                        </div>
-                    @endforeach
-                    
+                        @endif
+
+                        @foreach ($kriteria as $kriteriaItem)
+                            @if ($kriteriaItem->kriteria_id != 7)
+                                <div class="col-12">
+                                    <div class="form-group mandatory mt-3 divider divider-left">
+                                        <label for="kriteria_{{ $kriteriaItem->kriteria_id }}"
+                                            class="form-label divider-text" style="padding:0">
+                                            {{ $kriteriaItem->nama }}
+                                        </label>
+                                        <select id="kriteria_{{ $kriteriaItem->kriteria_id }}"
+                                            name="kriteria[{{ $kriteriaItem->kriteria_id }}]" class="form-select"
+                                            data-parsley-required="true" required>
+                                            <option value="">Pilih {{ strtolower($kriteriaItem->nama) }}</option>
+                                            @foreach ($crisp->where('kriteria_id', $kriteriaItem->kriteria_id) as $crispItem)
+                                                <option value="{{ $crispItem->poin }}"
+                                                    @if (isset($penilaian[$kriteriaItem->kriteria_id]) && $penilaian[$kriteriaItem->kriteria_id]->nilai == $crispItem->poin) selected @endif>
+                                                    {{ $crispItem->judul }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+
                     </div>
                     <form>
                         <button type="submit" class="btn btn-success mt-3 gap-2"
@@ -155,7 +161,7 @@
                                     @endforeach
                                 </select>
                                 <button type="submit" class="btn btn-success w-100" onclick="return confirmSubmit()">
-                                    Submit
+                                    Ajukan Penugasan
                                 </button>
                             </div>
                         </div>
@@ -175,7 +181,7 @@
                                     <option value="revisi">Revisi</option>
                                 </select>
                                 <button type="submit" class="btn btn-success w-100" onclick="return confirmSubmit()">
-                                    Submit
+                                    Selesaikan
                                 </button>
                             </div>
                         </div>
