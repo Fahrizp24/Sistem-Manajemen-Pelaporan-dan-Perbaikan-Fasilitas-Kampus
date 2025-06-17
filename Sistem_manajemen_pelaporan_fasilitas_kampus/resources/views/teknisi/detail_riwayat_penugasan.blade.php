@@ -65,18 +65,42 @@
                 </table>
             </div>
             <div class="row mt-4">
-        <div class="col-12">
-            @if ($laporan->foto)
-                <img src="{{ Storage::url('foto_laporan/foto_diterima_11.jpg' ) }}" 
-                     class="img-thumbnail w-150% mx-auto d-block"
-                     style="max-width: 100%; height: 100%; max-height: 400px;">
-            @else
-                <div class="alert alert-info text-center">
-                    <i class="fas fa-image"></i> Tidak ada foto
+                <div class="col-md-6 mb-3">
+                    @if ($laporan->foto)
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <span class="fw-bold">Foto Sebelum Diperbaiki</span>
+                            </div>
+                            <div class="card-body p-2 text-center">
+                                <img src="{{ Storage::url('foto_laporan/' . $laporan->foto) }}" class="img-fluid rounded"
+                                    style="max-height: 250px; width: auto;">
+                            </div>
+                        </div>
+                    @else
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-image"></i> Tidak ada foto sebelum perbaikan
+                        </div>
+                    @endif
                 </div>
-            @endif
-        </div>
-    </div>
+
+                <div class="col-md-6 mb-3">
+                    @if ($laporan->foto_pengerjaan)
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <span class="fw-bold">Foto Setelah Diperbaiki</span>
+                            </div>
+                            <div class="card-body p-2 text-center">
+                                <img src="{{ Storage::url('foto_pengerjaan/' . $laporan->foto_pengerjaan) }}"
+                                    class="img-fluid rounded" style="max-height: 250px; width: auto;">
+                            </div>
+                        </div>
+                    @else
+                        <div class="alert alert-info text-center">
+                            <i class="fas fa-image"></i> Tidak ada foto setelah perbaikan
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 @endempty

@@ -6,7 +6,7 @@
                 <h5 class="modal-title" id="modalLabel">Tambah Gedung</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body">    
                 <div class="form-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -70,7 +70,7 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                            dataGedung.ajax.reload(null, false);
+                            $('#gedungTable').DataTable().ajax.reload(null, false);
                         }
                     },
                     error: function (xhr) {

@@ -166,23 +166,23 @@ class AdminController extends Controller
     public function konfirmasi_laporan(string $id, Request $request)
     {
         try {
-
-            // Update status laporan
-            LaporanModel::findOrFail($id)->update(['status' => 'memilih teknisi']);
+            LaporanModel::where('fasilitas_id', $id)
+                ->where('status', 'konfirmasi')
+                ->update(['status' => 'memilih teknisi']);
 
             if ($request->ajax()) {
                 return response()->json([
-                    'success' => true,
+                    // 'success' => true,
+                    'status' =>  true,
                     'message' => 'Laporan berhasil dikonfirmasi.'
                 ]);
             }
 
             return redirect()->back()->with('success', 'Laporan berhasil dikonfirmasi.');
         } catch (\Exception $e) {
-
             if ($request->ajax()) {
                 return response()->json([
-                    'success' => false,
+                    'status' => false,
                     'message' => 'Gagal mengkonfirmasi laporan: ' . $e->getMessage()
                 ], 500);
             }
@@ -258,7 +258,7 @@ class AdminController extends Controller
             ->unique()
             ->count();
 
-        return view('admin.detail_laporan', compact('laporan', 'fasilitas' , 'jumlahPelapor','breadcrumb', 'page', 'source'));
+        return view('admin.detail_laporan', compact('laporan', 'fasilitas', 'jumlahPelapor', 'breadcrumb', 'page', 'source'));
     }
 
     public function laporan2()
@@ -306,7 +306,7 @@ class AdminController extends Controller
             'username' => 'required|string',
             'nama' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'no_telp' => 'required|digits_between:10,15',
+            'no_telp' => 'nullable|digits_between:10,15',
             'password' => 'required|min:6',
             'peran' => 'required|in:admin,sarpras,pelapor,teknisi',
         ];
@@ -325,6 +325,7 @@ class AdminController extends Controller
         $pengguna->username = $request->username;
         $pengguna->nama = $request->nama;
         $pengguna->email = $request->email;
+        $pengguna->no_telp = $request->no_telp;
         $pengguna->password = Hash::make($request->password);
         $pengguna->peran = $request->peran;
         $pengguna->save();
@@ -334,7 +335,6 @@ class AdminController extends Controller
             'message' => 'Pengguna berhasil ditambahkan.'
         ]);
     }
-
 
     public function show_pengguna()
     {
@@ -354,6 +354,7 @@ class AdminController extends Controller
             'username' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
+            'no_telp' => 'nullable|string|max:20',
             'password' => 'nullable|string|min:6',
             'peran' => 'required|string|in:admin,sarpras,pelapor, teknisi',
         ]);

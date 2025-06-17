@@ -20,6 +20,7 @@ class UserModel extends Authenticatable
         'username',
         'nama',
         'email',
+        'no_telp',
         'password',
         'peran',
         'program_studi',

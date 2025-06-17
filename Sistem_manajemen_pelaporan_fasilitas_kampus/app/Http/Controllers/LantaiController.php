@@ -104,11 +104,18 @@ class LantaiController extends Controller
         $lantai = LantaiModel::find($lantai_id);
 
         if (!$lantai) {
-            return redirect()->route('admin.lantai')->with('error', 'Lantai tidak ditemukan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Lantai tidak ditemukan.'
+            ], 404);
         }
 
         $lantai->delete();
 
-        return redirect()->route('admin.lantai')->with('success', 'Lantai berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Lantai berhasil dihapus.'
+        ]);
     }
+
 }

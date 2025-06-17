@@ -1,4 +1,4 @@
-@empty($laporan)
+@empty($fasilitas)
     <div class="modal fade" id="errorModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -17,32 +17,9 @@
         </div>
     </div>
 @else
-    <!-- Modal untuk Foto Pelapor -->
-    <div class="modal fade" id="fotoPelaporModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="fotoPelaporModalLabel">Foto Laporan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <img id="modalFotoPelapor" src="" class="img-fluid" style="max-height: 70vh;">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-        <script>
-            function showFotoPelapor(fotoUrl, namaPelapor) {
-        document.getElementById('modalFotoPelapor').src = fotoUrl;
-        document.getElementById('fotoPelaporModalLabel').textContent = 'Foto Laporan: ' + namaPelapor;
-        var modal = new bootstrap.Modal(document.getElementById('fotoPelaporModal'));
-        modal.show();
-    }
-        </script>
     </div>
     <div class="modal-body">
+        @dd($fasilitas)
         <!-- Kolom Informasi (Full width) -->
         <div class="row">
             <div class="col-12">
@@ -111,7 +88,7 @@
                 @csrf
                 <div class="row justify-content-center">
                     <div class="col-md-6">
-                        <button type="submit" class="btn btn-success w-100" onclick="return confirmSubmit()">
+                        <button type="submit" id="btn-submit-laporan" class="btn btn-success w-100">
                             Konfirmasi Laporan dan Laksanakan Penugasan
                         </button>
                     </div>
@@ -119,60 +96,74 @@
             </form>
         </div>
     </div>
+    <!-- Modal untuk Foto Pelapor -->
+    <div class="modal fade" id="fotoPelaporModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fotoPelaporModalLabel">Foto Laporan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalFotoPelapor" src="" class="img-fluid" style="max-height: 70vh;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endempty
 <script>
-    $(document).ready(function () {
+    function showFotoPelapor(fotoUrl, namaPelapor) {
+        document.getElementById('modalFotoPelapor').src = fotoUrl;
+        document.getElementById('fotoPelaporModalLabel').textContent = 'Foto Laporan: ' + namaPelapor;
+        var modal = new bootstrap.Modal(document.getElementById('fotoPelaporModal'));
+        modal.show();
+    }
 
-        // Form terima Laporan (Pelapor)
-        $('form[action*="/admin/laporan_masuk/memilih_teknisi"]').validate({
-            submitHandler: function (form) {
-                $.ajax({
-                    url: form.action,
-                    type: form.method,
-                    data: $(form).serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-                        if (response.status) {
-                            $('#detailModal').fadeOut(300, function () {
-                                $(this).modal('hide');
-                            });
+    $(document).ready(function() {
+        const formSelector = 'form[action*="/admin/laporan_masuk/"]';
 
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message
-                            });
-                        } else {
-                            $('.error-text').text('');
-                            if (response.msgField) {
-                                $.each(response.msgField, function (prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
-                                });
-                            }
+        $(formSelector).on('submit', function(e) {
+            e.preventDefault(); 
 
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Terjadi Kesalahan',
-                                text: response.message
+            const form = this;
+
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.status) {
+                        $('#detailModal').fadeOut(300, function() {
+                            $(this).modal('hide');
+                        });
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message
+                        });
+                    } else {
+                        $('.error-text').text('');
+                        if (response.msgField) {
+                            $.each(response.msgField, function(prefix, val) {
+                                $('#error-' + prefix).text(val[0]);
                             });
                         }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan',
+                            text: response.message
+                        });
                     }
-                });
-                return false;
-            },
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function (element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            }
+                }
+            });
         });
     });
 </script>

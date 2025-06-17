@@ -77,31 +77,44 @@
             @endif
         </div>
     </div>
-         @if ($laporan->status == 'selesai')
-        <div class="mt-4">
-            <h5>Rating Layanan</h5>
-            @if ($laporan->rating !== null)
-                <div class="my-rating" 
-                     data-rating="{{ $laporan->rating }}" 
-                     data-readonly="true"
-                     data-laporan-id="{{ $laporan->laporan_id }}"></div>
-                <p class="text-muted mt-2">Anda telah memberikan rating {{ $laporan->rating }} bintang</p>
-            @else
-                <div class="my-rating" 
-                     data-rating="0" 
-                     data-readonly="false"
-                     data-laporan-id="{{ $laporan->laporan_id }}"></div>
-                <form id="ratingForm_{{ $laporan->laporan_id }}" class="rating-form" method="POST" 
-                      action="{{ url('pelapor/laporan_saya/rating/', $laporan->laporan_id) }}">
-                    @csrf
-                    <input type="hidden" name="rating" id="ratingInput" class="rating-input">
-                    <button type="submit" id="submitRating" class="btn btn-primary mt-2 submit-rating" disabled>
-                        Simpan Rating
-                    </button>
-                </form>
+    @if ($laporan->status == 'selesai')
+    <div class="mt-4">
+        <h5>Rating Layanan</h5>
+        @if ($laporan->umpanBalik)
+            <div class="my-rating" data-rating="{{ $laporan->umpanBalik->penilaian }}" data-readonly="true"
+                data-laporan-id="{{ $laporan->laporan_id }}"></div>
+            <p class="text-muted mt-2">Anda telah memberikan rating {{ $laporan->umpanBalik->penilaian }} bintang</p>
+            @if ($laporan->umpanBalik->komentar)
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <h6>Komentar Anda:</h6>
+                        <p>{{ $laporan->umpanBalik->komentar }}</p>
+                    </div>
+                </div>
             @endif
-        </div>
-    @endif
+        @else
+            <div class="my-rating" data-rating="0" data-readonly="false" data-laporan-id="{{ $laporan->laporan_id }}"></div>
+
+            <form id="ratingForm_{{ $laporan->laporan_id }}" class="rating-form" method="POST"
+                action="{{ url('pelapor/laporan_saya/rating/' . $laporan->laporan_id) }}">
+                @csrf
+                <input type="hidden" name="rating" class="rating-input">
+
+                <div class="form-group mt-2">
+                    <label for="komentar_{{ $laporan->laporan_id }}">Komentar (Opsional)</label>
+                    <textarea name="komentar" id="komentar_{{ $laporan->laporan_id }}" rows="3" class="form-control"
+                        placeholder="Tulis komentar Anda tentang layanan..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-2 submit-rating" disabled>
+                    Simpan Rating
+                </button>
+            </form>
+        @endif
+    </div>
+@endif
+
+    </div>
 @endif
 
 @push('scripts')

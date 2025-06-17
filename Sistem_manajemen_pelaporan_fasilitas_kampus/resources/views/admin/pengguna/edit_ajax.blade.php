@@ -84,11 +84,10 @@
                 nama: { required: true, minlength: 3 },
                 email: { required: true, email: true },
                 no_telp: {
-                    required: true,
                     digits: true,
                     minlength: 10,
                     maxlength: 15
-                }
+                },
                 peran: { required: true }
             },
             submitHandler: function (form) {

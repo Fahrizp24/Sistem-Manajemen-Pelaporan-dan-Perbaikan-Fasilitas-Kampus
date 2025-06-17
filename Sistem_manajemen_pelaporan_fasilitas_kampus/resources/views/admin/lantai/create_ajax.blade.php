@@ -109,7 +109,7 @@
                     dataType: 'json',
                     success: function (response) {
                         if (response.status) {
-                            $('#modalLantai').modal('hide');
+                            $('#myModal').modal('hide');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',

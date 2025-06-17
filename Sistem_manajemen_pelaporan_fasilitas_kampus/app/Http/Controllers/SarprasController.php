@@ -136,30 +136,45 @@ class SarprasController extends Controller
 
         $activeMenu = 'penugasan';
 
-        $laporan_masuk_pelapor = LaporanModel::with('fasilitas.ruangan.lantai.gedung')->where('status', 'diajukan')->get();
+        $laporan_masuk_pelapor = LaporanModel::with('fasilitas.ruangan.lantai.gedung')
+            ->where('status', 'diajukan')
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
-        // Fasilitas dengan laporan status 'memilih teknisi'
         $fasilitas_memilih_teknisi = FasilitasModel::whereHas('laporan', function ($query) {
             $query->where('status', 'memilih teknisi');
         })->with([
             'laporan' => function ($query) {
-                $query->where('status', 'memilih teknisi')->with('pelapor');
+                $query->where('status', 'memilih teknisi')
+                    ->with('pelapor')
+                    ->orderBy('updated_at', 'desc'); 
             },
             'ruangan.lantai.gedung'
-        ])->get();
+        ])
+        ->orderBy('updated_at', 'desc') 
+        ->get();
 
-        // Fasilitas dengan laporan status 'telah diperbaiki'
         $fasilitas_telah_diperbaiki = FasilitasModel::whereHas('laporan', function ($query) {
             $query->where('status', 'telah diperbaiki');
         })->with([
             'laporan' => function ($query) {
-                $query->where('status', 'telah diperbaiki')->with('pelapor');
+                $query->where('status', 'telah diperbaiki')
+                    ->with('pelapor')
+                    ->orderBy('updated_at', 'desc'); 
             },
             'ruangan.lantai.gedung'
-        ])->get();
+        ])
+        ->orderBy('updated_at', 'desc')
+        ->get();
 
-        return view('sarpras.laporan_masuk', compact('breadcrumb', 'page', 'activeMenu', 'laporan_masuk_pelapor', 'fasilitas_memilih_teknisi', 'fasilitas_telah_diperbaiki'));
+        return view('sarpras.laporan_masuk', compact(
+            'breadcrumb', 'page', 'activeMenu',
+            'laporan_masuk_pelapor',
+            'fasilitas_memilih_teknisi',
+            'fasilitas_telah_diperbaiki'
+        ));
     }
+
 
     public function show_laporan(string $id)
     {

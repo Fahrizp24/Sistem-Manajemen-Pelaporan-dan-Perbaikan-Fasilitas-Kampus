@@ -64,8 +64,8 @@ class GedungController extends Controller
         }
 
         $gedung = new GedungModel();
-        $gedung->nama = $request->nama;
-        $gedung->deskripsi = $request->deskripsi;
+        $gedung->gedung_nama = $request->nama;
+        $gedung->gedung_deskripsi = $request->deskripsi;
         $gedung->save();
 
         return response()->json([
@@ -110,11 +110,18 @@ class GedungController extends Controller
         $gedung = GedungModel::find($gedung_id);
 
         if (!$gedung) {
-            return redirect()->route('admin.gedung')->with('error', 'Gedung tidak ditemukan.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Gedung tidak ditemukan.'
+            ], 404);
         }
 
         $gedung->delete();
 
-        return redirect()->route('admin.gedung')->with('success', 'Gedung berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Gedung berhasil dihapus.'
+        ]);
     }
+
 }

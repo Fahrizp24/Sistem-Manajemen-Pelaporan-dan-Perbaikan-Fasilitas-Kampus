@@ -19,9 +19,13 @@
                         <h5 class="card-title mb-0">Daftar Pengguna</h5>
                         <div>
                             <button type="button" class="btn btn-success mb-3"
-                                onclick="modalAction('{{url('admin/pengguna/create_ajax')}}')">+ Tambah Pengguna</button>
+                                onclick="modalAction('{{ url('admin/pengguna/create_ajax') }}', $(this))">+ Tambah
+                                Pengguna</button>
+
                             <button type="button" class="btn btn-success mb-3"
-                                onclick="modalAction('{{url('admin/pengguna/import_pengguna')}}')">+ Import Pengguna</button>
+                                onclick="modalAction('{{ url('admin/pengguna/import_pengguna') }}', $(this))">+ Import
+                                Pengguna</button>
+
                         </div>
                     </div>
                     <div class="card-body table-responsive">
@@ -46,58 +50,98 @@
             </div>
         </div>
     </div>
-    
+
 @endsection
 <!-- Modal -->
 @push('scripts')
     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-                <div class="modal-body">
-                    <div id="modalContent">Memuat...</div>
-                </div>
+            <div class="modal-body">
+                <div id="modalContent">Memuat...</div>
             </div>
+        </div>
     </div>
     <script>
+        function modalAction(url, button = null) {
+            let originalHTML = null;
+            if (button) {
+                button.prop('disabled', true);
+                originalHTML = button.html();
+                button.html('<span class="spinner-border spinner-border-sm me-1"></span>Memuat...');
+            }
 
-        function modalAction(url) {
             $.ajax({
                 url: url,
                 type: "GET",
-                success: function (res) {
+                success: function(res) {
                     $('#modalContent').html(res);
                     $('#myModal').modal('show');
                 },
-                error: function () {
+                error: function() {
                     $('#modalContent').html('<p class="text-danger">Gagal memuat data.</p>');
+                },
+                complete: function() {
+                    if (button) {
+                        button.prop('disabled', false);
+                        button.html(originalHTML);
+                    }
                 }
             });
         }
 
-        $(document).on('click', '.btnEditPengguna', function () {
+        $(document).on('click', '.btnEditPengguna', function() {
             var id = $(this).data('id');
-            modalAction('/admin/pengguna/edit_ajax/' + id);
+            modalAction('/admin/pengguna/edit_ajax/' + id, $(this));
         });
 
+
         var dataUser;
-        $(document).ready(function () {
+        $(document).ready(function() {
             dataUser = $('#penggunaTable').DataTable({
                 responsive: true,
                 autoWidth: false,
                 processing: true,
                 serverSide: true,
-                ajax: { url: "{{ route('admin.data_pengguna') }}", type: "POST" },
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'username', name: 'username' },
-                    { data: 'nama', name: 'nama' },
-                    { data: 'email', name: 'email' },
-                    { data: 'no_telp', name: 'no_telp' },
-                    { data: 'peran', name: 'peran' },
-                    { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                ajax: {
+                    url: "{{ route('admin.data_pengguna') }}",
+                    type: "POST"
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'username',
+                        name: 'username'
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'no_telp',
+                        name: 'no_telp'
+                    },
+                    {
+                        data: 'peran',
+                        name: 'peran'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        orderable: false,
+                        searchable: false
+                    }
                 ]
             });
         });
-        $(document).on('submit', '#formDeletePengguna', function (e) {
+        $(document).on('submit', '#formDeletePengguna', function(e) {
             e.preventDefault(); // Cegah form langsung submit
 
             let form = this;
@@ -117,6 +161,5 @@
                 }
             });
         });
-
     </script>
 @endpush

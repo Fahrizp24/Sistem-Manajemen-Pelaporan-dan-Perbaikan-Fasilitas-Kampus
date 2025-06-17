@@ -238,18 +238,51 @@
     $(document).on('submit', '#formDeleteFasilitas, #formDeleteGedung, #formDeleteLantai, #formDeleteRuangan', function (e) {
         e.preventDefault();
         let form = this;
+        let tableId = '';
+        
+        // Tentukan tabel mana yang akan di-reload
+        if ($(form).attr('id') === 'formDeleteGedung') {
+            tableId = '#gedungTable';
+        } else if ($(form).attr('id') === 'formDeleteLantai') {
+            tableId = '#tableLantai';
+        } else if ($(form).attr('id') === 'formDeleteRuangan') {
+            tableId = '#tableRuangan';
+        } else if ($(form).attr('id') === 'formDeleteFasilitas') {
+            tableId = '#fasilitasTable';
+        }
+
         Swal.fire({
-            title: "Yakin nih mau dihapus?",
-            text: "Data gak bakal bisa dibalikin lagi loh kalo dihapus!",
+            title: "Yakin ingin menghapus?",
+            text: "Data tidak dapat dikembalikan setelah dihapus!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            cancelButtonText: "Gajadi deh",
-            confirmButtonText: "Yup, Hapus ajalah!"
+            confirmButtonText: "Ya, Hapus!",
+            cancelButtonText: "Batal"
         }).then((result) => {
             if (result.isConfirmed) {
-                form.submit();
+                $.ajax({
+                    url: $(form).attr('action'),
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        _method: 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.success || response.status) {
+                            Swal.fire("Terhapus!", response.message, "success");
+                            if (tableId) {
+                                $(tableId).DataTable().ajax.reload();
+                            }
+                        } else {
+                            Swal.fire("Gagal!", response.message, "error");
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire("Error!", "Terjadi kesalahan saat menghapus data.", "error");
+                    }
+                });
             }
         });
     });
