@@ -91,8 +91,8 @@ class GedungController extends Controller
         ]);
 
         $gedung = GedungModel::findOrFail($gedung_id);
-        $gedung->nama = $request->nama;
-        $gedung->deskripsi = $request->deskripsi;
+        $gedung->gedung_nama = $request->nama;
+        $gedung->gedung_deskripsi = $request->deskripsi;
         $gedung->save();
 
 
