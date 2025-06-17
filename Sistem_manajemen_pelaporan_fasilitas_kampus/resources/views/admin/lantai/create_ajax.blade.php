@@ -117,7 +117,7 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                            dataLantai.ajax.reload(null, false);
+                            tableLantai.ajax.reload(null, false);
                         }
                     },
                     error: function (xhr) {

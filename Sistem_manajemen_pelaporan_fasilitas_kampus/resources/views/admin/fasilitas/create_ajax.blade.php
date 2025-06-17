@@ -199,7 +199,7 @@ $(document).ready(function() {
                             timer: 1500,
                             showConfirmButton: false
                         });
-                        dataFasilitas.ajax.reload(null, false);
+                        fasilitasTable.ajax.reload(null, false);
                     }
                 },
                 error: function(xhr) {

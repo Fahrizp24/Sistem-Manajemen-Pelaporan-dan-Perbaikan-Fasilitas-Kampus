@@ -105,7 +105,6 @@ class FasilitasController extends Controller
         $rules = [
             'fasilitas_nama' => 'required|string|max:255',
             'fasilitas_deskripsi' => 'required|string|min:10',
-            'ruangan_id' => 'required',
             'status' => 'required',
         ];
 
@@ -120,9 +119,8 @@ class FasilitasController extends Controller
         }
 
         $fasilitas = FasilitasModel::findOrFail($fasilitas_id);
-        $fasilitas->nama = $request->nama;
-        $fasilitas->deskripsi = $request->deskripsi;
-        $fasilitas->ruangan_id = $request->ruangan_id;
+        $fasilitas->fasilitas_nama = $request->fasilitas_nama;
+        $fasilitas->fasilitas_deskripsi = $request->fasilitas_deskripsi;
         $fasilitas->status = $request->status;
         $fasilitas->save();
 

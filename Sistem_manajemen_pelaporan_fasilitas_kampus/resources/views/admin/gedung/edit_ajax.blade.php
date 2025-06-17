@@ -34,7 +34,7 @@
     $(document).ready(function () {
         $("#form-edit").validate({
             rules: {
-                nama: { required: true, minlength: 3 },
+                nama: { required: true, minlength: 1 },
                 deskripsi: { required: true, minlength: 10 }
             },
             submitHandler: function (form) {
@@ -52,14 +52,14 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                            dataGedung.ajax.reload();
+                            gedungTable.ajax.reload();
                         } else {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal',
                                 text: response.message
                             });
-                            dataGedung.ajax.reload(null, false); // ✅ reload data table
+                            gedungTable.ajax.reload(null, false); // ✅ reload data table
                         }
                     },
                     error: function (xhr) {

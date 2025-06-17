@@ -159,8 +159,10 @@
         });
     }
 
+    var fasilitasTable, gedungTable, tableLantai, tableRuangan;
+
     $(document).ready(function () {
-        $('#fasilitasTable').DataTable({
+        fasilitasTable =  $('#fasilitasTable').DataTable({
             responsive: true,
             autoWidth: false,
             processing: true,
@@ -176,7 +178,7 @@
             ]
         });
 
-        $('#gedungTable').DataTable({
+        gedungTable =  $('#gedungTable').DataTable({
             responsive: true,
             autoWidth: false,
             processing: true,
@@ -190,7 +192,7 @@
             ]
         });
 
-        $('#tableLantai').DataTable({
+        tableLantai =  $('#tableLantai').DataTable({
             responsive: true,
             autoWidth: false,
             processing: true,
@@ -204,7 +206,7 @@
             ]
         });
 
-        $('#tableRuangan').DataTable({
+        tableRuangan =  $('#tableRuangan').DataTable({
             responsive: true,
             autoWidth: false,
             processing: true,

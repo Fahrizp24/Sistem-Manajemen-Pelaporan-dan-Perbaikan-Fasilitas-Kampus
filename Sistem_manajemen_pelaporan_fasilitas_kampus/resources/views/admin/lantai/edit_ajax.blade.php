@@ -52,14 +52,14 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                            dataLantai.ajax.reload();
+                            tableLantai.ajax.reload();
                         } else {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal',
                                 text: response.message
                             });
-                            dataLantai.ajax.reload(null, false); // ✅ reload data table
+                            tableLantai.ajax.reload(null, false); // ✅ reload data table
                         }
                     },
                     error: function (xhr) {

@@ -11,13 +11,13 @@
                 <div class="form-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="nama">Nama Fasilitas</label>
-                            <input type="text" name="nama" class="form-control" value="{{ $fasilitas->fasilitas_nama }}"
+                            <label for="fasilitas_nama">Nama Fasilitas</label>
+                            <input type="text" name="fasilitas_nama" class="form-control" value="{{ $fasilitas->fasilitas_nama }}"
                                 required>
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="deskripsi">Deskripsi</label>
-                            <textarea name="deskripsi" class="form-control" rows="3"
+                            <label for="fasilitas_deskripsi">Deskripsi</label>
+                            <textarea name="fasilitas_deskripsi" class="form-control" rows="3"
                                 required>{{ $fasilitas->fasilitas_deskripsi }}</textarea>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -52,9 +52,9 @@
     $(document).ready(function () {
         $("#form-edit").validate({
             rules: {
-                nama: { required: true, minlength: 3 },
-                deskripsi: { required: true, minlength: 10 },
-                gedung: { required: true },
+                fasilitas_nama: { required: true, minlength: 3 },
+                fasilitas_deskripsi: { required: true, minlength: 10 },
+                gedung_id: { required: true },
                 status: { required: true }
             },
             submitHandler: function (form) {
@@ -72,14 +72,14 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             });
-                            dataFasilitas.ajax.reload();
+                            fasilitasTable.ajax.reload();
                         } else {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal',
                                 text: response.message
                             });
-                            dataFasilitas.ajax.reload(null, false); // ✅ reload data table
+                            fasilitasTable.ajax.reload(null, false); // ✅ reload data table
                         }
                     },
                     error: function (xhr) {

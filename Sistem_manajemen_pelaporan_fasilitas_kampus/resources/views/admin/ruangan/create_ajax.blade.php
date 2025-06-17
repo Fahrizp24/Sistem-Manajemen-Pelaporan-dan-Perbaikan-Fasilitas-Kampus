@@ -144,7 +144,7 @@ $(document).ready(function() {
                             timer: 1500,
                             showConfirmButton: false
                         });
-                        dataRuangan.ajax.reload(null, false);
+                        tableRuangan.ajax.reload(null, false);
                     }
                 },
                 error: function(xhr) {
