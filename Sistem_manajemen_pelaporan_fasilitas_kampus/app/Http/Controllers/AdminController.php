@@ -363,6 +363,7 @@ class AdminController extends Controller
         $user->username = $request->username;
         $user->nama = $request->nama;
         $user->email = $request->email;
+        $user->no_telp = $request->no_telp;
         $user->peran = $request->peran;
 
         // Jika ada field password dikirim dan tidak kosong

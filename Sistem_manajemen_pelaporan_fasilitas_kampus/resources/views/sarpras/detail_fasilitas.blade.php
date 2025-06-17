@@ -36,65 +36,69 @@
     </div>
     <div class="modal-body">
         <div class="row">
-            <div class="table-responsive">
-                <tr>
-                    <span>Laporan ini dilaporkan oleh:</span>
-                    <span>{{ $jumlahPelapor }} orang</span>
-                </tr>
-                <table class="table table-bordered">
+
+            <!-- Kolom Informasi (Kanan) -->
+            <div class="col-md-8">
+                <div class="table-responsive">
                     <tr>
-                        <th>Gedung</th>
-                        <td>{{ $fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
+                        <span>Laporan ini dilaporkan oleh:</span>
+                        <span>{{ $jumlahPelapor }} orang</span>
                     </tr>
-                    <tr>
-                        <th>Lantai</th>
-                        <td>{{ $fasilitas->ruangan->lantai->lantai_nama }}</td>
-                    </tr>
-                    <tr>
-                        <th>Ruangan</th>
-                        <td>{{ $fasilitas->ruangan->ruangan_nama }}</td>
-                    </tr>
-                    <tr>
-                        <th>Fasilitas</th>
-                        <td>{{ $fasilitas->fasilitas_nama }}</td>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td>{{ $fasilitas->status }}</td>
-                    </tr>
-                    <tr>
-                        <th>Tanggal Laporan</th>
-                        <td>{{ $laporan[0]['id'] }}</td>
-                    </tr>
-                    <tr>
-                        <th>Ditugaskan Oleh</th>
-                        <td>{{ $laporan[0]['sarpras'] ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Ditugaskan Kepada</th>
-                        <td>{{ $laporan[0]['teknisi'] ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Deskripsi</th>
-                        <td>{{ $laporan[0]['deskripsi'] ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Pelapor</th>
-                        <td>
-                            @foreach ($laporan as $laporanItem)
-                                <div class="d-flex align-items-center mb-2">
-                                    <button class="btn btn-sm btn-outline-primary d-flex align-items-center"
-                                        onclick="showFotoPelapor('{{ asset('storage/foto_laporan/' . $laporanItem['foto']) }}', '{{ $laporanItem['nama'] }}')">
-                                        <img src="{{ asset('storage/foto_laporan/' . $laporanItem['foto']) }}"
-                                            alt="Foto {{ $laporanItem['nama'] }}" width="40" height="40"
-                                            class="square me-2">
-                                        <span>{{ $laporanItem['nama'] }}</span>
-                                    </button>
-                                </div>
-                            @endforeach
-                        </td>
-                    </tr>
-                </table>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Gedung</th>
+                            <td>{{ $fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
+                        </tr>
+                        <tr>
+                            <th>Lantai</th>
+                            <td>{{ $fasilitas->ruangan->lantai->lantai_nama }}</td>
+                        </tr>
+                        <tr>
+                            <th>Ruangan</th>
+                            <td>{{ $fasilitas->ruangan->ruangan_nama }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fasilitas</th>
+                            <td>{{ $fasilitas->fasilitas_nama }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>{{ $fasilitas->status }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tanggal Laporan</th>
+                            <td>{{ $laporan[0]['id'] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Ditugaskan Oleh</th>
+                            <td>{{ $laporan[0]['sarpras'] ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Ditugaskan Kepada</th>
+                            <td>{{ $laporan[0]['teknisi'] ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Deskripsi</th>
+                            <td>{{ $laporan[0]['deskripsi'] ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Pelapor</th>
+                            <td>
+                                @foreach ($laporan as $laporanItem)
+                                    <div class="d-flex align-items-center mb-2">
+                                        <button class="btn btn-sm btn-outline-primary d-flex align-items-center"
+                                            onclick="showFotoPelapor('{{ asset('storage/foto_laporan/' . $laporanItem['foto']) }}', '{{ $laporanItem['nama'] }}')">
+                                            <img src="{{ asset('storage/foto_laporan/' . $laporanItem['foto']) }}"
+                                                alt="Foto {{ $laporanItem['nama'] }}" width="40" height="40"
+                                                class="square me-2">
+                                            <span>{{ $laporanItem['nama'] }}</span>
+                                        </button>
+                                    </div>
+                                @endforeach
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
 

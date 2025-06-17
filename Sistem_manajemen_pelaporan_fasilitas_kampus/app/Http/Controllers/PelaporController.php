@@ -8,11 +8,9 @@ use App\Models\LantaiModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Yajra\DataTables\DataTables;
 use App\Models\UserModel;
 use App\Models\LaporanModel;
 use App\Models\RuanganModel;
-use App\Models\UmpanBalikModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -22,53 +20,6 @@ use Illuminate\Support\Facades\Storage;
 
 class PelaporController extends Controller
 {
-
-    public function data()
-{
-    $query = LaporanModel::with(['fasilitas.ruangan.lantai.gedung', 'pelapor'])
-        ->where('pelapor_id', auth()->id())
-        ->orderBy('created_at', 'desc');
-
-    return DataTables::of($query)
-        ->addIndexColumn()
-        ->addColumn('gedung', function($item) {
-            return $item->fasilitas->ruangan->lantai->gedung->gedung_nama;
-        })
-        ->addColumn('lantai', function($item) {
-            return $item->fasilitas->ruangan->lantai->lantai_nama;
-        })
-        ->addColumn('ruangan', function($item) {
-            return $item->fasilitas->ruangan->ruangan_nama;
-        })
-        ->addColumn('fasilitas', function($item) {
-            return $item->fasilitas->fasilitas_nama;
-        })
-        ->addColumn('tanggal', function($item) {
-            return \Carbon\Carbon::parse($item->tanggal_laporan)->format('d/m/Y');
-        })
-        ->addColumn('status', function($item) {
-            $badgeClass = [
-                'diajukan' => 'bg-secondary text-white',
-                'diterima' => 'bg-primary text-white',
-                'tidak diterima' => 'bg-danger text-white',
-                'konfirmasi' => 'bg-info text-white',
-                'memilih teknisi' => 'bg-dark text-white',
-                'diperbaiki' => 'bg-warning text-dark',
-                'telah diperbaiki' => 'bg-light text-dark',
-                'revisi' => 'bg-body-secondary text-dark',
-                'selesai' => 'bg-success text-white',
-            ][$item->status] ?? 'bg-secondary text-white';
-            
-            return '<span class="badge '.$badgeClass.'">'.ucfirst($item->status).'</span>';
-        })
-        ->addColumn('action', function($item) {
-            return '<button onclick="showDetailModal(\''.url('pelapor/laporan_saya/'.$item->laporan_id).'\')" class="btn btn-sm btn-primary">
-                        <i class="bi bi-eye-fill"></i> Detail
-                    </button>';
-        })
-        ->rawColumns(['status', 'action'])
-        ->make(true);
-}
 
     public function profile()
     {
@@ -230,6 +181,7 @@ class PelaporController extends Controller
         return response()->json($fasilitas);
     }
 
+
     public function store_laporan(Request $request)
     {
         $request->validate([
@@ -307,28 +259,6 @@ class PelaporController extends Controller
         return view('pelapor.show_detail_laporan', [
             'laporan' => $laporan,
             'page' => (object) ['title' => 'Detail Laporan']
-        ]);
-    }
-
-    public function submit_rating(Request $request, $laporan_id)
-    {
-        $request->validate([
-            'rating' => 'required|numeric|min:1|max:5',
-            'komentar' => 'nullable|string|max:1000',
-        ]);
-
-        UmpanBalikModel::create([
-            'laporan_id' => $laporan_id,
-            'pengguna_id' => auth()->id(),
-            'penilaian' => $request->rating,
-            'komentar' => $request->komentar,
-        ]);
-
-        return response()->json([
-            'success' => true, 
-            'message' => 'Rating berhasil disimpan!',
-            'rating' => $request->rating,
-            'komentar' => $request->komentar
         ]);
     }
 }

@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id('umpan_balik_id');
             $table->foreignId('laporan_id')->constrained('laporan', 'laporan_id')->onDelete('cascade');
             $table->foreignId('pengguna_id')->constrained('pengguna', 'pengguna_id')->onDelete('cascade');
-            $table->tinyInteger('penilaian');
+            $table->integer('penilaian');
             $table->text('komentar')->nullable();
             $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->nullable();
         });
     }
 
