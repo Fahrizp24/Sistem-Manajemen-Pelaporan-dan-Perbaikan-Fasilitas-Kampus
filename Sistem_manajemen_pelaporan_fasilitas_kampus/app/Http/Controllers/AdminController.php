@@ -123,7 +123,6 @@ class AdminController extends Controller
         }
     }
 
-
     public function data_pengguna(Request $request)
     {
         if ($request->ajax()) {
@@ -411,7 +410,6 @@ class AdminController extends Controller
     {
         return view('admin.pengguna.import_pengguna');
     }
-
 
     public function import_pengguna_store(Request $request)
     {
