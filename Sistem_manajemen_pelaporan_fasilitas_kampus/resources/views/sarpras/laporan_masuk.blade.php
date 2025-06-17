@@ -2,172 +2,161 @@
 @section('title', 'Laporan Masuk')
 
 @section('content')
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-    <h4 class="mb-3">Laporan Masuk</h4>
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
-    <div class="page-content">
-        <div class="row">
-            <div class="col-12">
-                <!-- Horizontal Tabs -->
-                <ul class="nav nav-tabs mb-3" id="laporanTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pelapor-tab" data-bs-toggle="tab" data-bs-target="#pelapor"
-                            type="button" role="tab">Laporan dari Pelapor</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button"
-                            role="tab">Laporan dari Admin</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="teknisi-tab" data-bs-toggle="tab" data-bs-target="#teknisi"
-                            type="button" role="tab">Laporan dari Teknisi</button>
-                    </li>
-                </ul>
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Laporan Masuk</h4>
+    </div>
+    
+    <div class="card-body">
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-pills nav-fill mb-4">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pelapor-tab" data-bs-toggle="tab" data-bs-target="#pelapor" type="button" role="tab">
+                    Laporan dari Pelapor
+                    <span class="badge bg-indigo ms-1">{{ count($laporan_masuk_pelapor) }}</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab">
+                    Laporan dari Admin
+                    <span class="badge bg-teal ms-1">{{ count($fasilitas_memilih_teknisi) }}</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="teknisi-tab" data-bs-toggle="tab" data-bs-target="#teknisi" type="button" role="tab">
+                    Laporan dari Teknisi
+                    <span class="badge bg-amber ms-1">{{ count($fasilitas_telah_diperbaiki) }}</span>
+                </button>
+            </li>
+        </ul>
 
-                <div class="tab-content" id="laporanTabsContent">
-                    <!-- Tab Pelapor -->
-                    <div class="tab-pane fade show active" id="pelapor" role="tabpanel" aria-labelledby="pelapor-tab">
-                        <div class="card">
-                            <div class="card-body table-responsive">
-                                <table class="table table-bordered table-striped" id="table-sarpras">
-                                    <thead class="table-white">
-                                        <tr>
-                                            <th width="5%">No</th>
-                                            <th>Pelapor</th>
-                                            <th>Gedung</th>
-                                            <th>Lantai</th>                                            
-                                            <th>Ruangan</th>
-                                            <th>Fasilitas</th>
-                                            <th>Tanggal</th>
-                                            <th class="text-center">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($laporan_masuk_pelapor as $item)
-                                            <tr>
-                                                <td class="fw-bold">{{ $loop->iteration }}</td>
-                                                <td>{{ $item->pelapor->nama }}</td>
-                                                <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
-                                                <td>{{ $item->fasilitas->ruangan->lantai->lantai_nama }}</td>
-                                                <td>{{ $item->fasilitas->ruangan->ruangan_nama }}</td>
-                                                <td>{{ $item->fasilitas->fasilitas_nama }}</td>
-                                                </td>
-                                                <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}
-                                                </td>
-                                                <td class="text-center">
-                                                    <button
-                                                        onclick="showDetailModal(this,'{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=pelapor')"
-                                                        class="btn btn-sm btn-primary">
-                                                        <i class="bi bi-eye-fill me-1"></i> Detail
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                <small class="text-indigo-600 d-block mt-2">{{ count($laporan_masuk_pelapor) }} laporan
-                                    perlu diterima/ditolak</small>
-                            </div>
-                        </div>
-                    </div>
+        <div class="tab-content pt-3" id="laporanTabsContent">
+            <!-- Tab Pelapor -->
+            <div class="tab-pane fade show active" id="pelapor" role="tabpanel" aria-labelledby="pelapor-tab">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" id="table-sarpras">
+                        <thead class="table">
+                            <tr>
+                                <th width="5%">No</th>
+                                <th>Pelapor</th>
+                                <th>Gedung</th>
+                                <th>Lantai</th>                                            
+                                <th>Ruangan</th>
+                                <th>Fasilitas</th>
+                                <th>Tanggal</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($laporan_masuk_pelapor as $item)
+                                <tr>
+                                    <td class="fw-bold">{{ $loop->iteration }}</td>
+                                    <td>{{ $item->pelapor->nama }}</td>
+                                    <td>{{ $item->fasilitas->ruangan->lantai->gedung->gedung_nama }}</td>
+                                    <td>{{ $item->fasilitas->ruangan->lantai->lantai_nama }}</td>
+                                    <td>{{ $item->fasilitas->ruangan->ruangan_nama }}</td>
+                                    <td>{{ $item->fasilitas->fasilitas_nama }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->tanggal_laporan)->format('d M Y') }}</td>
+                                    <td class="text-center">
+                                        <button onclick="showDetailModal(this,'{{ url('sarpras/laporan_masuk/' . $item->laporan_id) }}?source=pelapor')"
+                                            class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye-fill me-1"></i> Detail
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
+            <!-- Tab Admin -->
+            <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" id="table-admin">
+                        <thead class="table">
+                            <tr>
+                                <th width="5%">No</th>
+                                <th>Gedung</th>
+                                <th>Lantai</th>
+                                <th>Ruangan</th>
+                                <th>Fasilitas</th>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($fasilitas_memilih_teknisi as $item)
+                                <tr>
+                                    <td class="fw-bold">{{ $loop->iteration }}</td>
+                                    <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
+                                    <td>{{ $item->ruangan->lantai->lantai_nama }}</td>
+                                    <td>{{ $item->ruangan->ruangan_nama }}</td>
+                                    <td>{{ $item->fasilitas_nama }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y') }}</td>
+                                    <td><span class="badge bg-warning text-white">Perlu Penugasan</span></td>
+                                    <td class="text-center">
+                                        <button onclick="showDetailModal(this,'{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=admin')"
+                                            class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye-fill me-1"></i> Detail
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-                    <!-- Tab Admin -->
-                    <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
-                        <div class="card">
-                            <div class="card-body table-responsive">
-                                <table class="table table-bordered table-striped" id="table-admin">
-                                    <thead class="table-white">
-                                        <tr>
-                                            <th width="5%">No</th>
-                                            <th>Gedung</th>
-                                            <th>Lantai</th>
-                                            <th>Ruangan</th>
-                                            <th>Fasilitas</th>
-                                            <th>Tanggal</th>
-                                            <th>Status</th>
-                                            <th class="text-center">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($fasilitas_memilih_teknisi as $item)
-                                            <tr>
-                                                <td class="fw-bold">{{ $loop->iteration }}</td>
-                                                <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
-                                                <td>{{ $item->ruangan->lantai->lantai_nama }}</td>
-                                                <td>{{ $item->ruangan->ruangan_nama }}</td>
-                                                <td>{{ $item->fasilitas_nama }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y') }}</td>
-                                                <td><span class="text-warning">Perlu Penugasan</span></td>
-                                                <td class="text-center">
-                                                    <button
-                                                        onclick="showDetailModal(this,'{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=admin')"
-                                                        class="btn btn-sm btn-primary">
-                                                        <i class="bi bi-eye-fill me-1"></i> Detail
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                <small class="text-teal-600 d-block mt-2">{{ count($fasilitas_memilih_teknisi) }} laporan
-                                    perlu penugasan teknisi</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tab Teknisi -->
-                    <div class="tab-pane fade" id="teknisi" role="tabpanel" aria-labelledby="teknisi-tab">
-                        <div class="card">
-                            <div class="card-body table-responsive">
-                                <table class="table table-bordered table-striped" id="table-teknisi">
-                                    <thead class="table-white">
-                                        <tr>
-                                            <th width="5%">No</th>
-                                            <th>Gedung</th>
-                                            <th>Lantai</th>
-                                            <th>Ruangan</th>
-                                            <th>Fasilitas</th>
-                                            <th>Tanggal</th>
-                                            <th>Status</th>
-                                            <th class="text-center">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($fasilitas_telah_diperbaiki as $item)
-                                            <tr>
-                                                <td class="fw-bold">{{ $loop->iteration }}</td>
-                                                <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
-                                                <td>{{ $item->ruangan->lantai->lantai_nama }}</td>
-                                                <td>{{ $item->ruangan->ruangan_nama }}</td>
-                                                <td>{{ $item->fasilitas_nama }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y') }}</td>
-                                                <td><span class="text-orange">Perlu Ditelaah</span></td>
-                                                <td class="text-center">
-                                                    <button
-                                                        onclick="showDetailModal(this,'{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=teknisi')"
-                                                        class="btn btn-sm btn-primary">
-                                                        <i class="bi bi-eye-fill me-1"></i> Detail
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                <small class="text-amber-600 d-block mt-2">{{ count($fasilitas_telah_diperbaiki) }} laporan
-                                    perlu ditelaah</small>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Tab Teknisi -->
+            <div class="tab-pane fade" id="teknisi" role="tabpanel" aria-labelledby="teknisi-tab">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" id="table-teknisi">
+                        <thead class="table">
+                            <tr>
+                                <th width="5%">No</th>
+                                <th>Gedung</th>
+                                <th>Lantai</th>
+                                <th>Ruangan</th>
+                                <th>Fasilitas</th>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($fasilitas_telah_diperbaiki as $item)
+                                <tr>
+                                    <td class="fw-bold">{{ $loop->iteration }}</td>
+                                    <td>{{ $item->ruangan->lantai->gedung->gedung_nama }}</td>
+                                    <td>{{ $item->ruangan->lantai->lantai_nama }}</td>
+                                    <td>{{ $item->ruangan->ruangan_nama }}</td>
+                                    <td>{{ $item->fasilitas_nama }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y') }}</td>
+                                    <td><span class="badge bg-info text-white">Perlu Ditelaah</span></td>
+                                    <td class="text-center">
+                                        <button onclick="showDetailModal(this,'{{ url('sarpras/laporan_masuk/' . $item->fasilitas_id) }}?source=teknisi')"
+                                            class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye-fill me-1"></i> Detail
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
     <!-- Modal -->
