@@ -306,7 +306,7 @@ class AdminController extends Controller
             'username' => 'required|string',
             'nama' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'no_telp' => 'required|digits_between:10,15',
+            'no_telp' => 'nullable|digits_between:10,15',
             'password' => 'required|min:6',
             'peran' => 'required|in:admin,sarpras,pelapor,teknisi',
         ];
@@ -325,6 +325,7 @@ class AdminController extends Controller
         $pengguna->username = $request->username;
         $pengguna->nama = $request->nama;
         $pengguna->email = $request->email;
+        $pengguna->no_telp = $request->no_telp;
         $pengguna->password = Hash::make($request->password);
         $pengguna->peran = $request->peran;
         $pengguna->save();
@@ -353,6 +354,7 @@ class AdminController extends Controller
             'username' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:pengguna,email,' . $id . ',pengguna_id',
+            'no_telp' => 'nullable|string|max:20',
             'password' => 'nullable|string|min:6',
             'peran' => 'required|string|in:admin,sarpras,pelapor, teknisi',
         ]);
