@@ -8,7 +8,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger">
-                        <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
+                        <h5><i class="icon fas fa-ban"></i> Kesalahan!!</h5>
                         Data yang anda cari tidak ditemukan
                     </div>
                     <a href="{{ url('/teknisi/penugasan') }}" class="btn btn-warning">Kembali</a>
